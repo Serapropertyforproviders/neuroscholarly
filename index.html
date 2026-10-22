@@ -441,12 +441,24 @@ button.circle:hover .more{color:var(--blue-deep)}
 .launch-band>.stack{max-width:60ch}
 .legal h3{margin-top:8px}.legal ul{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}.legal p,.legal li{color:var(--ink)}
 .send-err{margin:0}
+.launchbar{background:linear-gradient(90deg,#FFC527,#FFD95E);color:#0F2A6B;font-size:.92rem}
+.launchbar .wrap{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding-block:8px;text-align:center}
+.lb-pill{background:#0F2A6B;color:#FFC527;font-weight:800;font-size:.72rem;letter-spacing:.1em;padding:3px 9px;border-radius:999px}
+.lb-btn{border:0;background:#0F2A6B;color:#fff;font-weight:700;border-radius:999px;padding:5px 14px;cursor:pointer;font-size:.85rem}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;background:#FFF3CC;color:#0F2A6B;border:1px solid #F7E2A0;border-radius:999px;padding:6px 14px;font-weight:700;font-size:.88rem}
+.hero-badge i{width:9px;height:9px;border-radius:50%;background:#2E9E62;box-shadow:0 0 0 4px rgba(46,158,98,.2);animation:pulse 1.8s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 7px rgba(46,158,98,0)}}
+@media (prefers-reduced-motion:reduce){.hero-badge i{animation:none}}
+.fp-badge{display:inline-flex;align-items:center;gap:7px;padding-left:8px!important;background:linear-gradient(135deg,#0F2A6B,#1D44A8);color:#FFE38A;font-weight:800;font-size:.85em;letter-spacing:.02em;padding:3px 12px 3px 6px;border-radius:999px;vertical-align:middle;white-space:nowrap;box-shadow:0 0 0 2px #E8B023 inset}
+.fp-badge svg{width:28px;height:28px;flex:none;margin:-6px 0 -6px -4px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+#applySec .hero-badge{border-radius:16px;flex-wrap:wrap;line-height:1.6}
 </style>
 <style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
 
 
+<div class="launchbar"><div class="wrap"><span class="lb-pill">NEW</span><span><b>Now launching</b> · Founding places open · Be one of the first</span><button class="lb-btn" data-go="join">Join now →</button></div></div>
 <div class="utility"><div class="wrap"><span><b>FREE</b> 20-min trial or <b>£2.50–£7.50</b> taster with every tutor</span><span>Ages 4–25</span><span>Online or in person</span><span>DBS &amp; certificates verified</span></div></div>
 <header class="top">
   <div class="wrap">
@@ -631,10 +643,10 @@ function tutorCard(t){const s=SAVED.has(t.id);return`<article class="tcard ${t.s
 function vHome(){return`
  <section class="hero"><div class="wrap hero-grid">${''}
   <div class="hero-text">
-   <p class="eyebrow">Specialist learning for ages 4–25</p>
+   <span class="hero-badge"><i></i>Now welcoming founding families &amp; Pioneers</span><p class="eyebrow">Specialist learning for ages 4–25</p>
    <h1>Potential is everywhere.<br><span class="hl">Opportunity isn't.</span></h1>
    <p class="lede">Specialist learning for different minds, different ambitions and different ways of learning. Find tutors and specialist professionals for children and young people aged 4–25, online or in person.</p>
-   ${searchCard()}${trust}
+   ${searchCard()}<div class="row" style="gap:10px"><button class="btn blue" data-go="find">Join the founding families</button><button class="btn yellow" data-ptype="">Become a founding Pioneer</button></div>${trust}
   </div>
   <div class="hero-visual hero-pic"><figure style="margin:0"><img src="${IMG.hero2}" alt="A smiling tutor working with a boy wearing headphones at a laptop. Cards show Emma T., Autism Specialist, 5 stars; free trial booked Thursday 4:30pm; confidence this term 74%."><figcaption class="small muted" style="text-align:right;margin-top:6px">Illustration</figcaption></figure></div>
  </div></section>
@@ -684,7 +696,7 @@ function vHome(){return`
  </div></section>
 
  <section class="band"><div class="wrap"><div class="launch-band">
-  <div class="stack" style="gap:6px"><p class="eyebrow" style="color:var(--yellow)">Now launching</p><h2 style="color:#fff">Be one of the first.</h2><p style="color:#C9D5F2">Families: tell us what would help and we'll personally match you with a verified tutor. Tutors: join as a founding Pioneer and help shape NeuroScholarly.</p></div>
+  <div class="stack" style="gap:6px"><p class="eyebrow" style="color:var(--yellow)">Now launching</p><h2 style="color:#fff">Be one of the first.</h2><p style="color:#fff;font-weight:600">The first 100 Pioneers get a permanent <span class="fp-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="fpg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE38A"/><stop offset=".55" stop-color="#E8B023"/><stop offset="1" stop-color="#B9831A"/></linearGradient></defs><path d="M12 1l2.2 6.1L20.5 5l-2.1 6.3L24 12l-5.6.7 2.1 6.3-6.3-2.1L12 23l-2.2-6.1L3.5 19l2.1-6.3L0 12l5.6-.7L3.5 5l6.3 2.1z" fill="url(#fpg)" stroke="#9A6B12" stroke-width=".6"/><circle cx="12" cy="12" r="3.2" fill="#0F2A6B"/></svg>Founding Pioneer</span> badge.</p><p style="color:#C9D5F2">Families: tell us what would help and we'll personally match you with a verified tutor. Tutors: join as a founding Pioneer and help shape NeuroScholarly.</p></div>
   <div class="row"><button class="btn yellow" data-go="find">Request a tutor</button><button class="btn" data-ptype="" style="background:none;color:#fff;border-color:rgba(255,255,255,.5)">Become a founding Pioneer</button></div>
  </div></div></section>
 
@@ -928,7 +940,7 @@ function vPioneers(){return`<section class="band soft" style="padding-top:56px">
  <section class="band" id="training"><div class="wrap">${trainingBlock()}</div></section>
  <section class="band soft"><div class="wrap">${certBlock()}</div></section>
  <section class="band" id="applySec"><div class="wrap" style="max-width:760px">
-  <div class="sec-head"><p class="eyebrow">Apply</p><h2>Apply to become a Pioneer</h2><p class="muted">Takes about 5 minutes. We'll guide you through verification and safeguarding next.</p></div>
+  <div class="sec-head"><span class="hero-badge" style="align-self:flex-start"><i></i>Founding places open · first 100 Pioneers get a <span class="fp-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="fpg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE38A"/><stop offset=".55" stop-color="#E8B023"/><stop offset="1" stop-color="#B9831A"/></linearGradient></defs><path d="M12 1l2.2 6.1L20.5 5l-2.1 6.3L24 12l-5.6.7 2.1 6.3-6.3-2.1L12 23l-2.2-6.1L3.5 19l2.1-6.3L0 12l5.6-.7L3.5 5l6.3 2.1z" fill="url(#fpg2)" stroke="#9A6B12" stroke-width=".6"/><circle cx="12" cy="12" r="3.2" fill="#0F2A6B"/></svg>Founding Pioneer</span> badge</span><p class="eyebrow">Apply</p><h2>Apply to become a Pioneer</h2><p class="muted">Takes about 5 minutes. We'll guide you through verification and safeguarding next.</p></div>
   <form class="panel stack" id="pioneerForm" style="gap:16px">
    ${sel('p_type','Pioneer type',PIONEERS.map(p=>p[1]),'','Choose your Pioneer type')}
    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px"><label class="f">Full name<input type="text" id="p_name" autocomplete="name"></label><label class="f">Email<input type="email" id="p_email" autocomplete="email"></label></div>
