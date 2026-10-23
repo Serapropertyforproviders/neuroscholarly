@@ -488,8 +488,8 @@ h1{letter-spacing:-.03em}
 .nh-ic{display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--blue-deep);font-size:.95rem}
 .nh-ic b{font-weight:600}
 .nh-ic .ic{width:58px;height:58px;border-radius:50%;display:grid;place-items:center}
-.nh-ic .ic svg{width:28px;height:28px}
-.nh-ic .ic.blue{background:#E6EDFB;color:#2D5BD7}.nh-ic .ic.red{background:#FCE6E8;color:#D93A4A}.nh-ic .ic.green{background:#E2F3EA;color:#2E9E62}.nh-ic .ic.purple{background:#EEE6F8;color:#7A4BC9}
+.nh-ic .ic svg{width:28px;height:28px}.nh-ic .ic.blue svg{width:34px;height:34px}
+.nh-ic .ic.blue{background:#E6EDFB;color:#1D44A8}.nh-ic .ic.red{background:#FCE6E8;color:#D93A4A}.nh-ic .ic.green{background:#E2F3EA;color:#2E9E62}.nh-ic .ic.purple{background:#EEE6F8;color:#7A4BC9}
 .nh-search{background:#fff;border:1px solid var(--line);border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 24px 50px -36px rgba(15,42,107,.55);max-width:760px;margin:0 auto 48px}
 .nh-search h2{font-size:clamp(1.6rem,3.4vw,2rem)}
 .nh-search .sel{position:relative;display:block}.nh-search .sel svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--muted);pointer-events:none}
@@ -505,7 +505,7 @@ h1{letter-spacing:-.03em}
  .nh-lede{font-size:1rem}
  .nh-trial{position:relative;right:auto;bottom:auto;align-self:stretch;max-width:none;margin:-54px 14px 0}
  .nh-icons{grid-template-columns:repeat(4,1fr);gap:8px;padding-block:22px}
- .nh-ic{font-size:.8rem}.nh-ic .ic{width:50px;height:50px}.nh-ic .ic svg{width:24px;height:24px}
+ .nh-ic{font-size:.8rem}.nh-ic .ic{width:50px;height:50px}.nh-ic .ic svg{width:24px;height:24px}.nh-ic .ic.blue svg{width:30px;height:30px}
  .nh-search{padding:18px}
 }
 @media (max-width:420px){.nh-second{font-size:.98rem;padding:10px 16px}}
@@ -711,7 +711,7 @@ function vHome(){return`
   </div>
  </section>
  <div class="wrap">
-  <div class="nh-icons"><div class="nh-ic"><span class="ic blue"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7" r="3"/><circle cx="5.5" cy="9" r="2.3"/><circle cx="18.5" cy="9" r="2.3"/><path d="M6 20c0-3.6 2.7-6 6-6s6 2.4 6 6zM.8 19c.2-2.6 1.9-4.3 4.2-4.6-1 1.3-1.5 2.9-1.6 4.6zM23.2 19h-2.6c-.1-1.7-.6-3.3-1.6-4.6 2.3.3 4 2 4.2 4.6z"/></svg></span><b>Specialist Learning</b></div><div class="nh-ic"><span class="ic red"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-5-8-11.2A4.6 4.6 0 0 1 12 7a4.6 4.6 0 0 1 8 2.8C20 16 12 21 12 21z"/></svg></span><b>No Diagnosis Required</b></div><div class="nh-ic"><span class="ic green"><svg viewBox="0 0 24 24"><path d="M12 2l8 3v6.5c0 5-3.4 8.9-8 10.5-4.6-1.6-8-5.5-8-10.5V5z" fill="currentColor"/><path d="M8.3 12.2l2.5 2.5 4.9-5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><b>Safe &amp; Verified</b></div><div class="nh-ic"><span class="ic purple"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="6.5" r="2.8"/><circle cx="16.5" cy="9" r="2.2"/><path d="M2.5 20c0-3.6 2.4-6.3 5.5-6.3s5.5 2.7 5.5 6.3zM13.5 20c.1-2 .7-3.7 1.7-5 .4-.1.8-.1 1.3-.1 2.6 0 4.5 2.1 4.5 5.1z"/></svg></span><b>Ages 4–25</b></div></div>
+  <div class="nh-icons"><div class="nh-ic"><span class="ic blue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14.6C9.2 10.2 1.6 9.8 1.6 14.6S9.2 19 12 14.6 22.4 9.8 22.4 14.6 14.8 19 12 14.6z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path transform="translate(8.6 .2) scale(.42)" d="M12 21s-8-5-8-11.2A4.6 4.6 0 0 1 12 7a4.6 4.6 0 0 1 8 2.8C20 16 12 21 12 21z" fill="currentColor"/></svg></span><b>Specialist Learning</b></div><div class="nh-ic"><span class="ic red"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-5-8-11.2A4.6 4.6 0 0 1 12 7a4.6 4.6 0 0 1 8 2.8C20 16 12 21 12 21z"/></svg></span><b>No Diagnosis Required</b></div><div class="nh-ic"><span class="ic green"><svg viewBox="0 0 24 24"><path d="M12 2l8 3v6.5c0 5-3.4 8.9-8 10.5-4.6-1.6-8-5.5-8-10.5V5z" fill="currentColor"/><path d="M8.3 12.2l2.5 2.5 4.9-5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><b>Safe &amp; Verified</b></div><div class="nh-ic"><span class="ic purple"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="6.6" r="3.1"/><circle cx="4.9" cy="9.3" r="2.2"/><circle cx="19.1" cy="9.3" r="2.2"/><path d="M7 20.2v-3.4c0-2.6 2.2-4.6 5-4.6s5 2 5 4.6v3.4c0 .5-.4.8-.8.8H7.8c-.4 0-.8-.3-.8-.8zM1.2 20.2v-2.6c0-2 1.6-3.6 3.7-3.6.6 0 1.1.1 1.5.3-.6.8-.9 1.8-.9 2.9V21H2c-.4 0-.8-.4-.8-.8zM22.8 20.2v-2.6c0-2-1.6-3.6-3.7-3.6-.6 0-1.1.1-1.5.3.6.8.9 1.8.9 2.9V21H22c.4 0 .8-.4.8-.8z"/></svg></span><b>Ages 4–25</b></div></div>
   ${searchCard()}
  </div>
 
