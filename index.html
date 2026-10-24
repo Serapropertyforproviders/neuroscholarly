@@ -509,6 +509,58 @@ h1{letter-spacing:-.03em}
  .nh-search{padding:18px}
 }
 @media (max-width:420px){.nh-second{font-size:.98rem;padding:10px 16px}}
+/* ---- accounts ---- */
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.sb-load{display:flex;align-items:center;gap:12px;color:var(--muted);padding:28px 0;font-weight:500}
+.sb-spin{width:22px;height:22px;border-radius:50%;border:3px solid var(--blue-soft);border-top-color:var(--blue);animation:sbspin .8s linear infinite}
+@keyframes sbspin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.sb-spin{animation-duration:2.4s}}
+.sb-msg{background:var(--blue-soft);color:var(--blue-deep);border-radius:14px;padding:14px 16px;font-size:.95rem;line-height:1.5;margin-bottom:16px}
+.sb-msg.ok{background:#E3F5EC;color:#1D6B43}.sb-msg.err{background:#FCE6E8;color:#9B1C2B}
+.sb-tabs,.sb-switch{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 18px}
+.sb-tabs .tab,.sb-switch .tab{min-height:44px;color:var(--blue-deep);display:inline-flex;align-items:center;gap:6px}
+.sb-tabs .tab[aria-selected="true"],.sb-switch .tab[aria-selected="true"]{background:var(--blue-deep);border-color:var(--blue-deep);color:#fff}
+.sb-count{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--yellow);color:var(--blue-deep);font-size:.78rem;font-weight:800}
+.sb-count:empty{display:none}
+.sb-grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.sb-fs{border:1px solid var(--line);border-radius:14px;padding:14px 16px 16px;margin:0;min-width:0}
+.sb-fs legend{font-weight:700;padding:0 6px;color:var(--blue-deep)}
+.sb-chips{display:flex;flex-wrap:wrap;gap:8px}
+.sb-chip{position:relative;cursor:pointer}
+.sb-chip input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.sb-chip span{display:inline-flex;align-items:center;min-height:40px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-size:.9rem;font-weight:500;color:var(--ink)}
+.sb-chip input:checked+span{background:var(--blue-soft);border-color:var(--blue);color:var(--blue-deep);font-weight:700}
+.sb-chip input:checked+span::before{content:"✓";margin-right:6px;color:var(--blue)}
+.sb-chip input:focus-visible+span{outline:3px solid var(--yellow);outline-offset:2px}
+.sb-photo-row{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.ph.sb-big{width:120px;height:120px;border-radius:24px}
+.sb-initials{background:linear-gradient(135deg,#2D5BD7,#0F2A6B);color:#fff;display:grid;place-items:center;font-weight:800}
+.av.sb-av{width:48px;height:48px;font-size:1.1rem}
+.sb-phbtn{border:0;padding:0;background:none;cursor:pointer;border-radius:16px;align-self:start}
+.sb-card .pill.sb-spec,.sb-profile .pill.sb-spec{background:var(--blue-deep);color:#FFE38A;font-weight:700}
+.pill.sb-mode{background:var(--yellow-soft)}
+.sb-clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;max-width:none}
+.sb-fp{font-size:.8rem}
+.sb-filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;padding:18px}
+.sb-profile{flex-direction:column;gap:22px;margin-top:10px}
+.sb-prof-top{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.badge.sb-st.blue{background:var(--blue-soft);color:var(--blue)}.badge.sb-st.ok{background:#E3F5EC;color:#1D6B43}.badge.sb-st.grey{background:#EEF1F6;color:#56617A}
+.sb-quote{background:var(--soft);border-radius:12px;padding:10px 14px;max-width:none;margin:0}
+.sb-sub{background:var(--soft);border-radius:14px;padding:14px 16px}
+.sb-checks{gap:14px;padding:10px 12px;background:var(--soft);border-radius:12px}
+.sb-msgs{display:flex;flex-direction:column;gap:10px;max-height:min(60vh,520px);overflow-y:auto;padding:12px;background:var(--soft);border-radius:14px}
+.sb-bub{align-self:flex-start;max-width:82%;background:#fff;border:1px solid var(--line);border-radius:16px 16px 16px 4px;padding:10px 14px}
+.sb-bub.me{align-self:flex-end;background:var(--blue-deep);border-color:var(--blue-deep);color:#fff;border-radius:16px 16px 4px 16px}
+.sb-bub p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.sb-bub span{display:block;font-size:.72rem;opacity:.7;margin-top:4px}
+#view textarea{min-height:96px}
+@media (max-width:640px){.sb-card{grid-template-columns:72px 1fr}.sb-card .ph{width:72px;height:72px;border-radius:16px}.ph.sb-big{width:96px;height:96px}.sb-tabs .tab{padding:8px 14px;font-size:.92rem}}
+#loginBtn{display:inline-flex!important}#loginBtn[hidden]{display:none!important}
+@media (max-width:760px){#loginBtn{display:none!important}}
+.panel.sb-profile{display:flex;flex-direction:column;gap:26px}
+.sb-profile h3{margin-bottom:2px}
+.sb-who{display:block;font-size:.75rem;opacity:.8;margin-bottom:2px}
+
 </style>
 <style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
@@ -1265,21 +1317,21 @@ function vSoon(){return`<div class="wrap" style="padding-block:56px;max-width:68
 const legal=(eyebrow,title,body)=>`<div class="wrap" style="padding-block:48px;max-width:780px"><div class="sec-head"><p class="eyebrow">${eyebrow}</p><h1 style="font-size:clamp(2rem,4vw,2.6rem)">${title}</h1><p class="small muted">Last updated: ${new Date(2026,9,22).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</p></div><div class="legal stack" style="gap:16px">${body}</div></div>`;
 function vPrivacy(){return legal('Privacy notice','How we use your information',`
 <p>This notice explains how NeuroScholarly ("we", "us") uses personal information collected through neuroscholarly.com. If you have any questions, email <b>${CONTACT}</b>.</p>
-<h3>What we collect</h3><p>When you use a form on this website we collect what you choose to give us. For families: your name, email, phone number if you give it, and details about the learner such as first name, age, subject, level and what would help. For tutors: your name, contact details, subjects, experience and the Pioneer type you're applying for. For organisations: your name, organisation, work email and message.</p>
+<h3>What we collect</h3><p><b>Accounts:</b> if you create an account we keep your name, email and password (stored securely, we can't see it). Families can add a town or area, a phone number, and learners' first names, ages, subjects and, if they choose, learning needs. Pioneers add a public profile (photo, name shown to families, subjects, rates and bio) and private details we use for checks (full name, phone, postcode, date of birth). Tutors only see a family's first name and area, and a learner's first name, age and subject, plus learning needs only if the parent chooses to share them. We keep messages sent through the website.</p><p><b>Forms:</b> when you use a form on this website we collect what you choose to give us. For families: your name, email, phone number if you give it, and details about the learner such as first name, age, subject, level and what would help. For tutors: your name, contact details, subjects, experience and the Pioneer type you're applying for. For organisations: your name, organisation, work email and message.</p>
 <p>Information about a learner's needs, such as ADHD, autism or dyslexia, can be sensitive. Only share what you're comfortable with. You never need a diagnosis to use NeuroScholarly.</p>
 <h3>Why we use it</h3><ul><li>To reply to you and match a learner with a suitable tutor</li><li>To assess applications from tutors, including identity, DBS and qualification checks</li><li>To respond to schools, local authorities, hospitals and partners</li><li>To keep learners safe and act on safeguarding concerns</li></ul>
 <p>We rely on your consent, on taking steps you've asked for before an agreement with us, on our legitimate interest in running and improving NeuroScholarly, and, for safeguarding, on our legal obligations.</p>
 <h3>Who we share it with</h3><p>We don't sell your information. We share it only where needed: with a tutor we propose to you (learner details only, never your full contact details without asking), and with services that help us run the website:</p>
-<ul><li><b>Formspree</b>, which delivers website form messages to our inbox. It is based in the United States, so your information may be transferred outside the UK under appropriate safeguards.</li><li><b>Namecheap Private Email</b>, which hosts our email.</li><li><b>GitHub Pages</b>, which hosts this website and may keep basic technical logs such as IP addresses.</li></ul>
+<ul><li><b>Formspree</b>, which delivers website form messages to our inbox. It is based in the United States, so your information may be transferred outside the UK under appropriate safeguards.</li><li><b>Namecheap Private Email</b>, which hosts our email.</li><li><b>GitHub Pages</b>, which hosts this website and may keep basic technical logs such as IP addresses.</li><li><b>Supabase</b>, which securely stores accounts, profiles, learner details, requests and messages on servers in London.</li></ul>
 <h3>How long we keep it</h3><p>Requests and enquiries that don't lead to lessons: up to 12 months. Unsuccessful tutor applications: up to 12 months. Records linked to lessons and safeguarding: as long as the law requires.</p>
 <h3>Children</h3><p>Forms are for parents, carers and people aged 18 or over. If you're under 18, please ask a parent or carer to contact us.</p>
-<h3>Cookies</h3><p>We don't use advertising or tracking cookies. Your browser may store small settings, such as items you've saved, on your own device.</p>
+<h3>Cookies</h3><p>We don't use advertising or tracking cookies. Your browser stores a secure sign-in token on your device so you stay logged in, plus small settings. Logging out removes the sign-in token.</p>
 <h3>Your rights</h3><p>You can ask to see, correct or delete your information, object to how we use it, or withdraw consent at any time by emailing <b>${CONTACT}</b>. If you're unhappy with how we've handled your information, you can complain to the Information Commissioner's Office at ico.org.uk.</p>`)}
 function vTerms(){return legal('Terms','Website terms of use',`
 <p>These terms apply to your use of neuroscholarly.com. By using the website you agree to them. Questions: <b>${CONTACT}</b>.</p>
 <h3>About this website</h3><p>NeuroScholarly connects families with tutors and specialist professionals. While our booking system is being built, sending a request or application doesn't create a contract for lessons or work. We'll confirm any arrangement with you directly.</p>
-<h3>Tutors (Pioneers)</h3><p>Pioneers are self-employed and responsible for their own tax and insurance. Fees, commission, payouts and Contribution Levels are set out on our <button type="button" class="btn ghost sm" data-go="fees" style="padding:0;min-height:0">Fees &amp; earnings</button> page and will be confirmed in a Pioneer agreement before you take paid bookings. We'll give at least 15 days' written notice of changes.</p>
-<h3>Safeguarding</h3><p>A parent or carer must be present for every lesson with a learner under 18, online or in person. Please report any concern to <b>${CONTACT}</b>.</p>
+<h3>Tutors (Pioneers)</h3><p>Pioneers are self-employed and responsible for their own tax and insurance. NeuroScholarly's commission is 20% of paid sessions, including card fees. Tutors keep 100% of introductory tasters. Fees and payouts are set out on our <button type="button" class="btn ghost sm" data-go="pioneers" style="padding:0;min-height:0">Become a Tutor</button> page and will be confirmed in a Pioneer agreement before you take paid bookings. We'll give at least 15 days' written notice of changes.</p>
+<h3>Accounts</h3><p>Family accounts are for parents and carers, and for young adults aged 18–25 learning for themselves. Pioneer accounts are for tutors aged 16 or over; under-18s need a parent or carer's agreement. Keep your password private and tell us if you think someone else has used your account. Pioneer profiles only appear on the website once we've approved them, and we can hide or remove a profile or account at any time to keep learners safe.</p><h3>Messages</h3><p>Please keep messages and arrangements on NeuroScholarly and don't share phone numbers, emails or social media. Messages may be reviewed by the NeuroScholarly team to keep everyone safe. Arranging paid lessons privately with a family or tutor you met through NeuroScholarly, to avoid fees, isn't allowed.</p><h3>Safeguarding</h3><p>A parent or carer must be present for every lesson with a learner under 18, online or in person. Please report any concern to <b>${CONTACT}</b>.</p>
 <h3>Using the website</h3><p>Please don't misuse the website, send false information or try to break its security. We try to keep information accurate and up to date, but we can't guarantee it's always complete.</p>
 <h3>Our content</h3><p>NeuroScholarly™, Quantum Leap™, our logo and our content belong to us. Please don't copy them without permission.</p>
 <h3>Liability</h3><p>Nothing in these terms limits liability that can't be limited by law. Otherwise, we're not responsible for losses caused by using this website.</p>
@@ -1315,8 +1367,431 @@ document.addEventListener('submit',e=>{const f=e.target;const handled=['requestF
   sendForm(f,(/safeguarding/i.test(org)?'SAFEGUARDING – ':'')+subj+': '+$('#c_name').value.trim(),{Type:subj,...(current==='partners'?{Area:PSECT[PTAB]?.[0]}:{})},okBox('Message sent',"Thank you. We'll reply within 2 working days."));return}
 },true);
 
+/* ================= ACCOUNTS (Supabase) ================= */
+const SB=Object.assign({url:'https://uifmdbdyrxdaugdshkog.supabase.co',key:'sb_publishable_nDx25btMVP-NkaySWPt1Jw_R1HW8d0W'},window.NS_SB||{});
+const SITE_URL=location.origin+location.pathname;
+const PTYPES={young:'Young Pioneer',university:'University Pioneer',professional:'Professional Pioneer',experienced:'Experienced Pioneer'};
+const PGUIDE={young:'£12–20',university:'£18–35',professional:'£30–60',experienced:'£45+'};
+const TSPECS=['ADHD','Autism','Dyslexia & SpLD','Dyscalculia','Speech & language','Anxiety & confidence','Gifted & stretch'];
+const MODES={online:'Online',in_person:'In person',both:'Online & in person'};
+const RSTAT={new:['Waiting for reply','blue'],accepted:['Accepted','ok'],declined:['Declined','grey'],cancelled:['Cancelled','grey'],completed:['Completed','ok']};
+const FPSTAR=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1l2.2 6.1L20.5 5l-2.1 6.3L24 12l-5.6.7 2.1 6.3-6.3-2.1L12 23l-2.2-6.1L3.5 19l2.1-6.3L0 12l5.6-.7L3.5 5l6.3 2.1z" fill="#E8B023" stroke="#9A6B12" stroke-width=".6"/><circle cx="12" cy="12" r="3.2" fill="#0F2A6B"/></svg>`;
+let SESSION=null,ME=null,TUTORS=null,ADMIN=null,THREAD=null,LOAD={},ACC_TAB='',ADM_TAB='tutors',SIGNUP_ROLE='family',NEWPHOTO=null,EDIT_LEARNER=null,TF={q:'',subject:'',spec:'',mode:''},POLL=null,REFRESHING=null;
+const ss={get(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}},set(k,v){try{v==null?localStorage.removeItem(k):localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const gbp2=n=>'£'+(+n%1?(+n).toFixed(2):+n);
+const firstName=s=>String(s||'').trim().split(/\s+/)[0]||'';
+const when=d=>{try{return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}catch(e){return''}};
+const whenT=d=>{try{return new Date(d).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}catch(e){return''}};
+const spinner=(msg='Loading…')=>`<div class="sb-load" role="status"><span class="sb-spin" aria-hidden="true"></span>${msg}</div>`;
+const sbErr=(m)=>`<div class="sb-msg err" role="alert">${esc(m)}</div>`;
+
+/* ---- low-level API ---- */
+function friendlyErr(d,s){const m=String((d&&(d.msg||d.error_description||d.message||d.error))||'');
+ if(/Invalid login credentials/i.test(m))return'That email and password don’t match. Please try again.';
+ if(/Email not confirmed/i.test(m))return'Please confirm your email first. Check your inbox (and spam) for our link.';
+ if(/already (been )?registered|User already/i.test(m))return'There’s already an account with that email. Try logging in.';
+ if(/Password should|weak password/i.test(m))return'Please choose a stronger password: at least 8 characters with letters and numbers.';
+ if(/rate limit|too many|security purposes/i.test(m)||s===429)return'Too many attempts. Please wait a few minutes and try again.';
+ if(/row-level security|permission denied|Not allowed/i.test(m))return'Sorry, you don’t have permission to do that.';
+ if(/check constraint/i.test(m))return'Some details aren’t in the right format. Please check and try again.';
+ if(/JWT|expired/i.test(m))return'Your session has ended. Please log in again.';
+ if(/payload too large|maximum allowed size|exceeded/i.test(m)||s===413)return'That photo is too large. Please choose a smaller one.';
+ return m||'Something went wrong. Please try again.'}
+function setSession(s){if(s&&s.access_token){SESSION={access_token:s.access_token,refresh_token:s.refresh_token,expires_at:+s.expires_at||Math.floor(Date.now()/1000)+(+s.expires_in||3600),user:s.user||SESSION?.user||null}}else SESSION=null;ss.set('ns_session',SESSION);USER=SESSION?{role:SESSION.user?.user_metadata?.role||'family'}:null}
+async function sbRaw(path,opt){let r;try{r=await fetch(SB.url+path,opt)}catch(e){throw new Error('We couldn’t reach NeuroScholarly. Please check your connection and try again.')}
+ const txt=await r.text();let d=null;try{d=txt?JSON.parse(txt):null}catch(e){d=txt}if(!r.ok){const er=new Error(friendlyErr(d,r.status));er.status=r.status;throw er}return d}
+async function sbRefresh(){if(!SESSION?.refresh_token){setSession(null);return}
+ if(!REFRESHING)REFRESHING=sbRaw('/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{apikey:SB.key,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:SESSION.refresh_token})}).then(d=>setSession(d),e=>{if(e.status>=400&&e.status<500)setSession(null)}).finally(()=>{REFRESHING=null});
+ return REFRESHING}
+async function sb(path,{method='GET',body,prefer,headers={},anon=false}={}){
+ if(SESSION&&!anon&&SESSION.expires_at*1000-Date.now()<90000)await sbRefresh();
+ const h={apikey:SB.key,...headers};if(SESSION&&!anon)h.Authorization='Bearer '+SESSION.access_token;
+ if(prefer)h.Prefer=prefer;let b=body;if(b!==undefined&&!(b instanceof Blob)){h['Content-Type']='application/json';b=JSON.stringify(b)}
+ try{return await sbRaw(path,{method,headers:h,body:b})}
+ catch(e){if(e.status===401&&SESSION&&!anon){await sbRefresh();if(SESSION){h.Authorization='Bearer '+SESSION.access_token;return sbRaw(path,{method,headers:h,body:b})}resetAccount();go('login');toast('Please log in again');}throw e}}
+const rpc=(fn,args={})=>sb('/rest/v1/rpc/'+fn,{method:'POST',body:args});
+function notify(subject,data){try{fetch(FORMSPREE,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify({_subject:subject,...data,page:location.href})}).catch(()=>{})}catch(e){}}
+function resetAccount(){setSession(null);ME=null;ADMIN=null;THREAD=null;LOAD={};ACC_TAB='';TUTORS=null;NEWPHOTO=null;EDIT_LEARNER=null}
+
+/* ---- data loading ---- */
+function need(key,loader){const s=LOAD[key];if(s==='ok')return'ok';if(s&&s.startsWith('err:'))return s;if(!s){LOAD[key]='busy';const at=current;loader().then(()=>{LOAD[key]='ok'},e=>{LOAD[key]='err:'+e.message}).finally(()=>{if(current===at)render()})}return'busy'}
+async function loadTutors(){TUTORS=await sb('/rest/v1/tutors?select=*&status=eq.approved&order=founding.desc,created_at.asc',{anon:true})||[]}
+async function loadMe(){if(!SESSION){ME=null;return}
+ if(!SESSION.user?.id){const u=await sb('/auth/v1/user');SESSION.user=u;ss.set('ns_session',SESSION)}
+ const u=SESSION.user,uid=u.id,role=u.user_metadata?.role==='tutor'?'tutor':'family';
+ const adm=await rpc('is_admin').catch(()=>false);
+ const m={uid,role,email:u.email,name:u.user_metadata?.name||'',isAdmin:adm===true};
+ if(role==='tutor'){const [t,p]=await Promise.all([sb(`/rest/v1/tutors?id=eq.${uid}&select=*`),sb(`/rest/v1/tutor_private?id=eq.${uid}&select=*`)]);m.tutor=t[0]||null;m.priv=p[0]||null}
+ else{let f=(await sb(`/rest/v1/families?id=eq.${uid}&select=*`))[0];
+  if(!f){await sb('/rest/v1/families',{method:'POST',body:{id:uid,full_name:(m.name||u.email.split('@')[0]).slice(0,80)},prefer:'return=minimal'});f=(await sb(`/rest/v1/families?id=eq.${uid}&select=*`))[0];notify('New family account: '+(m.name||u.email),{Type:'New family account',Name:m.name,Email:u.email})}
+  m.family=f;m.learners=await sb(`/rest/v1/learners?family_id=eq.${uid}&select=*&order=created_at.asc`)||[]}
+ m.requests=await rpc('my_requests')||[];
+ USER={role};ME=m}
+async function refreshMe(){LOAD.me=null;await loadMe();LOAD.me='ok'}
+async function loadAdmin(){ADMIN=await rpc('admin_overview')}
+
+/* ---- small UI helpers ---- */
+const chk=(name,opts,sel=[],cls='')=>`<div class="sb-chips ${cls}">${opts.map(o=>`<label class="sb-chip"><input type="checkbox" name="${name}" value="${esc(o)}" ${sel.includes(o)?'checked':''}><span>${esc(o)}</span></label>`).join('')}</div>`;
+const vals=(form,name)=>[...form.querySelectorAll(`input[name="${name}"]:checked`)].map(i=>i.value);
+const fv=(form,id)=>(form.querySelector('#'+id)?.value||'').trim();
+const tPhoto=(t,cls='ph')=>t.photo_url?`<img class="${cls} sb-photo" src="${esc(t.photo_url)}" alt="${esc(t.display_name)}" loading="lazy">`:`<span class="${cls} sb-initials" aria-hidden="true">${esc(firstName(t.display_name).slice(0,1).toUpperCase()||'?')}</span>`;
+const fpBadge=`<span class="fp-badge sb-fp">${FPSTAR}Founding Pioneer</span>`;
+const trialText=t=>t.trial_type==='taster'?`${gbp2(t.taster_price||2.5)} introductory taster`:'FREE 20-minute trial';
+const checksList=t=>[t.id_verified&&'ID verified',t.dbs_verified&&'Enhanced DBS checked',t.certs_verified&&'Certificates verified'].filter(Boolean);
+const statusBadge=s=>{const [l,c]=RSTAT[s]||[s,'grey'];return`<span class="badge sb-st ${c}">${l}</span>`};
+function needLogin(){return`<div class="wrap" style="padding-block:48px;max-width:560px">${loginPanel('Please log in to continue.')}</div>`}
+function accHeader(title,sub){return`<div class="sec-head" style="margin-bottom:18px"><p class="eyebrow">My account</p><h1 style="font-size:clamp(1.8rem,4vw,2.5rem)">${title}</h1>${sub?`<p class="muted">${sub}</p>`:''}</div>`}
+function tabs(list,cur,attr){return`<div class="sb-tabs" role="tablist">${list.map(([k,l,n])=>`<button type="button" class="tab" role="tab" aria-selected="${k===cur}" ${attr}="${k}">${l}${n?` <span class="sb-count">${n}</span>`:''}</button>`).join('')}</div>`}
+
+/* ---- auth views ---- */
+function loginPanel(note){return`<form class="panel stack" id="sb_login" style="gap:14px" novalidate>
+ <h2 style="font-size:1.6rem">Log in</h2>${note?`<p class="muted">${note}</p>`:''}
+ <label class="f">Email<input type="email" id="sl_email" autocomplete="email" required></label>
+ <label class="f">Password<input type="password" id="sl_pw" autocomplete="current-password" required></label>
+ <button class="btn blue" type="submit">Log in</button>
+ <div class="row between"><button type="button" class="btn ghost sm" data-go="forgot" style="padding:0">Forgotten your password?</button><button type="button" class="btn ghost sm" data-go="join" style="padding:0">Create an account</button></div></form>`}
+function vLogin(){if(SESSION){setTimeout(()=>go('account'));return spinner()}return`<div class="wrap" style="padding-block:48px;max-width:560px">${loginPanel()}</div>`}
+function vSignup(){const tutor=SIGNUP_ROLE==='tutor';return`<div class="wrap" style="padding-block:40px;max-width:600px">
+ <div class="sec-head" style="margin-bottom:18px"><p class="eyebrow">${tutor?'Become a Pioneer':'Family account'}</p><h1 style="font-size:clamp(1.8rem,4vw,2.5rem)">${tutor?'Create your Pioneer account':'Create your free family account'}</h1>
+ <p class="muted">${tutor?'Build your profile, then we check your ID, DBS and certificates before it goes live.':'Add your learners, request tutors and message them safely, all in one place.'}</p></div>
+ <div class="sb-switch" role="tablist"><button type="button" class="tab" aria-selected="${!tutor}" data-sb="role" data-v="family">I’m a parent, carer or young adult</button><button type="button" class="tab" aria-selected="${tutor}" data-sb="role" data-v="tutor">I want to teach</button></div>
+ <form class="panel stack" id="sb_signup" style="gap:14px" novalidate>
+  <label class="f">Your full name<input type="text" id="su_name" autocomplete="name" maxlength="80" required></label>
+  <label class="f">Email<input type="email" id="su_email" autocomplete="email" required></label>
+  <label class="f">Create a password<input type="password" id="su_pw" autocomplete="new-password" minlength="8" required><span class="hint">At least 8 characters, with letters and numbers.</span></label>
+  <label class="check"><input type="checkbox" id="su_age"><span>${tutor?'I’m 16 or over. If I’m under 18, my parent or carer agrees to me joining.':'I’m 18 or over: a parent or carer, or a young adult (18–25) learning for myself.'}</span></label>
+  <label class="check"><input type="checkbox" id="su_terms"><span>I agree to the <button type="button" class="btn ghost sm" data-go="terms" style="padding:0;min-height:0">terms</button> and <button type="button" class="btn ghost sm" data-go="privacy" style="padding:0;min-height:0">privacy notice</button>.</span></label>
+  <button class="btn blue" type="submit">Create my account</button>
+  <p class="small muted">Already have an account? <button type="button" class="btn ghost sm" data-go="login" style="padding:0;min-height:0">Log in</button></p></form></div>`}
+function vCheckEmail(){const e=ss.get('ns_pending_email')||'';return`<div class="wrap" style="padding-block:56px;max-width:600px"><div class="panel stack center" style="text-align:center;gap:14px">
+ <span class="tick" style="width:60px;height:60px;font-size:1.6rem">✓</span><h1 style="font-size:clamp(1.7rem,4vw,2.2rem)">Check your email</h1>
+ <p class="muted">We’ve sent a link to <b>${esc(e)}</b>. Tap it to confirm your email and you’ll come straight back here, logged in.</p>
+ <p class="small muted">Can’t see it? Check your spam or junk folder. It can take a couple of minutes.</p>
+ <div class="row" style="justify-content:center"><button class="btn sm" data-sb="resend">Send the link again</button><button class="btn sm ghost" data-go="login">Log in</button></div></div></div>`}
+function vForgot(){return`<div class="wrap" style="padding-block:48px;max-width:560px"><form class="panel stack" id="sb_forgot" style="gap:14px" novalidate>
+ <h2 style="font-size:1.6rem">Reset your password</h2><p class="muted">Enter your email and we’ll send you a link to choose a new password.</p>
+ <label class="f">Email<input type="email" id="sf_email" autocomplete="email" required></label>
+ <button class="btn blue" type="submit">Send reset link</button><button type="button" class="btn ghost sm" data-go="login" style="padding:0;align-self:flex-start">Back to log in</button></form></div>`}
+function vNewPw(){if(!SESSION)return needLogin();return`<div class="wrap" style="padding-block:48px;max-width:560px"><form class="panel stack" id="sb_newpw" style="gap:14px" novalidate>
+ <h2 style="font-size:1.6rem">Choose a new password</h2>
+ <label class="f">New password<input type="password" id="np_1" autocomplete="new-password" minlength="8"></label>
+ <label class="f">Type it again<input type="password" id="np_2" autocomplete="new-password" minlength="8"></label>
+ <button class="btn blue" type="submit">Save new password</button></form></div>`}
+function vJoin2(){return`<div class="wrap" style="padding-block:48px;max-width:900px"><div class="sec-head center"><p class="eyebrow">Join NeuroScholarly</p><h1 style="font-size:clamp(2rem,4.4vw,3rem)">How would you like to join?</h1></div>
+ <div class="split" style="align-items:stretch">
+  <div class="panel stack" style="gap:12px;border-top:5px solid var(--blue)"><h3>I’m a parent, carer or young adult</h3><p class="muted">Create a free family account. Add your learners, request tutors and message them safely. Every tutor offers a FREE 20-minute trial or a £2.50–£7.50 introductory taster.</p><button class="btn blue" data-sb="signup" data-v="family" style="align-self:flex-start;margin-top:auto">Create a family account</button></div>
+  <div class="panel stack" style="gap:12px;border-top:5px solid var(--yellow)"><h3>I want to teach</h3><p class="muted">Create your Pioneer account and build your profile. Sixth-formers, students, graduates and experienced professionals welcome. The first 100 approved Pioneers get the Founding Pioneer badge.</p><button class="btn yellow" data-sb="signup" data-v="tutor" style="align-self:flex-start;margin-top:auto">Create a Pioneer account</button></div></div>
+ <p class="small muted" style="text-align:center;margin-top:20px">Already joined? <button type="button" class="btn ghost sm" data-go="login" style="padding:0;min-height:0">Log in</button></p></div>`}
+
+/* ---- find a tutor (live) ---- */
+function tutorMatches(t){const q=TF.q.toLowerCase();
+ if(q&&![t.display_name,t.bio,t.area,...t.subjects,...t.specialisms,...t.levels].join(' ').toLowerCase().includes(q))return false;
+ if(TF.subject&&!t.subjects.includes(TF.subject))return false;
+ if(TF.spec&&!t.specialisms.includes(TF.spec))return false;
+ if(TF.mode==='online'&&t.lesson_mode==='in_person')return false;
+ if(TF.mode==='in_person'&&t.lesson_mode==='online')return false;return true}
+function liveCard(t){const ck=checksList(t);return`<article class="tcard sb-card ${t.specialisms.length?'is-spec':''}">
+ <button class="sb-phbtn" data-pt="${t.id}" aria-label="View ${esc(t.display_name)}’s profile">${tPhoto(t)}</button>
+ <div class="mid"><div class="row" style="gap:8px"><h3 style="font-size:1.3rem">${esc(t.display_name)}</h3><span class="badge blue">${PTYPES[t.pioneer_type]}</span></div>
+  ${t.founding?`<div>${fpBadge}</div>`:''}
+  ${ck.length?`<ul class="ticks">${ck.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}
+  ${t.bio?`<p class="small muted sb-clamp">${esc(t.bio)}</p>`:''}
+  <div class="pills">${t.specialisms.map(x=>`<span class="pill sb-spec">${esc(x)}</span>`).join('')}${t.subjects.slice(0,5).map(x=>`<span class="pill">${esc(x)}</span>`).join('')}<span class="pill sb-mode">${MODES[t.lesson_mode]}${t.lesson_mode!=='online'&&t.area?' · '+esc(t.area):''}</span></div></div>
+ <div class="side">${t.hourly_rate?`<div class="rate">${gbp2(t.hourly_rate)}<small>/hour</small></div>`:''}<div class="free ${t.trial_type}">${trialText(t)}</div>
+  <button class="btn sm blue" data-preq="${t.id}">${t.trial_type==='taster'?'Request a taster':'Request a free trial'}</button><button class="btn sm" data-pt="${t.id}">View profile</button></div></article>`}
+function vFindLive(){const st=need('tutors',loadTutors);
+ const head=`<div class="wrap" style="padding-top:36px"><div class="sec-head"><p class="eyebrow">Find your tutor</p><h1 style="font-size:clamp(2rem,4.4vw,3rem)">Find the right person for you.</h1><p class="muted">Every Pioneer is checked before their profile goes live. Request a FREE 20-minute trial or a £2.50–£7.50 introductory taster, depending on the tutor.</p></div></div>`;
+ if(st==='busy')return head+`<div class="wrap">${spinner('Finding tutors…')}</div>`;
+ if(st.startsWith('err:'))return head+`<div class="wrap stack" style="padding-bottom:48px">${sbErr(st.slice(4))}<button class="btn sm" data-sb="retry" data-v="tutors" style="align-self:flex-start">Try again</button></div>`;
+ const list=TUTORS.filter(tutorMatches);
+ const filters=`<form class="panel sb-filters" id="sb_tf" onsubmit="return false"><label class="f">Search<input type="search" id="tf_q" value="${esc(TF.q)}" placeholder="Name, subject, area…"></label>
+  <label class="f">Subject<select id="tf_subject">${LOPT(SUBJECTS,TF.subject,'Any subject')}</select></label>
+  <label class="f">Specialist experience<select id="tf_spec">${LOPT(TSPECS,TF.spec,'Any')}</select></label>
+  <label class="f">Online or in person<select id="tf_mode"><option value="">Either</option><option value="online" ${TF.mode==='online'?'selected':''}>Online</option><option value="in_person" ${TF.mode==='in_person'?'selected':''}>In person</option></select></label></form>`;
+ const empty=TUTORS.length?`<div class="panel stack"><h3>No tutors match those filters yet</h3><p class="muted">Try clearing a filter, or tell us what you need and we’ll match you personally.</p><div class="row"><button class="btn sm" data-sb="clearf">Clear filters</button><button class="btn sm blue" data-go="request">Tell us what you need</button></div></div>`
+  :`<div class="panel stack" style="border-top:5px solid var(--yellow)"><h3>Our founding Pioneers are being verified now</h3><p class="muted">Profiles appear here as soon as their ID, DBS and certificates are checked. In the meantime, tell us what would help and we’ll match you personally.</p><div class="row"><button class="btn blue" data-go="request">Tell us what you need</button><button class="btn" data-sb="signup" data-v="family">Create a family account</button></div></div>`;
+ return head+`<div class="wrap stack" style="gap:18px;padding-bottom:56px;max-width:1100px">${TUTORS.length?filters:''}<div class="stack" id="sb_results" style="gap:16px;max-width:none">${list.length?list.map(liveCard).join(''):empty}</div>
+  ${list.length?`<p class="small muted" style="text-align:center">Can’t see the right person? <button type="button" class="btn ghost sm" data-go="request" style="padding:0;min-height:0">Tell us what you need</button> and we’ll match you personally.</p>`:''}</div>`}
+function findTutor(id){return (TUTORS||[]).find(t=>t.id===id)||(ME?.tutor?.id===id?ME.tutor:null)||(ADMIN?.tutors||[]).find(t=>t.id===id)}
+function vTutorLive(id){if(!TUTORS){const st=need('tutors',loadTutors);if(st==='busy')return`<div class="wrap">${spinner()}</div>`}
+ const t=findTutor(id);if(!t)return`<div class="wrap" style="padding-block:48px"><div class="panel stack"><h2>This profile isn’t available</h2><p class="muted">It may be waiting for checks or no longer listed.</p><button class="btn blue" data-go="find" style="align-self:flex-start">Find a tutor</button></div></div>`;
+ const ck=checksList(t),preview=t.status!=='approved';
+ return`<div class="wrap" style="padding-block:32px;max-width:980px">${preview?`<div class="sb-msg">This is a preview. Families can’t see this profile until it’s approved.</div>`:''}
+ <button class="btn ghost sm" data-go="find" style="padding:0;align-self:flex-start">← All tutors</button>
+ <div class="panel sb-profile"><div class="sb-prof-top">${tPhoto(t,'ph sb-big')}<div class="stack" style="gap:8px"><h1 style="font-size:clamp(1.8rem,4vw,2.4rem)">${esc(t.display_name)}</h1>
+  <div class="row" style="gap:8px"><span class="badge blue">${PTYPES[t.pioneer_type]}</span>${t.founding?fpBadge:''}</div>
+  <div class="row" style="gap:14px;align-items:baseline">${t.hourly_rate?`<span class="rate">${gbp2(t.hourly_rate)}<small>/hour</small></span>`:''}<span class="free ${t.trial_type}">${trialText(t)}</span></div>
+  <p class="small muted">${MODES[t.lesson_mode]}${t.lesson_mode!=='online'&&t.area?' · '+esc(t.area):''}</p></div></div>
+  ${t.bio?`<div class="stack" style="gap:6px;max-width:none"><h3>About me</h3><p style="white-space:pre-line">${esc(t.bio)}</p></div>`:''}
+  ${t.specialisms.length?`<div class="stack" style="gap:8px;max-width:none"><h3>Specialist experience</h3><div class="pills">${t.specialisms.map(x=>`<span class="pill sb-spec">${esc(x)}</span>`).join('')}</div></div>`:''}
+  ${t.subjects.length?`<div class="stack" style="gap:8px;max-width:none"><h3>Subjects</h3><div class="pills">${t.subjects.map(x=>`<span class="pill">${esc(x)}</span>`).join('')}</div></div>`:''}
+  ${t.levels.length?`<div class="stack" style="gap:8px;max-width:none"><h3>Ages and levels</h3><div class="pills">${t.levels.map(x=>`<span class="pill">${esc(x)}</span>`).join('')}</div></div>`:''}
+  <div class="stack" style="gap:8px;max-width:none"><h3>Safety checks</h3><ul class="ticks">${(ck.length?ck:['Checks in progress']).map(x=>`<li>${x}</li>`).join('')}<li>A parent or carer present for every lesson with an under-18</li></ul></div>
+  ${preview?'':`<button class="btn blue" data-preq="${t.id}" style="align-self:flex-start">${t.trial_type==='taster'?'Request a taster':'Request a free trial'}</button>`}</div></div>`}
+
+/* ---- request a tutor ---- */
+function vRequestTutor(id){const t=findTutor(id);if(!t){if(!TUTORS){const st=need('tutors',loadTutors);if(st==='busy')return`<div class="wrap">${spinner()}</div>`}return vTutorLive(id)}
+ const top=`<div class="wrap" style="padding-block:32px;max-width:760px"><button class="btn ghost sm" data-pt="${t.id}" style="padding:0;align-self:flex-start">← Back to ${esc(firstName(t.display_name))}’s profile</button>
+  <div class="row" style="gap:14px">${tPhoto(t,'av sb-av')}<div><p class="eyebrow">Request a tutor</p><h1 style="font-size:clamp(1.6rem,4vw,2.2rem)">${esc(t.display_name)}</h1></div></div>`;
+ if(!SESSION){ss.set('ns_after_login','preq-'+t.id);return top+`<div class="panel stack" style="gap:12px"><h3>Create a free family account to send your request</h3><p class="muted">It takes a minute. You’ll be able to message ${esc(firstName(t.display_name))} safely and keep track of everything in one place.</p><div class="row"><button class="btn blue" data-sb="signup" data-v="family">Create a family account</button><button class="btn" data-go="login">Log in</button></div></div></div>`}
+ const st=need('me',loadMe);if(st==='busy')return top+spinner()+'</div>';if(st.startsWith('err:'))return top+sbErr(st.slice(4))+'</div>';
+ if(ME.role==='tutor')return top+`<div class="panel stack"><h3>You’re logged in as a Pioneer</h3><p class="muted">Tutor requests are sent from family accounts. Log out and use a family account to request a tutor.</p></div></div>`;
+ const L=ME.learners,subs=[...new Set([...t.subjects,...SUBJECTS])];
+ return top+`<form class="panel stack" id="sb_req" data-tutor="${t.id}" style="gap:14px" novalidate>
+  ${L.length?`<label class="f">Who is it for?<select id="rq_learner">${L.map(l=>`<option value="${l.id}">${esc(l.first_name)}${l.age?' ('+l.age+')':''}</option>`).join('')}<option value="new">+ Add another learner</option></select></label>`:`<input type="hidden" id="rq_learner" value="new">`}
+  <div id="rq_new" class="sb-sub stack" style="gap:12px;max-width:none" ${L.length?'hidden':''}><b>About the learner</b>
+   <div class="sb-grid2"><label class="f">First name<input type="text" id="rq_lname" maxlength="40"></label><label class="f">Age<input type="number" id="rq_lage" min="4" max="25"></label></div>
+   <p class="small muted">You can add learning needs later in your account. Only share what you’re comfortable with.</p></div>
+  <label class="f">Subject<select id="rq_subject">${LOPT(subs,t.subjects[0]||'','Choose a subject')}</select></label>
+  <label class="f">First session<select id="rq_trial"><option value="${t.trial_type}">${trialText(t)}</option></select></label>
+  <label class="f">Message to ${esc(firstName(t.display_name))} <span class="hint">Optional. What would help, what has worked before, good days and times. Please don’t include phone numbers or emails.</span><textarea id="rq_msg" maxlength="1000"></textarea></label>
+  <label class="check"><input type="checkbox" id="rq_safe"><span>I understand a parent or carer must be present for every lesson with a learner under 18.</span></label>
+  <button class="btn blue" type="submit">Send request</button></form></div>`}
+
+/* ---- account ---- */
+function vAccount2(){if(!SESSION)return needLogin();const st=need('me',loadMe);
+ if(st==='busy')return`<div class="wrap" style="padding-block:40px">${spinner('Loading your account…')}</div>`;
+ if(st.startsWith('err:'))return`<div class="wrap stack" style="padding-block:40px">${sbErr(st.slice(4))}<div class="row"><button class="btn sm" data-sb="retry" data-v="me">Try again</button><button class="btn sm ghost" data-sb="logout">Log out</button></div></div>`;
+ return ME.role==='tutor'?tutorAccount():familyAccount()}
+function accTop(){return`<div class="row between" style="margin-bottom:6px"><span class="small muted">Logged in as <b>${esc(ME.email)}</b></span><div class="row" style="gap:6px">${ME.isAdmin?`<button class="btn sm yellow" data-go="admin">Admin</button>`:''}<button class="btn sm" data-sb="logout">Log out</button></div></div>`}
+function reqCards(list,as){if(!list.length)return`<div class="panel stack"><h3>No requests yet</h3><p class="muted">${as==='tutor'?'When a family requests you, it appears here. Make sure your profile is complete so it can be approved.':'Find a tutor you like and tap “Request a free trial”.'}</p>${as==='tutor'?'':`<button class="btn blue" data-go="find" style="align-self:flex-start">Find a tutor</button>`}</div>`;
+ return list.map(r=>{const l=r.learner||{};return`<article class="panel stack sb-req" style="gap:10px;max-width:none">
+  <div class="row between"><div class="row" style="gap:10px">${as==='family'?tPhoto({display_name:r.tutor.name,photo_url:r.tutor.photo_url},'av sb-av'):''}<div><b>${as==='tutor'?esc(l.first_name||'Learner')+(l.age?', '+l.age:''):esc(r.tutor.name)}</b><div class="small muted">${esc(r.subject)} · ${r.trial_type==='taster'?'Taster':'Free trial'} · ${when(r.created_at)}</div></div></div>${statusBadge(r.status)}</div>
+  ${as==='tutor'?`<div class="small">Parent or carer: <b>${esc(r.family.first_name)}</b>${r.family.area?' · '+esc(r.family.area):''}${l.school_year?' · '+esc(l.school_year):''}</div>${(l.needs||[]).length?`<div class="pills">${l.needs.map(x=>`<span class="pill">${esc(x)}</span>`).join('')}</div>`:''}${l.needs_notes?`<p class="small muted">${esc(l.needs_notes)}</p>`:''}`:`<div class="small">For <b>${esc(l.first_name||'')}</b></div>`}
+  ${r.message?`<p class="small sb-quote">“${esc(r.message)}”</p>`:''}
+  <div class="row">${as==='tutor'&&r.status==='new'?`<button class="btn sm blue" data-sb="accept" data-id="${r.id}">Accept</button><button class="btn sm" data-sb="decline" data-id="${r.id}">Decline</button>`:''}
+   <button class="btn sm ${as==='family'||r.status!=='new'?'blue':''}" data-thread="${r.id}">Messages${r.messages?` (${r.messages})`:''}</button>
+   ${as==='family'&&['new','accepted'].includes(r.status)?`<button class="btn sm ghost" data-sb="cancelreq" data-id="${r.id}">Cancel request</button>`:''}</div></article>`}).join('')}
+function settingsTab(){return`<div class="stack" style="gap:16px;max-width:640px">
+ <form class="panel stack" id="sb_chpw" style="gap:12px" novalidate><h3>Change password</h3><label class="f">New password<input type="password" id="cp_1" autocomplete="new-password" minlength="8"></label><button class="btn sm blue" type="submit" style="align-self:flex-start">Update password</button></form>
+ <div class="panel stack" style="gap:10px"><h3>Delete my account</h3><p class="small muted">We’ll delete your account and details within 30 days. Records we must keep for safeguarding are kept only as long as the law requires.</p><button class="btn sm" data-sb="delacct" style="align-self:flex-start;border-color:var(--c-red);color:var(--c-red)">Request account deletion</button></div>
+ <div class="panel stack" style="gap:10px"><h3>Worried about something?</h3><p class="small muted">Tell us straight away. We take every safeguarding concern seriously.</p><button class="btn sm" data-sb="concern" style="align-self:flex-start">Report a concern</button></div></div>`}
+function tutorAccount(){const t=ME.tutor,newReq=ME.requests.filter(r=>r.as==='tutor'&&r.status==='new').length;
+ if(!ACC_TAB)ACC_TAB=t?'requests':'profile';
+ const banner=!t?`<div class="sb-msg"><b>Step 1:</b> build your profile below. Once it’s saved, we’ll check your ID, enhanced DBS and certificates before it goes live.</div>`
+  :t.status==='pending'?`<div class="sb-msg"><b>Waiting for approval.</b> We’re checking your profile. To speed things up, email your photo ID, enhanced DBS certificate and qualification certificates to <b>${CONTACT}</b>.</div>`
+  :t.status==='approved'?`<div class="sb-msg ok"><b>Your profile is live.</b> Families can find you and send requests. <button class="btn ghost sm" data-pt="${t.id}" style="padding:0;min-height:0">View my public profile</button></div>`
+  :`<div class="sb-msg err"><b>Your profile is hidden.</b> Please contact <b>${CONTACT}</b>.</div>`;
+ const body=ACC_TAB==='profile'?tutorProfileForm():ACC_TAB==='private'?tutorPrivateForm():ACC_TAB==='settings'?settingsTab():`<div class="stack" style="gap:14px;max-width:none">${reqCards(ME.requests.filter(r=>r.as==='tutor'),'tutor')}</div>`;
+ return`<div class="wrap" style="padding-block:28px;max-width:980px">${accTop()}${accHeader('Hello, '+esc(firstName(t?.display_name||ME.name)||'Pioneer'),'Your Pioneer dashboard')}${banner}
+  ${tabs([['requests','Requests',newReq],['profile','My profile'],['private','Private details'],['settings','Settings']],ACC_TAB,'data-acc')}${body}</div>`}
+function tutorProfileForm(){const t=ME.tutor||{display_name:'',pioneer_type:'',subjects:[],levels:[],specialisms:[],bio:'',hourly_rate:'',trial_type:'free',taster_price:2.5,lesson_mode:'online',area:'',photo_url:''};
+ const ph=NEWPHOTO?.url||t.photo_url,other=t.subjects.filter(s=>!SUBJECTS.includes(s));
+ return`<form class="panel stack" id="sb_tprof" style="gap:18px;max-width:none" novalidate>
+ <div class="sb-photo-row">${ph?`<img class="ph sb-big" src="${esc(ph)}" alt="Your profile photo">`:`<span class="ph sb-big sb-initials">${esc(firstName(t.display_name||ME.name).slice(0,1)||'+')}</span>`}
+  <div class="stack" style="gap:8px"><b>Profile photo</b><span class="hint">A clear, friendly head-and-shoulders photo. Families trust a real face.</span><label class="btn sm" style="align-self:flex-start">${ph?'Change photo':'Add photo'}<input type="file" id="tp_photo" accept="image/*" hidden></label></div></div>
+ <div class="sb-grid2"><label class="f">Name shown to families<input type="text" id="tp_name" maxlength="60" value="${esc(t.display_name||(ME.name?firstName(ME.name)+' '+(ME.name.trim().split(/\s+/)[1]||'').slice(0,1)+'.':''))}"><span class="hint">First name and surname initial, e.g. Sarah K.</span></label>
+  <label class="f">Pioneer type<select id="tp_type"><option value="">Choose</option>${Object.entries(PTYPES).map(([k,v])=>`<option value="${k}" ${t.pioneer_type===k?'selected':''}>${v}</option>`).join('')}</select></label></div>
+ <fieldset class="sb-fs"><legend>Subjects you teach</legend>${chk('tp_subj',SUBJECTS,t.subjects)}<label class="f" style="margin-top:8px">Other subjects <span class="hint">Separate with commas</span><input type="text" id="tp_other" value="${esc(other.join(', '))}"></label></fieldset>
+ <fieldset class="sb-fs"><legend>Ages and levels</legend>${chk('tp_lvl',LEVELS,t.levels)}</fieldset>
+ <fieldset class="sb-fs"><legend>Specialist experience <span class="hint">Optional</span></legend>${chk('tp_spec',TSPECS,t.specialisms)}</fieldset>
+ <label class="f">About you<span class="hint">Your experience, how you teach and what learners enjoy about your sessions. Please don’t include contact details.</span><textarea id="tp_bio" maxlength="1200" rows="6">${esc(t.bio)}</textarea><span class="hint" id="tp_bioc">${(t.bio||'').length}/1200</span></label>
+ <div class="sb-grid2"><label class="f">Hourly rate (£)<input type="number" id="tp_rate" min="5" max="250" step="0.5" value="${t.hourly_rate??''}"><span class="hint" id="tp_guide">${t.pioneer_type?'Typical for '+PTYPES[t.pioneer_type]+'s: '+PGUIDE[t.pioneer_type]+' (guide only)':'Choose your Pioneer type to see typical rates'}</span></label>
+  <label class="f">Lessons<select id="tp_mode">${Object.entries(MODES).map(([k,v])=>`<option value="${k}" ${t.lesson_mode===k?'selected':''}>${v}</option>`).join('')}</select></label></div>
+ <label class="f" id="tp_areaw" ${t.lesson_mode==='online'?'hidden':''}>Town or area for in-person lessons<input type="text" id="tp_area" maxlength="80" value="${esc(t.area||'')}" placeholder="e.g. North Leeds"></label>
+ <fieldset class="sb-fs"><legend>First session for new families</legend><div class="stack" style="gap:8px">
+  <label class="check"><input type="radio" name="tp_trial" value="free" ${t.trial_type!=='taster'?'checked':''}><span><b>FREE 20-minute trial</b></span></label>
+  <label class="check"><input type="radio" name="tp_trial" value="taster" ${t.trial_type==='taster'?'checked':''}><span><b>Introductory taster</b>: you keep 100% <select id="tp_taster" aria-label="Taster price">${[2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5].map(p=>`<option value="${p}" ${+t.taster_price===p?'selected':''}>${gbp2(p)}</option>`).join('')}</select></span></label></div></fieldset>
+ <div class="row"><button class="btn blue" type="submit">${ME.tutor?'Save changes':'Save my profile'}</button>${ME.tutor?`<button type="button" class="btn" data-pt="${ME.tutor.id}">Preview</button>`:''}</div>
+ ${ME.tutor?.status==='approved'?`<p class="small muted">Changing your name, photo or “About you” sends your profile back for a quick re-check.</p>`:''}</form>`}
+function tutorPrivateForm(){const p=ME.priv||{};return`<form class="panel stack" id="sb_tpriv" style="gap:14px;max-width:640px" novalidate>
+ <p class="muted">Only you and the NeuroScholarly team can see these. We use them for your ID and DBS checks.</p>
+ <label class="f">Full legal name<input type="text" id="pv_name" autocomplete="name" value="${esc(p.full_name||ME.name)}"></label>
+ <div class="sb-grid2"><label class="f">Phone<input type="tel" id="pv_phone" autocomplete="tel" value="${esc(p.phone||'')}"></label><label class="f">Postcode<input type="text" id="pv_post" autocomplete="postal-code" value="${esc(p.postcode||'')}"></label></div>
+ <label class="f">Date of birth<input type="date" id="pv_dob" value="${esc(p.date_of_birth||'')}"></label>
+ <button class="btn blue" type="submit" style="align-self:flex-start">Save private details</button></form>`}
+function familyAccount(){const f=ME.family,reqs=ME.requests.filter(r=>r.as==='family');
+ if(!ACC_TAB)ACC_TAB=ME.learners.length?'requests':'learners';
+ const body=ACC_TAB==='learners'?learnersTab():ACC_TAB==='details'?familyDetails():ACC_TAB==='settings'?settingsTab():`<div class="stack" style="gap:14px;max-width:none">${reqCards(reqs,'family')}</div>`;
+ return`<div class="wrap" style="padding-block:28px;max-width:980px">${accTop()}${accHeader('Hello, '+esc(firstName(f.full_name)),'Your family account')}
+  ${!ME.learners.length?`<div class="sb-msg"><b>Start here:</b> add your learner, then find a tutor and request a free trial or taster.</div>`:''}
+  ${tabs([['requests','My requests',reqs.filter(r=>r.status==='accepted').length],['learners','Learners',ME.learners.length],['details','My details'],['settings','Settings']],ACC_TAB,'data-acc')}${body}
+  <div class="row" style="margin-top:18px"><button class="btn yellow" data-go="find">Find a tutor</button></div></div>`}
+function familyDetails(){const f=ME.family;return`<form class="panel stack" id="sb_fam" style="gap:14px;max-width:640px" novalidate>
+ <label class="f">Your full name<input type="text" id="fd_name" maxlength="80" value="${esc(f.full_name)}"></label>
+ <label class="f">Town or area<input type="text" id="fd_area" maxlength="80" value="${esc(f.area||'')}"><span class="hint">Tutors see your first name and area only.</span></label>
+ <label class="f">Phone (optional)<input type="tel" id="fd_phone" maxlength="30" value="${esc(f.phone||'')}"><span class="hint">Only the NeuroScholarly team can see this.</span></label>
+ <button class="btn blue" type="submit" style="align-self:flex-start">Save details</button></form>`}
+function learnerForm(l){l=l||{first_name:'',age:'',school_year:'',subjects:[],needs:[],needs_notes:'',share_needs:false};return`<form class="panel stack" id="sb_learner" data-id="${l.id||''}" style="gap:14px;max-width:none" novalidate>
+ <h3>${l.id?'Edit '+esc(l.first_name):'Add a learner'}</h3>
+ <div class="sb-grid2"><label class="f">First name<input type="text" id="ln_name" maxlength="40" value="${esc(l.first_name)}"></label><label class="f">Age<input type="number" id="ln_age" min="4" max="25" value="${l.age??''}"></label></div>
+ <label class="f">School year or level <span class="hint">Optional</span><select id="ln_year">${LOPT(LEVELS,l.school_year,'Choose')}</select></label>
+ <fieldset class="sb-fs"><legend>Subjects they’d like help with</legend>${chk('ln_subj',SUBJECTS,l.subjects)}</fieldset>
+ <fieldset class="sb-fs"><legend>What would help? <span class="hint">Optional. No diagnosis needed.</span></legend>${chk('ln_needs',NEEDS,l.needs)}
+  <label class="f" style="margin-top:8px">Anything else a tutor should know? <span class="hint">Optional</span><textarea id="ln_notes" maxlength="600" rows="3">${esc(l.needs_notes||'')}</textarea></label>
+  <label class="check" style="margin-top:6px"><input type="checkbox" id="ln_share" ${l.share_needs?'checked':''}><span>Share these learning needs with tutors I send requests to, so they can prepare. If unticked, tutors only see first name, age and subject.</span></label></fieldset>
+ <div class="row"><button class="btn blue" type="submit">${l.id?'Save':'Add learner'}</button><button type="button" class="btn ghost sm" data-sb="cancel-learner">Cancel</button></div></form>`}
+function learnersTab(){if(EDIT_LEARNER!==null)return learnerForm(ME.learners.find(l=>l.id===EDIT_LEARNER));
+ return`<div class="stack" style="gap:14px;max-width:none">${ME.learners.map(l=>`<article class="panel stack" style="gap:8px;max-width:none"><div class="row between"><div><b>${esc(l.first_name)}</b>${l.age?`<span class="muted">, ${l.age}</span>`:''}${l.school_year?`<div class="small muted">${esc(l.school_year)}</div>`:''}</div><div class="row" style="gap:6px"><button class="btn sm" data-sb="edit-learner" data-id="${l.id}">Edit</button><button class="btn sm ghost" data-sb="del-learner" data-id="${l.id}">Remove</button></div></div>
+  ${l.subjects.length?`<div class="pills">${l.subjects.map(x=>`<span class="pill">${esc(x)}</span>`).join('')}</div>`:''}${l.needs.length?`<div class="small muted">Learning needs: ${l.needs.map(esc).join(', ')} · ${l.share_needs?'shared with tutors you request':'private'}</div>`:''}</article>`).join('')}
+  <button class="btn blue" data-sb="add-learner" style="align-self:flex-start">+ Add ${ME.learners.length?'another':'a'} learner</button></div>`}
+
+/* ---- messages ---- */
+async function loadThread(id){const msgs=await sb(`/rest/v1/messages?request_id=eq.${id}&select=*&order=created_at.asc`);let r=(ME?.requests||[]).find(x=>x.id===id);
+ if(!r&&ME?.isAdmin){if(!ADMIN)await loadAdmin();const a=ADMIN.requests.find(x=>x.id===id);if(a)r={id,admin:true,tutor_id:a.tutor_id,status:a.status,subject:a.subject,tutor:{name:a.tutor},family:{first_name:a.family},learner:{first_name:a.learner}}}
+ THREAD={id,msgs:msgs||[],req:r}}
+function vThread(id){if(!SESSION)return needLogin();if(need('me',loadMe)!=='ok')return`<div class="wrap">${spinner()}</div>`;
+ const st=need('thread:'+id,()=>loadThread(id));if(st==='busy')return`<div class="wrap" style="padding-block:40px">${spinner('Loading messages…')}</div>`;if(st.startsWith('err:'))return`<div class="wrap">${sbErr(st.slice(4))}</div>`;
+ const r=THREAD.req;if(!r)return`<div class="wrap" style="padding-block:40px"><div class="panel">This conversation isn’t available.</div></div>`;
+ const other=r.admin?`${esc(r.family.first_name)} ↔ ${esc(r.tutor.name)}`:r.as==='tutor'?esc(r.family.first_name)+' (parent or carer)':esc(r.tutor.name);
+ const canSend=!r.admin&&['new','accepted'].includes(r.status);
+ return`<div class="wrap" style="padding-block:24px;max-width:760px"><button class="btn ghost sm" data-go="${r.admin?'admin':'account'}" style="padding:0;align-self:flex-start">← Back</button>
+ <div class="panel stack sb-thread" style="gap:12px;max-width:none"><div class="row between"><div><b style="font-size:1.15rem">${other}</b><div class="small muted">${esc(r.subject)}${r.learner?.first_name?' · for '+esc(r.learner.first_name):''}</div></div>${statusBadge(r.status)}</div>
+  <div class="sb-msgs" id="sb_msgs" aria-live="polite">${THREAD.msgs.length?THREAD.msgs.map(m=>`<div class="sb-bub ${m.sender_id===ME.uid||(r.admin&&m.sender_id===r.tutor_id)?'me':''}">${r.admin?`<b class="sb-who">${m.sender_id===r.tutor_id?esc(r.tutor.name):esc(r.family.first_name)}</b>`:''}<p>${esc(m.body)}</p><span>${whenT(m.created_at)}</span></div>`).join(''):`<p class="small muted" style="text-align:center">No messages yet. Say hello and suggest some times for the ${r.subject?esc(r.subject)+' ':''}trial.</p>`}</div>
+  ${canSend?`<form id="sb_send" class="stack" style="gap:8px;max-width:none" novalidate><label class="f"><span class="sr-only">Message</span><textarea id="ms_body" maxlength="2000" rows="3" placeholder="Write a message…"></textarea></label><div class="row between"><span class="hint">Keep messages on NeuroScholarly. Don’t share phone numbers or emails.</span><button class="btn sm blue" type="submit">Send</button></div></form>`:`<p class="small muted">${r.admin?'Admin view: read only.':'This request is '+(RSTAT[r.status]?.[0]||r.status).toLowerCase()+', so messaging is closed.'}</p>`}
+  <button class="btn ghost sm" data-sb="concern" data-id="${r.id}" style="padding:0;align-self:flex-start;color:var(--c-red)">Report a concern</button></div></div>`}
+const CONTACT_RE=/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}|(?:\+?44|0)\s?7(?:[\s-]?\d){9}|(?:\d[\s-]?){10,}|whats\s?app|snap\s?chat|instagram|insta\b|telegram/i;
+
+/* ---- admin ---- */
+function vAdmin2(){if(!SESSION)return needLogin();if(need('me',loadMe)!=='ok')return`<div class="wrap">${spinner()}</div>`;
+ if(!ME.isAdmin)return`<div class="wrap" style="padding-block:48px"><div class="panel stack"><h2>Admin only</h2><p class="muted">This page is for the NeuroScholarly team.</p></div></div>`;
+ const st=need('admin',loadAdmin);if(st==='busy')return`<div class="wrap" style="padding-block:40px">${spinner('Loading admin…')}</div>`;if(st.startsWith('err:'))return`<div class="wrap">${sbErr(st.slice(4))}</div>`;
+ const A=ADMIN,pend=A.tutors.filter(t=>t.status==='pending').length;
+ const body=ADM_TAB==='families'?A.families.map(f=>`<article class="panel stack" style="gap:6px;max-width:none"><div class="row between"><b>${esc(f.full_name)}</b><span class="small muted">Joined ${when(f.created_at)}</span></div><div class="small">${esc(f.login_email||'')}${f.phone?' · '+esc(f.phone):''}${f.area?' · '+esc(f.area):''}</div>
+   ${f.learners.length?`<div class="small muted">Learners: ${f.learners.map(l=>esc(l.first_name)+(l.age?' ('+l.age+')':'')+(l.needs.length?' – '+l.needs.map(esc).join(', '):'')).join(' · ')}</div>`:'<div class="small muted">No learners yet</div>'}</article>`).join('')||'<p class="muted">No families yet.</p>'
+  :ADM_TAB==='requests'?A.requests.map(r=>`<article class="panel stack" style="gap:6px;max-width:none"><div class="row between"><b>${esc(r.family)} → ${esc(r.tutor)}</b>${statusBadge(r.status)}</div><div class="small muted">${esc(r.subject)}${r.learner?' · for '+esc(r.learner):''} · ${when(r.created_at)}</div>${r.message?`<p class="small sb-quote">“${esc(r.message)}”</p>`:''}<button class="btn sm" data-thread="${r.id}" style="align-self:flex-start">Read messages (${r.messages})</button></article>`).join('')||'<p class="muted">No requests yet.</p>'
+  :A.tutors.map(adminTutor).join('')||'<p class="muted">No tutors yet.</p>';
+ return`<div class="wrap" style="padding-block:28px;max-width:1000px"><div class="row between"><button class="btn ghost sm" data-go="account" style="padding:0">← My account</button><button class="btn sm" data-sb="retry" data-v="admin">Refresh</button></div>
+ <div class="sec-head" style="margin-bottom:14px"><p class="eyebrow">Admin</p><h1 style="font-size:clamp(1.8rem,4vw,2.4rem)">NeuroScholarly admin</h1><p class="muted">${A.tutors.length} Pioneers · ${A.families.length} families · ${A.requests.length} requests</p></div>
+ ${tabs([['tutors','Pioneers',pend],['families','Families',0],['requests','Requests',0]],ADM_TAB,'data-adm')}<div class="stack" style="gap:14px;max-width:none">${body}</div></div>`}
+function adminTutor(t){const p=t.private||{};return`<article class="panel stack sb-adm" style="gap:10px;max-width:none">
+ <div class="row between"><div class="row" style="gap:12px">${tPhoto(t,'av sb-av')}<div><b>${esc(t.display_name)}</b> <span class="badge blue">${PTYPES[t.pioneer_type]}</span>${t.founding?' '+fpBadge:''}<div class="small muted">${esc(t.login_email||'')} · joined ${when(t.created_at)}</div></div></div><span class="badge sb-st ${{approved:'ok',pending:'blue',hidden:'grey'}[t.status]}">${{approved:'Live',pending:'Pending approval',hidden:'Hidden'}[t.status]}</span></div>
+ <div class="small"><b>Private:</b> ${esc(p.full_name||'–')} · ${esc(p.phone||'no phone')} · ${esc(p.postcode||'no postcode')} · DOB ${esc(p.date_of_birth||'–')}</div>
+ <div class="small"><b>Teaches:</b> ${t.subjects.map(esc).join(', ')||'–'} · <b>Levels:</b> ${t.levels.map(esc).join(', ')||'–'}${t.specialisms.length?' · <b>Specialist:</b> '+t.specialisms.map(esc).join(', '):''}</div>
+ <div class="small"><b>Rate:</b> ${t.hourly_rate?gbp2(t.hourly_rate)+'/hr':'–'} · ${trialText(t)} · ${MODES[t.lesson_mode]}${t.area?' · '+esc(t.area):''}</div>
+ ${t.bio?`<p class="small sb-quote" style="white-space:pre-line">${esc(t.bio)}</p>`:''}
+ <div class="row sb-checks"><label class="check"><input type="checkbox" data-ck="id" ${t.id_verified?'checked':''}><span>ID verified</span></label><label class="check"><input type="checkbox" data-ck="dbs" ${t.dbs_verified?'checked':''}><span>Enhanced DBS</span></label><label class="check"><input type="checkbox" data-ck="certs" ${t.certs_verified?'checked':''}><span>Certificates</span></label><button class="btn sm" data-sb="checks" data-id="${t.id}">Save checks</button></div>
+ <div class="row">${t.status!=='approved'?`<button class="btn sm blue" data-sb="approve" data-id="${t.id}">Approve & publish</button>`:''}${t.status!=='hidden'?`<button class="btn sm" data-sb="hide" data-id="${t.id}">Hide</button>`:''}${t.status==='hidden'?`<button class="btn sm" data-sb="pending" data-id="${t.id}">Move to pending</button>`:''}<button class="btn sm ghost" data-pt="${t.id}">Preview profile</button></div></article>`}
+
+/* ---- photo resize ---- */
+function resizePhoto(file){return new Promise((res,rej)=>{if(!/^image\//.test(file.type)){rej(new Error('Please choose a photo (JPG or PNG).'));return}if(file.size>15*1024*1024){rej(new Error('That photo is over 15 MB. Please choose a smaller one.'));return}
+ const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const sz=600,c=document.createElement('canvas');c.width=c.height=sz;const s=Math.max(sz/im.width,sz/im.height),x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,sz,sz);x.drawImage(im,(sz-im.width*s)/2,(sz-im.height*s)/2,im.width*s,im.height*s);URL.revokeObjectURL(u);c.toBlob(b=>b?res({blob:b,url:URL.createObjectURL(b)}):rej(new Error('Couldn’t read that photo.')),'image/jpeg',.86)};im.onerror=()=>rej(new Error('Couldn’t read that photo. Try a JPG or PNG.'));im.src=u})}
+
+/* ---- busy buttons ---- */
+async function busy(btn,fn,label='Saving…'){if(btn){if(btn.disabled)return;btn.disabled=true;btn.dataset.t=btn.textContent;btn.textContent=label}
+ try{return await fn()}catch(e){toast(e.message||'Something went wrong');throw e}finally{if(btn&&btn.isConnected){btn.disabled=false;btn.textContent=btn.dataset.t}}}
+
+/* ---- routing ---- */
+Object.assign(VIEWS,{find:vFindLive,request:vRequest,join:vJoin2,signup:vSignup,login:vLogin,forgot:vForgot,newpw:vNewPw,checkemail:vCheckEmail,account:vAccount2,admin:vAdmin2,verify:vAccount2});
+const _pioneers=VIEWS.pioneers;VIEWS.pioneers=()=>_pioneers().replace(/<form class="panel stack" id="pioneerForm"[\s\S]*?<\/form><p class="small muted"[^>]*>[\s\S]*?<\/p>/,`<div class="panel stack" style="gap:14px"><h3>Create your Pioneer account</h3><p class="muted">Sign up, build your profile with your photo, subjects and rates, then we check your ID, enhanced DBS and certificates. Approved profiles go live straight away.</p><button class="btn blue" data-sb="signup" data-v="tutor" style="align-self:flex-start">Create my Pioneer account</button><p class="small muted">Already started? <button type="button" class="btn ghost sm" data-go="login" style="padding:0;min-height:0">Log in</button></p></div>`);
+render=function(){clearInterval(POLL);POLL=null;
+ let html;if(current.startsWith('pt-'))html=vTutorLive(current.slice(3));else if(current.startsWith('preq-'))html=vRequestTutor(current.slice(5));else if(current.startsWith('thread-'))html=vThread(current.slice(7));else html=(VIEWS[current]||vHome)();
+ $('#view').innerHTML=html;
+ const navKey=current.startsWith('pt-')||current.startsWith('preq-')?'find':current;
+ $$('nav.main [data-go]').forEach(b=>b.setAttribute('aria-current',b.dataset.go===navKey?'page':'false'));
+ const lb=$('#loginBtn');if(lb){lb.textContent='Log in';lb.dataset.go='login';lb.hidden=!!SESSION}
+ const jb=$('#joinBtn');if(jb){jb.hidden=false;jb.innerHTML=SESSION?'My account':'Join<span class="jl"> NeuroScholarly</span>';jb.dataset.go=SESSION?'account':'join'}
+ if(current.startsWith('thread-')&&LOAD['thread:'+current.slice(7)]==='ok'){const box=$('#sb_msgs');if(box)box.scrollTop=box.scrollHeight;const id=current.slice(7);
+  POLL=setInterval(async()=>{if(current!=='thread-'+id||document.hidden)return;if($('#ms_body')?.value)return;try{const n=THREAD.msgs.length;await loadThread(id);if(THREAD.msgs.length!==n&&current==='thread-'+id)render()}catch(e){}},20000)}};
+
+/* ---- events ---- */
+document.addEventListener('click',e=>{if(!e.target.closest('#burger'))return;setTimeout(()=>{const nav=$('.drawer nav');if(!nav||nav.querySelector('[data-acct-item]'))return;const add=(go,label)=>{const b=document.createElement('button');b.className='item';b.dataset.go=go;b.dataset.acctItem='1';b.textContent=label;nav.appendChild(b)};
+ if(SESSION){add('account','My account');if(ME?.isAdmin)add('admin','Admin')}else add('login','Log in')},0)});
+document.addEventListener('click',async e=>{const t=e.target.closest('button,[data-sb]');if(!t)return;const d=t.dataset;
+ const stop=()=>{e.preventDefault();e.stopImmediatePropagation()};
+ if(d.pt){stop();go('pt-'+d.pt);return}
+ if(d.preq){stop();go('preq-'+d.preq);return}
+ if(d.thread){stop();LOAD['thread:'+d.thread]=null;go('thread-'+d.thread);return}
+ if(d.acc){stop();ACC_TAB=d.acc;EDIT_LEARNER=null;render();return}
+ if(d.adm){stop();ADM_TAB=d.adm;render();return}
+ if(d.go==='login'||d.go==='account'){if(t.closest('.drawer'))t.closest('.drawer').remove()}
+ if(!d.sb)return;stop();const a=d.sb,id=d.id;
+ try{switch(a){
+  case'role':SIGNUP_ROLE=d.v;render();break;
+  case'signup':SIGNUP_ROLE=d.v||'family';if(SESSION){go('account');break}go('signup');break;
+  case'retry':LOAD[d.v]=null;if(d.v==='admin')ADMIN=null;render();break;
+  case'clearf':TF={q:'',subject:'',spec:'',mode:''};render();break;
+  case'logout':{const tok=SESSION?.access_token;resetAccount();if(tok)fetch(SB.url+'/auth/v1/logout',{method:'POST',headers:{apikey:SB.key,Authorization:'Bearer '+tok}}).catch(()=>{});go('home');toast('You’re logged out');break}
+  case'resend':{const em=ss.get('ns_pending_email');if(!em){go('login');break}await busy(t,()=>sb('/auth/v1/resend',{method:'POST',body:{type:'signup',email:em},anon:true}),'Sending…');toast('Link sent again');break}
+  case'accept':case'decline':await busy(t,()=>rpc('respond_request',{req:id,accept:a==='accept'}));await refreshMe();render();toast(a==='accept'?'Accepted. Send a message to arrange the first session.':'Request declined');break;
+  case'cancelreq':if(!confirmInline(t,'Tap again to cancel'))break;await busy(t,()=>rpc('cancel_request',{req:id}));await refreshMe();render();toast('Request cancelled');break;
+  case'add-learner':EDIT_LEARNER='';render();break;
+  case'edit-learner':EDIT_LEARNER=id;render();break;
+  case'cancel-learner':EDIT_LEARNER=null;render();break;
+  case'del-learner':if(!confirmInline(t,'Tap again to remove'))break;await busy(t,()=>sb(`/rest/v1/learners?id=eq.${id}`,{method:'DELETE'}),'Removing…');await refreshMe();render();toast('Learner removed');break;
+  case'approve':case'hide':case'pending':await busy(t,()=>rpc('admin_set_status',{tutor_id:id,new_status:a==='approve'?'approved':a==='hide'?'hidden':'pending'}));LOAD.admin=null;TUTORS=null;LOAD.tutors=null;render();toast(a==='approve'?'Approved. The profile is now live.':a==='hide'?'Profile hidden':'Moved to pending');break;
+  case'checks':{const art=t.closest('article'),g=k=>art.querySelector(`[data-ck="${k}"]`).checked;await busy(t,()=>rpc('admin_set_checks',{tutor_id:id,id_ok:g('id'),dbs_ok:g('dbs'),certs_ok:g('certs')}));LOAD.admin=null;TUTORS=null;LOAD.tutors=null;render();toast('Checks saved');break}
+  case'delacct':if(!confirmInline(t,'Tap again to confirm deletion request'))break;await busy(t,async()=>{const r=await fetch(FORMSPREE,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify({_subject:'Account deletion request: '+ME.email,Type:'Account deletion request',Email:ME.email,Account:ME.role,UserID:ME.uid})});if(!r.ok)throw new Error('Couldn’t send. Please email '+CONTACT)},'Sending…');toast('Request sent. We’ll confirm by email within 30 days.');break;
+  case'concern':PRE_REASON='Safeguarding concern'+(id?' (request '+id.slice(0,8)+')':'');go('contact');setTimeout(()=>{const m=$('#c_msg');if(m)m.value=PRE_REASON+': ';const o=$('#c_org');if(o)o.value='Safeguarding concern'},0);break;
+ }}catch(err){}
+},true);
+function confirmInline(btn,msg){if(btn.dataset.armed){delete btn.dataset.armed;return true}btn.dataset.armed='1';const old=btn.textContent;btn.textContent=msg;setTimeout(()=>{if(btn.isConnected&&btn.dataset.armed){delete btn.dataset.armed;btn.textContent=old}},4000);return false}
+document.addEventListener('input',e=>{const t=e.target;
+ if(t.id==='tf_q'){TF.q=t.value;const box=$('#sb_results');if(box){const l=TUTORS.filter(tutorMatches);box.innerHTML=l.length?l.map(liveCard).join(''):`<div class="panel stack"><h3>No tutors match yet</h3><p class="muted">Try another search, or <button type="button" class="btn ghost sm" data-go="request" style="padding:0;min-height:0">tell us what you need</button>.</p></div>`}return}
+ if(t.id==='tp_bio'){const c=$('#tp_bioc');if(c)c.textContent=t.value.length+'/1200'}},true);
+document.addEventListener('change',async e=>{const t=e.target;
+ if(['tf_subject','tf_spec','tf_mode'].includes(t.id)){TF[t.id.slice(3)]=t.value;render();return}
+ if(t.id==='tp_type'){const g=$('#tp_guide');if(g)g.textContent=t.value?'Typical for '+PTYPES[t.value]+'s: '+PGUIDE[t.value]+' (guide only)':''}
+ if(t.id==='tp_mode'){$('#tp_areaw').hidden=t.value==='online'}
+ if(t.id==='rq_learner'){$('#rq_new').hidden=t.value!=='new'}
+ if(t.id==='tp_photo'&&t.files[0]){try{NEWPHOTO=await resizePhoto(t.files[0]);const img=t.closest('form').querySelector('.sb-photo-row .ph');if(img){const n=document.createElement('img');n.className='ph sb-big';n.src=NEWPHOTO.url;n.alt='Your new profile photo';img.replaceWith(n)}toast('Photo ready. Tap Save to upload it.')}catch(err){toast(err.message)}}},true);
+
+/* ---- forms ---- */
+document.addEventListener('submit',async e=>{const f=e.target;if(!f.id||!f.id.startsWith('sb_'))return;e.preventDefault();e.stopImmediatePropagation();const btn=f.querySelector('button[type=submit]');
+ try{switch(f.id){
+ case'sb_login':{const em=fv(f,'sl_email'),pw=$('#sl_pw').value;if(!emailOK(em)||!pw){toast('Enter your email and password');return}
+  const s=await busy(btn,()=>sb('/auth/v1/token?grant_type=password',{method:'POST',body:{email:em,password:pw},anon:true}),'Logging in…');setSession(s);LOAD={};ME=null;const nx=ss.get('ns_after_login');ss.set('ns_after_login',null);go(nx||'account');toast('Welcome back');break}
+ case'sb_signup':{const name=fv(f,'su_name'),em=fv(f,'su_email'),pw=$('#su_pw').value;
+  if(name.length<2){toast('Please add your full name');return}if(!emailOK(em)){toast('Please enter a valid email');return}
+  if(pw.length<8||!/[A-Za-z]/.test(pw)||!/\d/.test(pw)){toast('Password: at least 8 characters, with letters and numbers');return}
+  if(!$('#su_age').checked||!$('#su_terms').checked){toast('Please tick both boxes to continue');return}
+  const r=await busy(btn,()=>sb('/auth/v1/signup?redirect_to='+encodeURIComponent(SITE_URL),{method:'POST',body:{email:em,password:pw,data:{role:SIGNUP_ROLE,name}},anon:true}),'Creating…');
+  if(SIGNUP_ROLE==='tutor')notify('New Pioneer sign-up: '+name,{Type:'New Pioneer account',Name:name,Email:em});
+  if(r&&r.access_token){setSession(r);LOAD={};go('account');toast('Welcome to NeuroScholarly')}else{ss.set('ns_pending_email',em);go('checkemail')}break}
+ case'sb_forgot':{const em=fv(f,'sf_email');if(!emailOK(em)){toast('Please enter a valid email');return}await busy(btn,()=>sb('/auth/v1/recover?redirect_to='+encodeURIComponent(SITE_URL),{method:'POST',body:{email:em},anon:true}),'Sending…');f.innerHTML=okBox('Check your email',`If there’s an account for <b>${esc(em)}</b>, we’ve sent a link to reset your password.`);break}
+ case'sb_newpw':case'sb_chpw':{const p1=f.querySelector('input').value,p2=f.id==='sb_newpw'?$('#np_2').value:p1;if(p1.length<8||!/[A-Za-z]/.test(p1)||!/\d/.test(p1)){toast('Password: at least 8 characters, with letters and numbers');return}if(p1!==p2){toast('The passwords don’t match');return}
+  await busy(btn,()=>sb('/auth/v1/user',{method:'PUT',body:{password:p1}}));toast('Password updated');if(f.id==='sb_newpw')go('account');else f.reset();break}
+ case'sb_tprof':{const name=fv(f,'tp_name'),type=fv(f,'tp_type'),subs=[...vals(f,'tp_subj'),...fv(f,'tp_other').split(',').map(s=>s.trim()).filter(Boolean)].slice(0,30),lv=vals(f,'tp_lvl'),rate=+fv(f,'tp_rate'),mode=fv(f,'tp_mode'),area=fv(f,'tp_area'),trial=f.querySelector('input[name=tp_trial]:checked').value,bio=$('#tp_bio').value.trim();
+  if(name.length<2){toast('Add the name families will see');return}if(!type){toast('Choose your Pioneer type');return}if(!subs.length){toast('Choose at least one subject');return}if(!lv.length){toast('Choose at least one age or level');return}
+  if(!(rate>=5&&rate<=250)){toast('Add your hourly rate (£5–£250)');return}if(mode!=='online'&&!area){toast('Add your town or area for in-person lessons');return}if(bio.length<40){toast('Tell families a little more about you (at least a couple of sentences)');return}
+  if(CONTACT_RE.test(bio)){toast('Please remove phone numbers, emails and social media from “About you”');return}
+  if(!NEWPHOTO&&!ME.tutor?.photo_url){toast('Please add a profile photo');return}
+  await busy(btn,async()=>{let photo=ME.tutor?.photo_url||null;
+   if(NEWPHOTO){const path=`${ME.uid}/${Date.now()}.jpg`;await sb('/storage/v1/object/tutor-photos/'+path,{method:'POST',body:NEWPHOTO.blob,headers:{'Content-Type':'image/jpeg','x-upsert':'false','cache-control':'max-age=31536000'}});
+    const old=ME.tutor?.photo_url;photo=SB.url+'/storage/v1/object/public/tutor-photos/'+path;
+    if(old&&old.includes('/tutor-photos/')){sb('/storage/v1/object/tutor-photos/'+old.split('/tutor-photos/')[1],{method:'DELETE'}).catch(()=>{})}}
+   const row={display_name:name,pioneer_type:type,subjects:subs,levels:lv,specialisms:vals(f,'tp_spec'),bio,hourly_rate:rate,trial_type:trial,taster_price:trial==='taster'?+$('#tp_taster').value:null,lesson_mode:mode,area:mode==='online'?null:area,photo_url:photo};
+   if(ME.tutor)await sb(`/rest/v1/tutors?id=eq.${ME.uid}`,{method:'PATCH',body:row,prefer:'return=minimal'});
+   else{await sb('/rest/v1/tutors',{method:'POST',body:{id:ME.uid,...row},prefer:'return=minimal'});notify('Pioneer profile ready for approval: '+name,{Type:'Profile awaiting approval',Name:name,PioneerType:PTYPES[type],Email:ME.email})}
+   const wasLive=ME.tutor?.status==='approved';NEWPHOTO=null;await refreshMe();
+   if(wasLive&&ME.tutor.status==='pending')notify('Pioneer profile changed, needs re-check: '+name,{Type:'Profile re-check',Name:name,Email:ME.email});
+   TUTORS=null;LOAD.tutors=null;ACC_TAB=ME.priv?'profile':'private';render();scrollTo(0,0);toast(ME.priv?'Profile saved':'Profile saved. Now add your private details.')});break}
+ case'sb_tpriv':{const row={id:ME.uid,full_name:fv(f,'pv_name'),email:ME.email,phone:fv(f,'pv_phone'),postcode:fv(f,'pv_post').toUpperCase(),date_of_birth:fv(f,'pv_dob')||null,updated_at:new Date().toISOString()};
+  if(!row.full_name||!row.phone){toast('Add your full name and phone');return}
+  await busy(btn,()=>sb('/rest/v1/tutor_private',{method:'POST',body:row,prefer:'resolution=merge-duplicates,return=minimal'}));await refreshMe();render();toast('Private details saved');break}
+ case'sb_fam':{const row={full_name:fv(f,'fd_name'),area:fv(f,'fd_area')||null,phone:fv(f,'fd_phone')||null,updated_at:new Date().toISOString()};if(row.full_name.length<2){toast('Add your full name');return}
+  await busy(btn,()=>sb(`/rest/v1/families?id=eq.${ME.uid}`,{method:'PATCH',body:row,prefer:'return=minimal'}));await refreshMe();render();toast('Details saved');break}
+ case'sb_learner':{const lid=f.dataset.id,age=+fv(f,'ln_age');const row={first_name:fv(f,'ln_name'),age:age||null,school_year:fv(f,'ln_year')||null,subjects:vals(f,'ln_subj'),needs:vals(f,'ln_needs'),needs_notes:$('#ln_notes').value.trim()||null,share_needs:$('#ln_share').checked};
+  if(!row.first_name){toast('Add the learner’s first name');return}if(age&&(age<4||age>25)){toast('NeuroScholarly supports ages 4–25');return}
+  await busy(btn,()=>lid?sb(`/rest/v1/learners?id=eq.${lid}`,{method:'PATCH',body:row,prefer:'return=minimal'}):sb('/rest/v1/learners',{method:'POST',body:{family_id:ME.uid,...row},prefer:'return=minimal'}));
+  EDIT_LEARNER=null;await refreshMe();render();toast(lid?'Saved':'Learner added');break}
+ case'sb_req':{const tid=f.dataset.tutor,t=findTutor(tid);let lid=$('#rq_learner').value;const subj=fv(f,'rq_subject'),msg=$('#rq_msg').value.trim();
+  if(lid==='new'){const n=fv(f,'rq_lname'),a=+fv(f,'rq_lage');if(!n){toast('Add the learner’s first name');return}if(a&&(a<4||a>25)){toast('NeuroScholarly supports ages 4–25');return}}
+  if(!subj){toast('Choose a subject');return}if(CONTACT_RE.test(msg)){toast('Please remove phone numbers, emails and social media. You can message safely once you’ve sent the request.');return}
+  if(!$('#rq_safe').checked){toast('Please tick the safeguarding box');return}
+  await busy(btn,async()=>{if(lid==='new'){const rows=await sb('/rest/v1/learners',{method:'POST',body:{family_id:ME.uid,first_name:fv(f,'rq_lname'),age:+fv(f,'rq_lage')||null,subjects:[subj]},prefer:'return=representation'});lid=rows[0].id}
+   await sb('/rest/v1/requests',{method:'POST',body:{learner_id:lid,tutor_id:tid,subject:subj,trial_type:$('#rq_trial').value,message:msg||null},prefer:'return=minimal'});
+   notify('New tutor request: '+(t?.display_name||'')+' – '+subj,{Type:'Tutor request (account)',Tutor:t?.display_name,Subject:subj,Family:ME.family.full_name,Email:ME.email});
+   await refreshMe();ACC_TAB='requests';go('account');toast('Request sent to '+firstName(t?.display_name)+'. We’ll let them know.')},'Sending…');break}
+ case'sb_send':{const ta=$('#ms_body'),body=ta.value.trim(),id=current.slice(7);if(!body)return;if(CONTACT_RE.test(body)){toast('For everyone’s safety, please don’t share phone numbers, emails or social media. Keep messages on NeuroScholarly.');return}
+  await busy(btn,()=>sb('/rest/v1/messages',{method:'POST',body:{request_id:id,body},prefer:'return=minimal'}),'Sending…');ta.value='';await loadThread(id);render();break}
+ }}catch(err){}
+},true);
+
+/* ---- returning from email links (confirm / reset) ---- */
+async function bootAuth(){const raw=(location.hash||'').slice(1);
+ if(/(^|&)(access_token|error_description)=/.test(raw)){const q=new URLSearchParams(raw);try{history.replaceState(null,'',location.pathname)}catch(e){}
+  if(q.get('error_description')){current='login';render();toast(/expired|invalid/i.test(q.get('error_description'))?'That link has expired. Please log in, or ask for a new link.':q.get('error_description').replace(/\+/g,' '));return true}
+  setSession({access_token:q.get('access_token'),refresh_token:q.get('refresh_token'),expires_in:q.get('expires_in'),expires_at:q.get('expires_at')});
+  try{SESSION.user=await sb('/auth/v1/user');ss.set('ns_session',SESSION);USER={role:SESSION.user.user_metadata?.role||'family'}}catch(e){resetAccount();current='login';render();toast(e.message);return true}
+  const type=q.get('type');if(type==='recovery'){current='newpw';render();return true}
+  const nx=ss.get('ns_after_login');ss.set('ns_after_login',null);current=nx||'account';render();toast('Email confirmed. Welcome to NeuroScholarly!');return true}
+ return false}
+addEventListener('hashchange',()=>{if(/(^|&)(access_token|error_description)=/.test((location.hash||'').slice(1)))bootAuth()});
+SESSION=ss.get('ns_session');if(SESSION?.access_token)USER={role:SESSION.user?.user_metadata?.role||'family'};else SESSION=null;
+
 /* boot */
-const h=(location.hash||'').slice(1);current=VIEWS[h]?h:'home';render();
+(async()=>{if(await bootAuth())return;const h=(location.hash||'').slice(1);current=(VIEWS[h]||/^(pt|preq|thread)-/.test(h))?h:'home';render()})();
 </script>
 
 </body>
