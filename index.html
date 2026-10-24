@@ -783,7 +783,7 @@ const howSteps=`<div class="steps4">
  <div class="step"><span class="n">1</span><h3>Search</h3><p class="muted">Find tutors by subject, level, learning approach and specialist experience.</p></div>
  <div class="step"><span class="n">2</span><h3>Try</h3><p class="muted">Book a free 20-minute trial or a £2.50–£7.50 introductory taster, depending on the tutor.</p></div>
  <div class="step"><span class="n">3</span><h3>Choose</h3><p class="muted">If it feels like the right match, book your learning sessions.</p></div>
- <div class="step"><span class="n">4</span><h3>Learn</h3><p class="muted">Learn online on Zoom or in person, with a parent or carer present for under-18s.</p></div></div>`;
+ <div class="step"><span class="n">4</span><h3>Learn</h3><p class="muted">Learn online by video call (Teams, Google Meet or Zoom) or in person, with a parent or carer present for under-18s.</p></div></div>`;
 function tutorCard(t){const s=SAVED.has(t.id);return`<article class="tcard ${t.spec.length?'is-spec':''}">
  <button style="border:0;padding:0;background:none;cursor:pointer;border-radius:16px" data-tutor="${t.id}" aria-label="View ${esc(t.name)}'s profile">${photo(t)}</button>
  <div class="mid"><div class="row" style="gap:8px"><h3 style="font-size:1.3rem">${esc(t.name)}</h3><span class="badge blue">${t.type}</span></div>${specBadge(t)?`<div>${specBadge(t)}</div>`:''}
@@ -1671,7 +1671,7 @@ function tutorPrivateForm(){const p=ME.priv||{};return`<form class="panel stack"
  <label class="f">Full legal name<input type="text" id="pv_name" autocomplete="name" value="${esc(p.full_name||ME.name)}"></label>
  <div class="sb-grid2"><label class="f">Phone<input type="tel" id="pv_phone" autocomplete="tel" value="${esc(p.phone||'')}"></label><label class="f">Postcode<input type="text" id="pv_post" autocomplete="postal-code" value="${esc(p.postcode||'')}"></label></div>
  <label class="f">Date of birth<input type="date" id="pv_dob" value="${esc(p.date_of_birth||'')}"></label>
- <label class="f">Zoom meeting link <span class="hint">For online lessons. Use your personal meeting link, e.g. https://us05web.zoom.us/j/1234567890. Families only see it once a session is confirmed.</span><input type="url" id="pv_zoom" value="${esc(p.zoom_link||'')}" placeholder="https://zoom.us/j/…"></label>
+ <label class="f">Online lesson link <span class="hint">Your Microsoft Teams, Google Meet or Zoom meeting link, e.g. https://teams.live.com/meet/… or https://meet.google.com/abc-defg-hij. Free Teams and Google Meet allow full 60-minute one-to-one lessons. Families only see it once a session is confirmed.</span><input type="url" id="pv_zoom" value="${esc(p.zoom_link||'')}" placeholder="https://meet.google.com/…"></label>
  <button class="btn blue" type="submit" style="align-self:flex-start">Save private details</button></form>`}
 function familyAccount(){const f=ME.family,reqs=ME.requests.filter(r=>r.as==='family');
  if(!ACC_TAB)ACC_TAB=ME.learners.length?'requests':'learners';
@@ -1750,6 +1750,7 @@ async function busy(btn,fn,label='Saving…'){if(btn){if(btn.disabled)return;btn
  try{return await fn()}catch(e){toast(e.message||'Something went wrong');throw e}finally{if(btn&&btn.isConnected){btn.disabled=false;btn.textContent=btn.dataset.t}}}
 
 /* ---- sessions & booking ---- */
+const VIDEO_RE=/^https:\/\/(([a-z0-9-]+\.)*zoom\.us|meet\.google\.com|teams\.microsoft\.com|teams\.live\.com)\//i;
 const DAYN=['','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 const SKIND={trial:'Free 20-minute trial',taster:'30-minute taster',lesson:'60-minute lesson'};
 const SMINS={trial:20,taster:30,lesson:60};
@@ -1765,7 +1766,7 @@ const hhmm=t=>String(t).slice(0,5);
 const TIMES=(()=>{const a=[];for(let h=6;h<=22;h++)for(const m of[0,30])a.push(String(h).padStart(2,'0')+':'+(m?'30':'00'));return a})();
 function sessStatus(s){if(s.status==='confirmed'&&new Date(s.starts_at)<new Date())return`<span class="badge sb-st grey">Completed</span>`;const [l,c]=SSTAT[s.status]||[s.status,'grey'];return`<span class="badge sb-st ${c}">${l}</span>`}
 function icsFor(s){const st=new Date(s.starts_at),en=new Date(st.getTime()+s.minutes*60000),f=d=>d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
- const title=`NeuroScholarly: ${s.subject} – ${s.as==='tutor'?s.learner||s.family:s.tutor}`,desc=`${SKIND[s.kind]} (${s.mode==='online'?'online':'in person'}).${s.zoom_link?' Join on Zoom: '+s.zoom_link:''} A parent or carer must be present for learners under 18. Manage at https://neuroscholarly.com/#account`;
+ const title=`NeuroScholarly: ${s.subject} – ${s.as==='tutor'?s.learner||s.family:s.tutor}`,desc=`${SKIND[s.kind]} (${s.mode==='online'?'online':'in person'}).${s.zoom_link?' Join the lesson: '+s.zoom_link:''} A parent or carer must be present for learners under 18. Manage at https://neuroscholarly.com/#account`;
  return{title,desc,start:f(st),end:f(en),loc:s.mode==='online'?(s.zoom_link||'Online'):(s.area||'In person')}}
 function gcalLink(s){const i=icsFor(s);return'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(i.title)+'&dates='+i.start+'/'+i.end+'&details='+encodeURIComponent(i.desc)+'&location='+encodeURIComponent(i.loc)}
 function downloadIcs(s){const i=icsFor(s),e=t=>t.replace(/([,;\\])/g,'\\$1');
@@ -1773,7 +1774,7 @@ function downloadIcs(s){const i=icsFor(s),e=t=>t.replace(/([,;\\])/g,'\\$1');
 function sessCard(s){const up=new Date(s.starts_at)>new Date(),who=s.as==='tutor'?`${esc(s.learner||'Learner')} · parent ${esc(s.family)}`:esc(s.tutor);
  return`<article class="panel stack sb-sess ${s.status}" style="gap:8px;max-width:none"><div class="row between"><div><b class="sb-when">${fmtWhen(s.starts_at)}</b><div class="small muted">${SKIND[s.kind]} · ${s.mode==='online'?'Online':'In person'+(s.area?' · '+esc(s.area):'')} · ${esc(s.subject)}</div><div class="small">${who}</div></div>${sessStatus(s)}</div>
  ${s.note?`<p class="small sb-quote">“${esc(s.note)}”</p>`:''}
- ${s.status==='confirmed'&&up&&s.mode==='online'?(s.zoom_link?`<a class="btn sm blue" href="${esc(s.zoom_link)}" target="_blank" rel="noopener" style="align-self:flex-start">Join on Zoom</a>`:`<p class="small muted">${s.as==='tutor'?'Add your Zoom link in Private details so the family can join.':'The tutor will add a Zoom link before the session.'}</p>`):''}
+ ${s.status==='confirmed'&&up&&s.mode==='online'?(s.zoom_link?`<a class="btn sm blue" href="${esc(s.zoom_link)}" target="_blank" rel="noopener" style="align-self:flex-start">Join lesson</a>`:`<p class="small muted">${s.as==='tutor'?'Add your online lesson link (Teams, Google Meet or Zoom) in Private details so the family can join.':'The tutor will add the online lesson link before the session.'}</p>`):''}
  ${s.status==='confirmed'&&up&&s.mode==='online'&&s.as==='family'?'<p class="small muted">A parent or carer must be present for learners under 18.</p>':''}
  <div class="row">${s.as==='tutor'&&s.status==='pending'?`<button class="btn sm blue" data-sb="sess-confirm" data-id="${s.id}">Confirm</button><button class="btn sm" data-sb="sess-decline" data-id="${s.id}">Can’t do this time</button>`:''}
   ${s.status==='confirmed'&&up?`<button class="btn sm" data-sb="ics" data-id="${s.id}">Add to calendar</button><a class="btn sm ghost" href="${gcalLink(s)}" target="_blank" rel="noopener">Google Calendar</a>`:''}
@@ -1790,7 +1791,7 @@ function availEditor(){const A=(ME.avail||[]).slice().sort((a,b)=>a.weekday-b.we
   <label class="f">To<select id="av_to">${TIMES.map(t=>`<option ${t==='18:00'?'selected':''}>${t}</option>`).join('')}</select></label>
   <button class="btn sm blue" type="submit">Add</button></form></div>`}
 function tutorSessionsTab(){const t=ME.tutor;return`<div class="stack" style="gap:14px;max-width:none">
- ${t&&t.lesson_mode!=='in_person'&&!ME.priv?.zoom_link?`<div class="sb-msg">For online lessons, add your <b>Zoom meeting link</b> in <button class="btn ghost sm" data-acc="private" style="padding:0;min-height:0">Private details</button>. Families see it once a session is confirmed.</div>`:''}
+ ${t&&t.lesson_mode!=='in_person'&&!ME.priv?.zoom_link?`<div class="sb-msg">For online lessons, add your <b>Teams, Google Meet or Zoom link</b> in <button class="btn ghost sm" data-acc="private" style="padding:0;min-height:0">Private details</button>. Families see it once a session is confirmed.</div>`:''}
  ${sessionsList()}${t?availEditor():''}</div>`}
 async function loadBook(id){const r=(ME.requests||[]).find(x=>x.id===id&&x.as==='family');if(!r)throw new Error('Request not found');
  const [t,av,busyT]=await Promise.all([sb(`/rest/v1/tutors?id=eq.${r.tutor.id}&select=*`,{anon:true}),sb(`/rest/v1/tutor_availability?tutor_id=eq.${r.tutor.id}&select=*`,{anon:true}),rpc('tutor_busy',{tutor:r.tutor.id})]);
@@ -1813,7 +1814,7 @@ function vBook(id){if(!SESSION)return needLogin();if(need('me',loadMe)!=='ok')re
  if(!BOOK.avail.length)return top+`<div class="panel stack" style="gap:10px;max-width:none"><h3>${esc(firstName(t.display_name))} hasn’t added available times yet</h3><p class="muted">Send a message to suggest some times, and we’ll remind them to add their availability.</p><button class="btn blue" data-thread="${r.id}" style="align-self:flex-start">Send a message</button></div></div>`;
  return top+`<form class="panel stack" id="sb_book" data-req="${r.id}" style="gap:16px;max-width:none" novalidate>
  <div class="stack" style="gap:8px;max-width:none"><b>1. Type of session</b><div class="sb-opts">${kinds.map(k=>`<button type="button" class="sb-opt" aria-pressed="${BK.kind===k}" data-sb="bk" data-f="kind" data-v="${k}"><b>${SKIND[k]}</b><span>${price(k)}</span></button>`).join('')}</div></div>
- ${modes.length>1?`<div class="stack" style="gap:8px;max-width:none"><b>2. Online or in person?</b><div class="sb-opts">${modes.map(m=>`<button type="button" class="sb-opt" aria-pressed="${BK.mode===m}" data-sb="bk" data-f="mode" data-v="${m}"><b>${m==='online'?'Online (Zoom)':'In person'}</b>${m==='in_person'&&t.area?`<span>${esc(t.area)}</span>`:''}</button>`).join('')}</div></div>`:''}
+ ${modes.length>1?`<div class="stack" style="gap:8px;max-width:none"><b>2. Online or in person?</b><div class="sb-opts">${modes.map(m=>`<button type="button" class="sb-opt" aria-pressed="${BK.mode===m}" data-sb="bk" data-f="mode" data-v="${m}"><b>${m==='online'?'Online (video call)':'In person'}</b>${m==='in_person'&&t.area?`<span>${esc(t.area)}</span>`:''}</button>`).join('')}</div></div>`:''}
  <div class="stack" style="gap:8px;max-width:none"><b>${modes.length>1?3:2}. Choose a day</b>${days.length?`<div class="sb-days">${days.map(k=>{const d=slots[k][0];return`<button type="button" class="sb-day" aria-pressed="${BK.day===k}" data-sb="bk" data-f="day" data-v="${k}"><span>${d.toLocaleDateString('en-GB',{timeZone:TZ,weekday:'short'})}</span><b>${d.toLocaleDateString('en-GB',{timeZone:TZ,day:'numeric'})}</b><span>${d.toLocaleDateString('en-GB',{timeZone:TZ,month:'short'})}</span></button>`}).join('')}</div>`:`<p class="sb-msg" style="margin:0">No free times in the next 3 weeks for this session length. Try another type, or <button type="button" class="btn ghost sm" data-thread="${r.id}" style="padding:0;min-height:0">message ${esc(firstName(t.display_name))}</button>.</p>`}</div>
  ${BK.day?`<div class="stack" style="gap:8px;max-width:none"><b>${modes.length>1?4:3}. Choose a time <span class="hint">(UK time)</span></b><div class="sb-times">${slots[BK.day].map(d=>`<button type="button" class="sb-time" aria-pressed="${BK.slot===d.toISOString()}" data-sb="bk" data-f="slot" data-v="${d.toISOString()}">${fmtTime(d)}</button>`).join('')}</div></div>`:''}
  <label class="f">Anything the tutor should know? <span class="hint">Optional. Please don’t include phone numbers or emails.</span><textarea id="bk_note" maxlength="500" rows="2"></textarea></label>
@@ -1924,7 +1925,7 @@ document.addEventListener('submit',async e=>{const f=e.target;if(!f.id||!f.id.st
    TUTORS=null;LOAD.tutors=null;ACC_TAB=ME.priv?'profile':'private';render();scrollTo(0,0);toast(ME.priv?'Profile saved':'Profile saved. Now add your private details.')});break}
  case'sb_tpriv':{const row={id:ME.uid,full_name:fv(f,'pv_name'),email:ME.email,phone:fv(f,'pv_phone'),postcode:fv(f,'pv_post').toUpperCase(),date_of_birth:fv(f,'pv_dob')||null,zoom_link:fv(f,'pv_zoom')||null,updated_at:new Date().toISOString()};
   if(!row.full_name||!row.phone){toast('Add your full name and phone');return}
-  if(row.zoom_link&&!/^https:\/\/([a-z0-9-]+\.)*zoom\.us\//i.test(row.zoom_link)){toast('That doesn’t look like a Zoom link. It should start https:// and include zoom.us');return}
+  if(row.zoom_link&&!VIDEO_RE.test(row.zoom_link)){toast('Please paste a Microsoft Teams, Google Meet or Zoom meeting link starting https://');return}
   await busy(btn,()=>sb('/rest/v1/tutor_private',{method:'POST',body:row,prefer:'resolution=merge-duplicates,return=minimal'}));await refreshMe();render();toast('Private details saved');break}
  case'sb_fam':{const row={full_name:fv(f,'fd_name'),area:fv(f,'fd_area')||null,phone:fv(f,'fd_phone')||null,updated_at:new Date().toISOString()};if(row.full_name.length<2){toast('Add your full name');return}
   await busy(btn,()=>sb(`/rest/v1/families?id=eq.${ME.uid}`,{method:'PATCH',body:row,prefer:'return=minimal'}));await refreshMe();render();toast('Details saved');break}
