@@ -608,6 +608,12 @@ h1{letter-spacing:-.03em}
 .sb-time[aria-pressed="true"]{background:var(--yellow);border-color:var(--yellow-deep)}
 .sb-opt:focus-visible,.sb-day:focus-visible,.sb-time:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
 #view .btn[disabled]{opacity:.5;cursor:not-allowed}
+.sb-refs{background:var(--soft);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.sb-refrow{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.sb-refrow summary{cursor:pointer;color:var(--blue);font-weight:600;margin-top:6px}
+.sb-refans{margin-top:8px;display:flex;flex-direction:column;gap:6px;font-size:.92rem}.sb-refans p{margin:0}
+.sb-refans.warn{border-left:4px solid var(--c-red);padding-left:10px}
+.sb-refwarn{color:#9B1C2B}.sb-red{color:#9B1C2B;font-weight:700}
 
 </style>
 <style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
@@ -1484,7 +1490,7 @@ async function loadMe(){if(!SESSION){ME=null;return}
  if(role==='tutor'&&m.tutor)m.avail=await sb(`/rest/v1/tutor_availability?tutor_id=eq.${uid}&select=*`).catch(()=>[])||[];
  USER={role};ME=m}
 async function refreshMe(){LOAD.me=null;await loadMe();LOAD.me='ok'}
-async function loadAdmin(){const [o,s]=await Promise.all([rpc('admin_overview'),rpc('admin_sessions').catch(()=>[])]);ADMIN=o;ADMIN.sessions=s||[]}
+async function loadAdmin(){const [o,s,r]=await Promise.all([rpc('admin_overview'),rpc('admin_sessions').catch(()=>[]),rpc('admin_references').catch(()=>[])]);ADMIN=o;ADMIN.sessions=s||[];ADMIN.refs=r||[]}
 
 /* ---- small UI helpers ---- */
 const chk=(name,opts,sel=[],cls='')=>`<div class="sb-chips ${cls}">${opts.map(o=>`<label class="sb-chip"><input type="checkbox" name="${name}" value="${esc(o)}" ${sel.includes(o)?'checked':''}><span>${esc(o)}</span></label>`).join('')}</div>`;
@@ -1493,7 +1499,7 @@ const fv=(form,id)=>(form.querySelector('#'+id)?.value||'').trim();
 const tPhoto=(t,cls='ph')=>t.photo_url?`<img class="${cls} sb-photo" src="${esc(t.photo_url)}" alt="${esc(t.display_name)}" loading="lazy">`:`<span class="${cls} sb-initials" aria-hidden="true">${esc(firstName(t.display_name).slice(0,1).toUpperCase()||'?')}</span>`;
 const fpBadge=`<span class="fp-badge sb-fp">${FPSTAR}Founding Pioneer</span>`;
 const trialText=t=>t.trial_type==='taster'?`${gbp2(t.taster_price||2.5)} introductory taster`:'FREE 20-minute trial';
-const checksList=t=>[t.id_verified&&'ID verified',t.dbs_verified&&'Enhanced DBS checked',t.certs_verified&&'Certificates verified'].filter(Boolean);
+const checksList=t=>[t.id_verified&&'ID verified',t.dbs_verified&&'Enhanced DBS checked',t.certs_verified&&'Certificates verified',t.refs_verified&&'References checked'].filter(Boolean);
 const statusBadge=s=>{const [l,c]=RSTAT[s]||[s,'grey'];return`<span class="badge sb-st ${c}">${l}</span>`};
 function needLogin(){return`<div class="wrap" style="padding-block:48px;max-width:560px">${loginPanel('Please log in to continue.')}</div>`}
 function accHeader(title,sub){return`<div class="sec-head" style="margin-bottom:18px"><p class="eyebrow">My account</p><h1 style="font-size:clamp(1.8rem,4vw,2.5rem)">${title}</h1>${sub?`<p class="muted">${sub}</p>`:''}</div>`}
@@ -1737,12 +1743,12 @@ function backupPanel(){const last=ss.get('ns_last_backup'),days=last?Math.floor(
 function adminTutor(t){const p=t.private||{};return`<article class="panel stack sb-adm" style="gap:10px;max-width:none">
  <div class="row between"><div class="row" style="gap:12px">${tPhoto(t,'av sb-av')}<div><b>${esc(t.display_name)}</b> <span class="badge blue">${PTYPES[t.pioneer_type]}</span>${t.founding?' '+fpBadge:''}<div class="small muted">${esc(t.login_email||'')} · joined ${when(t.created_at)}</div></div></div><span class="badge sb-st ${{approved:'ok',pending:'blue',hidden:'grey'}[t.status]}">${{approved:'Live',pending:'Pending approval',hidden:'Hidden'}[t.status]}</span></div>
  <div class="small"><b>Private:</b> ${esc(p.full_name||'–')} · ${esc(p.phone||'no phone')} · ${esc(p.postcode||'no postcode')} · DOB ${esc(p.date_of_birth||'–')}</div>
- <div class="small"><b>Referees:</b> ${(p.referees||[]).length?(p.referees||[]).map(r=>`${esc(r.name)} (${esc(r.how||'')}) <a href="mailto:${esc(r.email)}">${esc(r.email)}</a>`).join(' · '):'<span class="muted">none added yet</span>'}</div>
+ ${adminRefs(t)}
  <div class="sb-admdocs"><b class="small">Documents:</b> ${(t.documents||[]).length?(t.documents||[]).map(d=>`<span class="sb-docchip">${DOCSHORT[d.kind]}<button type="button" data-sb="viewdoc" data-path="${esc(d.path)}">View</button><button type="button" data-sb="admdeldoc" data-id="${d.id}" data-path="${esc(d.path)}" aria-label="Delete ${DOCSHORT[d.kind]}">✕</button></span>`).join(''):'<span class="small muted">none uploaded yet</span>'}</div>
  <div class="small"><b>Teaches:</b> ${t.subjects.map(esc).join(', ')||'–'} · <b>Levels:</b> ${t.levels.map(esc).join(', ')||'–'}${t.specialisms.length?' · <b>Specialist:</b> '+t.specialisms.map(esc).join(', '):''}</div>
  <div class="small"><b>Rate:</b> ${t.hourly_rate?gbp2(t.hourly_rate)+'/hr to tutor · '+gbp2(famPrice(t.hourly_rate))+'/hr family price':'–'} · ${trialText(t)} · ${MODES[t.lesson_mode]}${t.area?' · '+esc(t.area):''}</div>
  ${t.bio?`<p class="small sb-quote" style="white-space:pre-line">${esc(t.bio)}</p>`:''}
- <div class="row sb-checks"><label class="check"><input type="checkbox" data-ck="id" ${t.id_verified?'checked':''}><span>ID verified</span></label><label class="check"><input type="checkbox" data-ck="dbs" ${t.dbs_verified?'checked':''}><span>Enhanced DBS</span></label><label class="check"><input type="checkbox" data-ck="certs" ${t.certs_verified?'checked':''}><span>Certificates</span></label><button class="btn sm" data-sb="checks" data-id="${t.id}">Save checks</button></div>
+ <div class="row sb-checks"><label class="check"><input type="checkbox" data-ck="id" ${t.id_verified?'checked':''}><span>ID verified</span></label><label class="check"><input type="checkbox" data-ck="dbs" ${t.dbs_verified?'checked':''}><span>Enhanced DBS</span></label><label class="check"><input type="checkbox" data-ck="certs" ${t.certs_verified?'checked':''}><span>Certificates</span></label><label class="check"><input type="checkbox" data-ck="refs" ${t.refs_verified?'checked':''}><span>References</span></label><button class="btn sm" data-sb="checks" data-id="${t.id}">Save checks</button></div>
  <div class="row">${t.status!=='approved'?`<button class="btn sm blue" data-sb="approve" data-id="${t.id}">Approve & publish</button>`:''}${t.status!=='hidden'?`<button class="btn sm" data-sb="hide" data-id="${t.id}">Hide</button>`:''}${t.status==='hidden'?`<button class="btn sm" data-sb="pending" data-id="${t.id}">Move to pending</button>`:''}<button class="btn sm ghost" data-pt="${t.id}">Preview profile</button></div></article>`}
 
 /* ---- photo resize ---- */
@@ -1826,11 +1832,54 @@ function vBook(id){if(!SESSION)return needLogin();if(need('me',loadMe)!=='ok')re
  <button class="btn blue" type="submit" ${BK.slot?'':'disabled'}>Request this time</button>
  <p class="small muted">${esc(firstName(t.display_name))} will confirm, and you’ll get an email. A parent or carer must be present for learners under 18.</p></form></div>`}
 
+/* ---- references ---- */
+let REFFORM=null,REF_FALLBACK={};
+const refLink=tok=>'https://neuroscholarly.com/#ref-'+tok;
+function refMailto(q,tutorName){const sub=`Reference request for ${tutorName} – NeuroScholarly`;
+ const body=`Dear ${q.referee_name},\n\n${tutorName} has applied to tutor with NeuroScholarly, an online and in-person tutoring service for learners aged 4 to 25, many of whom are neurodivergent. They have given your name as a referee.\n\nBecause our tutors work with children and young people, we'd be very grateful if you could complete a short, confidential reference form. It takes about 5 minutes:\n\n${refLink(q.token)}\n\nYour reference will be kept confidential and used only for our safeguarding checks.\n\nThank you,\nNeuroScholarly\nhello@neuroscholarly.com`;
+ return`mailto:${encodeURIComponent(q.referee_email)}?subject=${encodeURIComponent(sub)}&body=${encodeURIComponent(body)}`}
+async function sendRefEmail(id){try{const r=await fetch(SB.url+'/functions/v1/notify',{method:'POST',headers:{apikey:SB.key,Authorization:'Bearer '+SESSION.access_token,'Content-Type':'application/json'},body:JSON.stringify({kind:'reference',reference_id:id})});if(!r.ok)return false;const d=await r.json().catch(()=>({}));return !!d.sent}catch(e){return false}}
+const RQ_LABEL={how:'How they know them',how_long:'Known for',role:'Referee’s role',character:'Reliability and character',suitability:'Suitability to work with children and young people',concerns:'Any reason they should not work with children or vulnerable young people?',concerns_detail:'Details',recommend:'Would they recommend them?'};
+function refAnswers(a){if(!a)return'';const bad=a.concerns==='Yes'||a.recommend==='No';
+ return`<div class="sb-refans ${bad?'warn':''}">${bad?'<p class="sb-refwarn"><b>⚠ Concern raised. Read carefully before approving.</b></p>':''}${Object.entries(RQ_LABEL).filter(([k])=>a[k]).map(([k,l])=>`<p><b>${l}:</b> <span class="${(k==='concerns'&&a[k]==='Yes')||(k==='recommend'&&a[k]==='No')?'sb-red':''}">${esc(a[k])}</span></p>`).join('')}<p class="small muted">Declaration confirmed by ${esc(a.signed_name||'')}${a.organisation?' · '+esc(a.organisation):''}</p></div>`}
+function adminRefs(t){const p=t.private||{},R=(ADMIN.refs||[]).filter(q=>q.tutor_id===t.id),tn=p.full_name||t.display_name,refs=p.referees||[];
+ if(!refs.length&&!R.length)return`<div class="small"><b>Referees:</b> <span class="muted">none added yet</span></div>`;
+ const rows=refs.map(r=>{const q=R.find(x=>x.referee_email===String(r.email||'').trim().toLowerCase());
+  const st=!q?'<span class="badge sb-st grey">Not requested</span>':q.status==='received'?`<span class="badge sb-st ok">✓ Received ${when(q.responded_at)}</span>`:`<span class="badge sb-st blue">Requested ${when(q.sent_at)}</span>`;
+  return`<div class="sb-refrow"><div class="row between"><div><b>${esc(r.name)}</b> <span class="small muted">${esc(r.how||'')}</span><div class="small">${esc(r.email)}</div></div>${st}</div>
+   ${q&&q.status==='received'?`<details><summary class="small">Read reference</summary>${refAnswers(q.answers)}</details>`:''}
+   ${q&&q.status==='sent'?`<div class="row" style="gap:6px;margin-top:6px">${REF_FALLBACK[t.id]?`<a class="btn sm yellow" href="${refMailto(q,tn)}" data-sb="refmailed" data-id="${q.id}">Send to ${esc(q.referee_name)}</a>`:''}<button type="button" class="btn sm ghost" data-sb="refresend" data-id="${q.id}" data-tid="${t.id}">Resend</button><button type="button" class="btn sm ghost" data-sb="refcopy" data-tok="${q.token}">Copy link</button></div>`:''}</div>`}).join('');
+ const need=refs.some(r=>!R.find(x=>x.referee_email===String(r.email||'').trim().toLowerCase()));
+ return`<div class="sb-refs"><div class="row between"><b class="small">References</b>${need?`<button type="button" class="btn sm blue" data-sb="reqrefs" data-id="${t.id}">Request references</button>`:''}</div>${rows}
+ ${REF_FALLBACK[t.id]?'<p class="small muted">Automatic emails aren’t switched on yet, so tap each yellow button to send the request from your Mail app.</p>':''}</div>`}
+async function loadRefForm(tok){const r=await rpc('reference_form',{tok});REFFORM=r||{invalid:true}}
+function vReference(tok){const st=need('ref:'+tok,()=>loadRefForm(tok));
+ const shell=b=>`<div class="wrap" style="padding-block:36px;max-width:720px">${b}</div>`;
+ if(st==='busy')return shell(spinner());if(st.startsWith('err:'))return shell(sbErr(st.slice(4)));
+ const F=REFFORM;if(F.invalid)return shell(`<div class="panel stack"><h2>This link isn’t valid</h2><p class="muted">Please check the link in your email, or contact <b>${CONTACT}</b>.</p></div>`);
+ if(F.status==='received')return shell(okBox('Thank you','Your reference has been received. We’re very grateful for your help.'));
+ if(F.expired)return shell(`<div class="panel stack"><h2>This link has expired</h2><p class="muted">Please contact <b>${CONTACT}</b> and we’ll send a new one.</p></div>`);
+ const n=esc(F.tutor_name),fn=esc(firstName(F.tutor_name));
+ return shell(`<div class="sec-head" style="margin-bottom:16px"><p class="eyebrow">Confidential reference</p><h1 style="font-size:clamp(1.7rem,4vw,2.3rem)">Reference for ${n}</h1><p class="muted">Thank you for helping us keep children and young people safe. ${n} has applied to tutor with NeuroScholarly, working with learners aged 4 to 25. This takes about 5 minutes, and your answers are kept confidential.</p></div>
+ <form class="panel stack" id="sb_ref" style="gap:16px;max-width:none" novalidate>
+  <div class="sb-grid2"><label class="f">Your full name<input type="text" id="rf_name" value="${esc(F.referee_name)}" maxlength="100"></label><label class="f">Your role or job title<input type="text" id="rf_role" maxlength="100" placeholder="e.g. Lecturer, Manager"></label></div>
+  <label class="f">Organisation <span class="hint">Optional</span><input type="text" id="rf_org" maxlength="120"></label>
+  <label class="f">How do you know ${fn}?<input type="text" id="rf_how" maxlength="200" placeholder="e.g. I was their manager at…"></label>
+  <label class="f">How long have you known them?<select id="rf_long"><option value="">Choose</option><option>Less than 1 year</option><option>1 to 2 years</option><option>3 to 5 years</option><option>More than 5 years</option></select></label>
+  <label class="f">How would you describe ${fn}’s reliability and character?<textarea id="rf_char" maxlength="1500" rows="4"></textarea></label>
+  <label class="f">How suitable do you think ${fn} is to work with children and young people, including neurodivergent learners?<textarea id="rf_suit" maxlength="1500" rows="4"></textarea></label>
+  <fieldset class="sb-fs"><legend>Are you aware of any reason ${fn} should not work with children or vulnerable young people?</legend><div class="row" style="gap:18px"><label class="check"><input type="radio" name="rf_conc" value="No"><span>No</span></label><label class="check"><input type="radio" name="rf_conc" value="Yes"><span>Yes</span></label></div>
+   <label class="f" id="rf_concw" hidden style="margin-top:10px">Please give details<textarea id="rf_concd" maxlength="1500" rows="3"></textarea></label></fieldset>
+  <fieldset class="sb-fs"><legend>Would you recommend ${fn} to tutor children and young people?</legend><div class="row" style="gap:18px"><label class="check"><input type="radio" name="rf_rec" value="Yes"><span>Yes</span></label><label class="check"><input type="radio" name="rf_rec" value="Yes, with some reservations"><span>Yes, with reservations</span></label><label class="check"><input type="radio" name="rf_rec" value="No"><span>No</span></label></div></fieldset>
+  <label class="check"><input type="checkbox" id="rf_ok"><span>The information I’ve given is true to the best of my knowledge, and I’m happy for NeuroScholarly to contact me to confirm it.</span></label>
+  <button class="btn blue" type="submit">Submit reference</button>
+  <p class="small muted">Your reference is used only for our safeguarding checks and is not shared with ${fn}. See our <button type="button" class="btn ghost sm" data-go="privacy" style="padding:0;min-height:0">privacy notice</button>.</p></form>`)}
+
 /* ---- routing ---- */
 Object.assign(VIEWS,{find:vFindLive,request:vRequest,join:vJoin2,signup:vSignup,login:vLogin,forgot:vForgot,newpw:vNewPw,checkemail:vCheckEmail,account:vAccount2,admin:vAdmin2,verify:vAccount2});
 const _pioneers=VIEWS.pioneers;VIEWS.pioneers=()=>_pioneers().replace(/<form class="panel stack" id="pioneerForm"[\s\S]*?<\/form><p class="small muted"[^>]*>[\s\S]*?<\/p>/,`<div class="panel stack" style="gap:14px"><h3>Create your Pioneer account</h3><p class="muted">Sign up, build your profile with your photo, subjects and rates, then we check your ID, enhanced DBS and certificates. Approved profiles go live straight away.</p><button class="btn blue" data-sb="signup" data-v="tutor" style="align-self:flex-start">Create my Pioneer account</button><p class="small muted">Already started? <button type="button" class="btn ghost sm" data-go="login" style="padding:0;min-height:0">Log in</button></p></div>`);
 render=function(){clearInterval(POLL);POLL=null;
- let html;if(current.startsWith('pt-'))html=vTutorLive(current.slice(3));else if(current.startsWith('preq-'))html=vRequestTutor(current.slice(5));else if(current.startsWith('thread-'))html=vThread(current.slice(7));else if(current.startsWith('book-'))html=vBook(current.slice(5));else html=(VIEWS[current]||vHome)();
+ let html;if(current.startsWith('pt-'))html=vTutorLive(current.slice(3));else if(current.startsWith('preq-'))html=vRequestTutor(current.slice(5));else if(current.startsWith('thread-'))html=vThread(current.slice(7));else if(current.startsWith('book-'))html=vBook(current.slice(5));else if(current.startsWith('ref-'))html=vReference(current.slice(4));else html=(VIEWS[current]||vHome)();
  $('#view').innerHTML=html;
  const navKey=current.startsWith('pt-')||current.startsWith('preq-')?'find':current;
  $$('nav.main [data-go]').forEach(b=>b.setAttribute('aria-current',b.dataset.go===navKey?'page':'false'));
@@ -1850,6 +1899,7 @@ document.addEventListener('click',async e=>{const t=e.target.closest('button,[da
  if(d.acc){stop();ACC_TAB=d.acc;EDIT_LEARNER=null;render();return}
  if(d.adm){stop();ADM_TAB=d.adm;render();return}
  if(d.go==='login'||d.go==='account'){if(t.closest('.drawer'))t.closest('.drawer').remove()}
+ if(d.sb==='refmailed'){rpc('admin_mark_reference_sent',{req:d.id}).catch(()=>{});return}
  if(!d.sb)return;stop();const a=d.sb,id=d.id;
  try{switch(a){
   case'role':SIGNUP_ROLE=d.v;render();break;
@@ -1861,6 +1911,11 @@ document.addEventListener('click',async e=>{const t=e.target.closest('button,[da
   case'accept':case'decline':await busy(t,()=>rpc('respond_request',{req:id,accept:a==='accept'}));alertEmail(a==='accept'?'accepted':'declined',id);await refreshMe();render();toast(a==='accept'?'Accepted. Send a message to arrange the first session.':'Request declined');break;
   case'cancelreq':if(!confirmInline(t,'Tap again to cancel'))break;await busy(t,()=>rpc('cancel_request',{req:id}));alertEmail('cancelled',id);await refreshMe();render();toast('Request cancelled');break;
   case'add-learner':EDIT_LEARNER='';render();break;
+  case'reqrefs':{await busy(t,async()=>{const before=new Set((ADMIN.refs||[]).map(q=>q.id));const all=await rpc('admin_request_references',{tutor:id});ADMIN.refs=[...(ADMIN.refs||[]).filter(q=>q.tutor_id!==id),...all];
+    const fresh=all.filter(q=>!before.has(q.id)&&q.status==='sent');let ok=true;for(const q of fresh){if(!(await sendRefEmail(q.id)))ok=false}
+    if(ok&&fresh.length){toast('Reference requests emailed to '+fresh.map(q=>q.referee_name).join(' and '))}else{REF_FALLBACK[id]=true;toast('Tap each yellow button to send the request from your Mail app')}},'Sending…');render();break}
+  case'refresend':{await busy(t,async()=>{const ok=await sendRefEmail(id);if(ok){await rpc('admin_mark_reference_sent',{req:id});ADMIN.refs=await rpc('admin_references');toast('Reminder sent')}else{REF_FALLBACK[d.tid]=true;toast('Tap the yellow button to send it from your Mail app')}},'…');render();break}
+  case'refcopy':{try{await navigator.clipboard.writeText(refLink(d.tok));toast('Link copied')}catch(e){prompt('Copy this link',refLink(d.tok))}break}
   case'bk':{BK[d.f]=d.v;if(d.f==='kind'||d.f==='mode'){BK.slot=''}if(d.f==='day')BK.slot='';const y=scrollY;render();scrollTo(0,y);break}
   case'sess-confirm':case'sess-decline':await busy(t,()=>rpc('respond_session',{sess:id,accept:a==='sess-confirm'}));alertEmail(a==='sess-confirm'?'confirmed':'session_declined',null,id);await refreshMe();render();toast(a==='sess-confirm'?'Session confirmed. The family has been emailed.':'We’ve asked the family to choose another time.');break;
   case'sess-cancel':if(!confirmInline(t,'Tap again to cancel'))break;await busy(t,()=>rpc('cancel_session',{sess:id}));alertEmail('session_cancelled',null,id);await refreshMe();render();toast('Session cancelled. We’ve let them know.');break;
@@ -1881,7 +1936,7 @@ document.addEventListener('click',async e=>{const t=e.target.closest('button,[da
   case'cancel-learner':EDIT_LEARNER=null;render();break;
   case'del-learner':if(!confirmInline(t,'Tap again to remove'))break;await busy(t,()=>sb(`/rest/v1/learners?id=eq.${id}`,{method:'DELETE'}),'Removing…');await refreshMe();render();toast('Learner removed');break;
   case'approve':case'hide':case'pending':await busy(t,()=>rpc('admin_set_status',{tutor_id:id,new_status:a==='approve'?'approved':a==='hide'?'hidden':'pending'}));LOAD.admin=null;TUTORS=null;LOAD.tutors=null;render();toast(a==='approve'?'Approved. The profile is now live.':a==='hide'?'Profile hidden':'Moved to pending');break;
-  case'checks':{const art=t.closest('article'),g=k=>art.querySelector(`[data-ck="${k}"]`).checked;await busy(t,()=>rpc('admin_set_checks',{tutor_id:id,id_ok:g('id'),dbs_ok:g('dbs'),certs_ok:g('certs')}));LOAD.admin=null;TUTORS=null;LOAD.tutors=null;render();toast('Checks saved');break}
+  case'checks':{const art=t.closest('article'),g=k=>art.querySelector(`[data-ck="${k}"]`).checked;await busy(t,()=>rpc('admin_set_checks',{tutor_id:id,id_ok:g('id'),dbs_ok:g('dbs'),certs_ok:g('certs'),refs_ok:g('refs')}));LOAD.admin=null;TUTORS=null;LOAD.tutors=null;render();toast('Checks saved');break}
   case'delacct':if(!confirmInline(t,'Tap again to confirm deletion request'))break;await busy(t,async()=>{const r=await fetch(FORMSPREE,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify({_subject:'Account deletion request: '+ME.email,Type:'Account deletion request',Email:ME.email,Account:ME.role,UserID:ME.uid})});if(!r.ok)throw new Error('Couldn’t send. Please email '+CONTACT)},'Sending…');toast('Request sent. We’ll confirm by email within 30 days.');break;
   case'concern':PRE_REASON='Safeguarding concern'+(id?' (request '+id.slice(0,8)+')':'');go('contact');setTimeout(()=>{const m=$('#c_msg');if(m)m.value=PRE_REASON+': ';const o=$('#c_org');if(o)o.value='Safeguarding concern'},0);break;
  }}catch(err){}
@@ -1896,6 +1951,7 @@ document.addEventListener('change',async e=>{const t=e.target;
  if(t.id==='tp_type'){const g=$('#tp_guide');if(g)g.textContent=t.value?'Typical for '+PTYPES[t.value]+'s: '+PGUIDE[t.value]+' (guide only)':''}
  if(t.id==='tp_mode'){$('#tp_areaw').hidden=t.value==='online'}
  if(t.id==='rq_learner'){$('#rq_new').hidden=t.value!=='new'}
+ if(t.name==='rf_conc'){const w=$('#rf_concw');if(w)w.hidden=t.value!=='Yes'}
  if(t.id==='tp_photo'&&t.files[0]){try{NEWPHOTO=await resizePhoto(t.files[0]);const img=t.closest('form').querySelector('.sb-photo-row .ph');if(img){const n=document.createElement('img');n.className='ph sb-big';n.src=NEWPHOTO.url;n.alt='Your new profile photo';img.replaceWith(n)}toast('Photo ready. Tap Save to upload it.')}catch(err){toast(err.message)}}},true);
 
 /* ---- forms ---- */
@@ -1963,6 +2019,14 @@ document.addEventListener('submit',async e=>{const f=e.target;if(!f.id||!f.id.st
   const reqId=f.dataset.req;let sid;
   try{sid=await busy(btn,()=>rpc('book_session',{req:reqId,start_at:BK.slot,mins:SMINS[BK.kind],lesson_mode:BK.mode,booking_note:note||null}),'Sending…')}catch(e){LOAD['book:'+reqId]=null;BK.slot='';render();return}
   alertEmail('booked',null,sid);const when=fmtWhen(BK.slot);BK={kind:'',mode:'',day:'',slot:''};LOAD['book:'+reqId]=null;await refreshMe();ACC_TAB='sessions';go('account');toast('Booking sent for '+when+'. You’ll get an email when it’s confirmed.');break}
+ case'sb_ref':{const tok=current.slice(4),g=id=>(f.querySelector('#'+id)?.value||'').trim(),rad=n=>(f.querySelector(`input[name=${n}]:checked`)||{}).value||'';
+  const a={signed_name:g('rf_name'),role:g('rf_role'),organisation:g('rf_org'),how:g('rf_how'),how_long:g('rf_long'),character:g('rf_char'),suitability:g('rf_suit'),concerns:rad('rf_conc'),concerns_detail:g('rf_concd'),recommend:rad('rf_rec')};
+  if(!a.signed_name||!a.how||!a.how_long||!a.character||!a.suitability||!a.concerns||!a.recommend){toast('Please answer every question');return}
+  if(a.concerns==='Yes'&&!a.concerns_detail){toast('Please give details of your concern');return}
+  if(!$('#rf_ok').checked){toast('Please tick the declaration');return}
+  const who=await busy(btn,()=>rpc('submit_reference',{tok,answers:a}),'Sending…');
+  notify('Reference received for '+who+(a.concerns==='Yes'||a.recommend==='No'?' – CONCERN RAISED':''),{Type:'Reference received',Tutor:who,Referee:a.signed_name,Note:'Read it on your Admin page'});
+  REFFORM.status='received';render();scrollTo(0,0);break}
  case'sb_send':{const ta=$('#ms_body'),body=ta.value.trim(),id=current.slice(7);if(!body)return;if(CONTACT_RE.test(body)){toast('For everyone’s safety, please don’t share phone numbers, emails or social media. Keep messages on NeuroScholarly.');return}
   await busy(btn,()=>sb('/rest/v1/messages',{method:'POST',body:{request_id:id,body},prefer:'return=minimal'}),'Sending…');alertEmail('message',id);ta.value='';await loadThread(id);render();break}
  }}catch(err){}
@@ -1981,7 +2045,7 @@ addEventListener('hashchange',()=>{if(/(^|&)(access_token|error_description)=/.t
 SESSION=ss.get('ns_session');if(SESSION?.access_token)USER={role:SESSION.user?.user_metadata?.role||'family'};else SESSION=null;
 
 /* boot */
-(async()=>{if(await bootAuth())return;const h=(location.hash||'').slice(1);current=(VIEWS[h]||/^(pt|preq|thread)-/.test(h))?h:'home';render()})();
+(async()=>{if(await bootAuth())return;const h=(location.hash||'').slice(1);current=(VIEWS[h]||/^(pt|preq|thread|book|ref)-/.test(h))?h:'home';render()})();
 </script>
 
 </body>
