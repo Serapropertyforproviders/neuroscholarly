@@ -575,6 +575,39 @@ h1{letter-spacing:-.03em}
 .panel.sb-profile{display:flex;flex-direction:column;gap:26px}
 .sb-profile h3{margin-bottom:2px}
 .sb-who{display:block;font-size:.75rem;opacity:.8;margin-bottom:2px}
+.sb-pay{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:var(--yellow-soft);border-radius:12px;padding:10px 14px}
+.sb-pay.paid{background:#E3F5EC;color:#1D6B43}
+.sb-doclist{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.sb-doclist li{display:flex;gap:10px;align-items:baseline}.sb-doclist li span{width:18px;font-weight:800;color:var(--muted)}.sb-doclist li.ok span{color:var(--ok)}
+.sb-docrow{padding:8px 0;border-top:1px solid var(--line)}.sb-docrow:first-of-type{border-top:0}
+.sb-admdocs{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sb-docchip{display:inline-flex;align-items:center;gap:4px;background:var(--blue-soft);color:var(--blue-deep);border-radius:999px;padding:2px 4px 2px 12px;font-size:.85rem;font-weight:600}
+.sb-docchip button{border:0;background:#fff;color:var(--blue);border-radius:999px;padding:5px 10px;font-weight:700;cursor:pointer;min-height:32px}
+.sb-payform{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end;background:var(--soft);border-radius:12px;padding:12px}
+#view input[type=url],#view input[type=password],#view input[type=date]{width:100%;min-height:48px;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font:inherit;color:inherit}
+#view input[type=file]{font:inherit;font-size:.9rem;padding:10px;border:1.5px dashed var(--line);border-radius:12px;background:var(--soft);width:100%}
+.sb-next{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:var(--blue-soft);color:var(--blue-deep);border-radius:12px;padding:10px 14px;font-size:.93rem}
+.sb-next.ok{background:#E3F5EC;color:#1D6B43}
+.sb-sess.cancelled,.sb-sess.declined{opacity:.7}
+.sb-when{font-size:1.1rem;color:var(--blue-deep)}
+.sb-past summary{cursor:pointer;font-weight:600;color:var(--blue);padding:8px 0}
+.sb-avlist{display:flex;flex-wrap:wrap;gap:8px}
+.sb-avchip{display:inline-flex;align-items:center;gap:6px;background:var(--blue-soft);color:var(--blue-deep);border-radius:999px;padding:4px 4px 4px 14px;font-size:.92rem}
+.sb-avchip button{border:0;background:#fff;color:var(--c-red);border-radius:999px;width:32px;height:32px;cursor:pointer;font-weight:700}
+.sb-avform{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;align-items:end}
+.sb-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.sb-opt{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:2px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px;cursor:pointer;font:inherit;color:var(--ink);min-height:56px}
+.sb-opt span{color:var(--muted);font-size:.9rem}
+.sb-opt[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-soft)}
+.sb-days{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+.sb-day{flex:none;width:64px;display:flex;flex-direction:column;align-items:center;gap:2px;border:2px solid var(--line);background:#fff;border-radius:14px;padding:8px 4px;cursor:pointer;font:inherit;color:var(--ink);scroll-snap-align:start}
+.sb-day span{font-size:.78rem;color:var(--muted)}.sb-day b{font-size:1.25rem;color:var(--blue-deep)}
+.sb-day[aria-pressed="true"]{border-color:var(--blue-deep);background:var(--blue-deep)}.sb-day[aria-pressed="true"] *{color:#fff}
+.sb-times{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px}
+.sb-time{border:2px solid var(--line);background:#fff;border-radius:12px;min-height:46px;font:inherit;font-weight:700;color:var(--blue-deep);cursor:pointer}
+.sb-time[aria-pressed="true"]{background:var(--yellow);border-color:var(--yellow-deep)}
+.sb-opt:focus-visible,.sb-day:focus-visible,.sb-time:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+#view .btn[disabled]{opacity:.5;cursor:not-allowed}
 
 </style>
 <style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
@@ -1425,6 +1458,12 @@ async function sb(path,{method='GET',body,prefer,headers={},anon=false}={}){
  try{return await sbRaw(path,{method,headers:h,body:b})}
  catch(e){if(e.status===401&&SESSION&&!anon){await sbRefresh();if(SESSION){h.Authorization='Bearer '+SESSION.access_token;return sbRaw(path,{method,headers:h,body:b})}resetAccount();go('login');toast('Please log in again');}throw e}}
 const rpc=(fn,args={})=>sb('/rest/v1/rpc/'+fn,{method:'POST',body:args});
+function alertEmail(kind,request_id,session_id){try{if(!SESSION)return;fetch(SB.url+'/functions/v1/notify',{method:'POST',headers:{apikey:SB.key,Authorization:'Bearer '+SESSION.access_token,'Content-Type':'application/json'},body:JSON.stringify({kind,request_id,session_id})}).catch(()=>{})}catch(e){}}
+const DOCKINDS={id:'Photo ID (passport or driving licence)',dbs:'Enhanced DBS certificate',qualification:'Qualification certificate or proof of university enrolment',other:'Other document'};
+const DOCSHORT={id:'Photo ID',dbs:'Enhanced DBS',qualification:'Qualification / enrolment',other:'Other'};
+function kb(n){return n>=1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB'}
+function download(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500)}
+const csvCell=v=>{v=Array.isArray(v)?v.join('; '):v??'';v=String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
 function notify(subject,data){try{fetch(FORMSPREE,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify({_subject:subject,...data,page:location.href})}).catch(()=>{})}catch(e){}}
 function resetAccount(){setSession(null);ME=null;ADMIN=null;THREAD=null;LOAD={};ACC_TAB='';TUTORS=null;NEWPHOTO=null;EDIT_LEARNER=null}
 
@@ -1436,14 +1475,15 @@ async function loadMe(){if(!SESSION){ME=null;return}
  const u=SESSION.user,uid=u.id,role=u.user_metadata?.role==='tutor'?'tutor':'family';
  const adm=await rpc('is_admin').catch(()=>false);
  const m={uid,role,email:u.email,name:u.user_metadata?.name||'',isAdmin:adm===true};
- if(role==='tutor'){const [t,p]=await Promise.all([sb(`/rest/v1/tutors?id=eq.${uid}&select=*`),sb(`/rest/v1/tutor_private?id=eq.${uid}&select=*`)]);m.tutor=t[0]||null;m.priv=p[0]||null}
+ if(role==='tutor'){const [t,p,d]=await Promise.all([sb(`/rest/v1/tutors?id=eq.${uid}&select=*`),sb(`/rest/v1/tutor_private?id=eq.${uid}&select=*`),sb(`/rest/v1/tutor_documents?tutor_id=eq.${uid}&select=*&order=uploaded_at.asc`).catch(()=>[])]);m.tutor=t[0]||null;m.priv=p[0]||null;m.docs=d||[]}
  else{let f=(await sb(`/rest/v1/families?id=eq.${uid}&select=*`))[0];
   if(!f){await sb('/rest/v1/families',{method:'POST',body:{id:uid,full_name:(m.name||u.email.split('@')[0]).slice(0,80)},prefer:'return=minimal'});f=(await sb(`/rest/v1/families?id=eq.${uid}&select=*`))[0];notify('New parent & learner account: '+(m.name||u.email),{Type:'New parent & learner account',Name:m.name,Email:u.email})}
   m.family=f;m.learners=await sb(`/rest/v1/learners?family_id=eq.${uid}&select=*&order=created_at.asc`)||[]}
- m.requests=await rpc('my_requests')||[];
+ m.requests=await rpc('my_requests')||[];m.sessions=await rpc('my_sessions').catch(()=>[])||[];
+ if(role==='tutor'&&m.tutor)m.avail=await sb(`/rest/v1/tutor_availability?tutor_id=eq.${uid}&select=*`).catch(()=>[])||[];
  USER={role};ME=m}
 async function refreshMe(){LOAD.me=null;await loadMe();LOAD.me='ok'}
-async function loadAdmin(){ADMIN=await rpc('admin_overview')}
+async function loadAdmin(){const [o,s]=await Promise.all([rpc('admin_overview'),rpc('admin_sessions').catch(()=>[])]);ADMIN=o;ADMIN.sessions=s||[]}
 
 /* ---- small UI helpers ---- */
 const chk=(name,opts,sel=[],cls='')=>`<div class="sb-chips ${cls}">${opts.map(o=>`<label class="sb-chip"><input type="checkbox" name="${name}" value="${esc(o)}" ${sel.includes(o)?'checked':''}><span>${esc(o)}</span></label>`).join('')}</div>`;
@@ -1574,22 +1614,30 @@ function reqCards(list,as){if(!list.length)return`<div class="panel stack"><h3>N
   <div class="row between"><div class="row" style="gap:10px">${as==='family'?tPhoto({display_name:r.tutor.name,photo_url:r.tutor.photo_url},'av sb-av'):''}<div><b>${as==='tutor'?esc(l.first_name||'Learner')+(l.age?', '+l.age:''):esc(r.tutor.name)}</b><div class="small muted">${esc(r.subject)} · ${r.trial_type==='taster'?'Taster':'Free trial'} · ${when(r.created_at)}</div></div></div>${statusBadge(r.status)}</div>
   ${as==='tutor'?`<div class="small">Parent or carer: <b>${esc(r.family.first_name)}</b>${r.family.area?' · '+esc(r.family.area):''}${l.school_year?' · '+esc(l.school_year):''}</div>${(l.needs||[]).length?`<div class="pills">${l.needs.map(x=>`<span class="pill">${esc(x)}</span>`).join('')}</div>`:''}${l.needs_notes?`<p class="small muted">${esc(l.needs_notes)}</p>`:''}`:`<div class="small">For <b>${esc(l.first_name||'')}</b></div>`}
   ${r.message?`<p class="small sb-quote">“${esc(r.message)}”</p>`:''}
+  ${payBlock(r,as)}${nextStep(r,as)}
   <div class="row">${as==='tutor'&&r.status==='new'?`<button class="btn sm blue" data-sb="accept" data-id="${r.id}">Accept</button><button class="btn sm" data-sb="decline" data-id="${r.id}">Decline</button>`:''}
    <button class="btn sm ${as==='family'||r.status!=='new'?'blue':''}" data-thread="${r.id}">Messages${r.messages?` (${r.messages})`:''}</button>
    ${as==='family'&&['new','accepted'].includes(r.status)?`<button class="btn sm ghost" data-sb="cancelreq" data-id="${r.id}">Cancel request</button>`:''}</div></article>`}).join('')}
+function nextStep(r,as){if(r.status!=='accepted')return'';const S=(ME.sessions||[]).filter(s=>s.request_id===r.id&&['pending','confirmed'].includes(s.status)&&new Date(s.starts_at)>new Date());
+ if(S.length)return`<div class="sb-next ok"><span>Next session: <b>${fmtWhen(S[0].starts_at)}</b> · ${SKIND[S[0].kind]} · ${S[0].status==='pending'?'waiting for tutor to confirm':'confirmed'}</span>${as==='family'?`<button class="btn sm" data-go="book-${r.id}">Book another</button>`:`<button class="btn sm" data-acc="sessions">View</button>`}</div>`;
+ return as==='family'?`<div class="sb-next"><span><b>Next step:</b> choose a time for the first session.</span><button class="btn sm yellow" data-go="book-${r.id}">Book a session</button></div>`:`<div class="sb-next"><span><b>Next step:</b> the family will choose a time from your availability. You’ll get an email to confirm.</span></div>`}
+function payBlock(r,as){if(!r.payment_status||r.payment_status==='none')return'';const amt=r.amount?gbp2(r.amount):'';
+ if(r.payment_status==='paid')return`<div class="sb-pay paid"><b>✓ Paid${amt?' · '+amt:''}</b></div>`;
+ if(as==='family'&&r.payment_link)return`<div class="sb-pay"><div><b>Payment due${amt?': '+amt:''}</b><div class="small muted">Secure card payment by Stripe.</div></div><a class="btn sm yellow" href="${esc(r.payment_link)}" target="_blank" rel="noopener">Pay securely</a></div>`;
+ return`<div class="sb-pay"><b>Payment due${amt?': '+amt:''}</b></div>`}
 function settingsTab(){return`<div class="stack" style="gap:16px;max-width:640px">
  <form class="panel stack" id="sb_chpw" style="gap:12px" novalidate><h3>Change password</h3><label class="f">New password<input type="password" id="cp_1" autocomplete="new-password" minlength="8"></label><button class="btn sm blue" type="submit" style="align-self:flex-start">Update password</button></form>
  <div class="panel stack" style="gap:10px"><h3>Delete my account</h3><p class="small muted">We’ll delete your account and details within 30 days. Records we must keep for safeguarding are kept only as long as the law requires.</p><button class="btn sm" data-sb="delacct" style="align-self:flex-start;border-color:var(--c-red);color:var(--c-red)">Request account deletion</button></div>
  <div class="panel stack" style="gap:10px"><h3>Worried about something?</h3><p class="small muted">Tell us straight away. We take every safeguarding concern seriously.</p><button class="btn sm" data-sb="concern" style="align-self:flex-start">Report a concern</button></div></div>`}
 function tutorAccount(){const t=ME.tutor,newReq=ME.requests.filter(r=>r.as==='tutor'&&r.status==='new').length;
- if(!ACC_TAB)ACC_TAB=t?'requests':'profile';
+ if(!ACC_TAB)ACC_TAB=!t?'profile':(ME.sessions||[]).some(s=>s.status==='pending'&&new Date(s.starts_at)>new Date())?'sessions':'requests';
  const banner=!t?`<div class="sb-msg"><b>Step 1:</b> build your profile below. Once it’s saved, we’ll check your ID, enhanced DBS and certificates before it goes live.</div>`
-  :t.status==='pending'?`<div class="sb-msg"><b>Waiting for approval.</b> We’re checking your profile. To speed things up, email your photo ID, enhanced DBS certificate and qualification certificates (or proof of university enrolment) to <b>${CONTACT}</b> with the subject <b>Pioneer verification – ${esc(ME.priv?.full_name||ME.name||'your full name')} – ${esc(ME.email)}</b>.</div>`
-  :t.status==='approved'?`<div class="sb-msg ok"><b>Your profile is live.</b> Families can find you and send requests. <button class="btn ghost sm" data-pt="${t.id}" style="padding:0;min-height:0">View my public profile</button></div>`
+  :t.status==='pending'?`<div class="sb-msg"><b>Waiting for approval.</b> We’re checking your profile. ${docsMissing().length?`Please upload your ${docsMissing().map(k=>DOCSHORT[k].toLowerCase()).join(', ')} securely in the <button class="btn ghost sm" data-acc="docs" style="padding:0;min-height:0">Documents</button> tab.`:'Thanks for uploading your documents. We’ll be in touch soon.'}</div>`
+  :t.status==='approved'?(!(ME.avail||[]).length?`<div class="sb-msg"><b>Next step:</b> add your weekly availability in <button class="btn ghost sm" data-acc="sessions" style="padding:0;min-height:0">Sessions</button> so families can book you.</div>`:`<div class="sb-msg ok"><b>Your profile is live.</b> Families can find you and book sessions. <button class="btn ghost sm" data-pt="${t.id}" style="padding:0;min-height:0">View my public profile</button></div>`)
   :`<div class="sb-msg err"><b>Your profile is hidden.</b> Please contact <b>${CONTACT}</b>.</div>`;
- const body=ACC_TAB==='profile'?tutorProfileForm():ACC_TAB==='private'?tutorPrivateForm():ACC_TAB==='settings'?settingsTab():`<div class="stack" style="gap:14px;max-width:none">${reqCards(ME.requests.filter(r=>r.as==='tutor'),'tutor')}</div>`;
+ const body=ACC_TAB==='profile'?tutorProfileForm():ACC_TAB==='private'?tutorPrivateForm():ACC_TAB==='docs'?docsTab():ACC_TAB==='sessions'?tutorSessionsTab():ACC_TAB==='settings'?settingsTab():`<div class="stack" style="gap:14px;max-width:none">${reqCards(ME.requests.filter(r=>r.as==='tutor'),'tutor')}</div>`;
  return`<div class="wrap" style="padding-block:28px;max-width:980px">${accTop()}${accHeader('Hello, '+esc(firstName(t?.display_name||ME.name)||'Pioneer'),'Your Pioneer dashboard')}${banner}
-  ${tabs([['requests','Requests',newReq],['profile','My profile'],['private','Private details'],['settings','Settings']],ACC_TAB,'data-acc')}${body}</div>`}
+  ${tabs([['requests','Requests',newReq],['sessions','Sessions',(ME.sessions||[]).filter(s=>s.status==='pending'&&new Date(s.starts_at)>new Date()).length],['profile','My profile'],['private','Private details'],['docs','Documents',docsMissing().length&&t?'!':''],['settings','Settings']],ACC_TAB,'data-acc')}${body}</div>`}
 function tutorProfileForm(){const t=ME.tutor||{display_name:'',pioneer_type:'',subjects:[],levels:[],specialisms:[],bio:'',hourly_rate:'',trial_type:'free',taster_price:2.5,lesson_mode:'online',area:'',photo_url:''};
  const ph=NEWPHOTO?.url||t.photo_url,other=t.subjects.filter(s=>!SUBJECTS.includes(s));
  return`<form class="panel stack" id="sb_tprof" style="gap:18px;max-width:none" novalidate>
@@ -1609,18 +1657,28 @@ function tutorProfileForm(){const t=ME.tutor||{display_name:'',pioneer_type:'',s
   <label class="check"><input type="radio" name="tp_trial" value="taster" ${t.trial_type==='taster'?'checked':''}><span><b>Introductory taster</b>: you keep 100% <select id="tp_taster" aria-label="Taster price">${[2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5].map(p=>`<option value="${p}" ${+t.taster_price===p?'selected':''}>${gbp2(p)}</option>`).join('')}</select></span></label></div></fieldset>
  <div class="row"><button class="btn blue" type="submit">${ME.tutor?'Save changes':'Save my profile'}</button>${ME.tutor?`<button type="button" class="btn" data-pt="${ME.tutor.id}">Preview</button>`:''}</div>
  ${ME.tutor?.status==='approved'?`<p class="small muted">Changing your name, photo or “About you” sends your profile back for a quick re-check.</p>`:''}</form>`}
+function docsMissing(){const have=new Set((ME?.docs||[]).map(d=>d.kind));return['id','dbs','qualification'].filter(k=>!have.has(k))}
+function docsTab(){const D=ME.docs||[],miss=docsMissing();return`<div class="stack" style="gap:16px;max-width:760px">
+ <div class="panel stack" style="gap:10px;max-width:none"><h3>Your verification documents</h3><p class="small muted">Upload clear photos or scans. Only you and the NeuroScholarly team can see these. They’re stored privately and never shown on your profile.</p>
+  <ul class="sb-doclist">${['id','dbs','qualification'].map(k=>`<li class="${miss.includes(k)?'':'ok'}"><span>${miss.includes(k)?'○':'✓'}</span>${DOCKINDS[k]}</li>`).join('')}</ul></div>
+ ${D.length?`<div class="panel stack" style="gap:8px;max-width:none"><h3>Uploaded</h3>${D.map(d=>`<div class="row between sb-docrow"><div><b>${DOCSHORT[d.kind]}</b><div class="small muted">${esc(d.file_name||'')} · ${d.size_bytes?kb(d.size_bytes)+' · ':''}${when(d.uploaded_at)}</div></div><button class="btn sm ghost" data-sb="deldoc" data-id="${d.id}">Remove</button></div>`).join('')}</div>`:''}
+ <form class="panel stack" id="sb_doc" style="gap:12px;max-width:none" novalidate><h3>Upload a document</h3>
+  <label class="f">What is it?<select id="dc_kind">${Object.entries(DOCKINDS).map(([k,v])=>`<option value="${k}" ${k===(miss[0]||'other')?'selected':''}>${v}</option>`).join('')}</select></label>
+  <label class="f">Choose file<input type="file" id="dc_file" accept="image/*,application/pdf"><span class="hint">Photo, PDF or scan, up to 10 MB.</span></label>
+  <button class="btn blue" type="submit" style="align-self:flex-start">Upload securely</button></form></div>`}
 function tutorPrivateForm(){const p=ME.priv||{};return`<form class="panel stack" id="sb_tpriv" style="gap:14px;max-width:640px" novalidate>
  <p class="muted">Only you and the NeuroScholarly team can see these. We use them for your ID and DBS checks.</p>
  <label class="f">Full legal name<input type="text" id="pv_name" autocomplete="name" value="${esc(p.full_name||ME.name)}"></label>
  <div class="sb-grid2"><label class="f">Phone<input type="tel" id="pv_phone" autocomplete="tel" value="${esc(p.phone||'')}"></label><label class="f">Postcode<input type="text" id="pv_post" autocomplete="postal-code" value="${esc(p.postcode||'')}"></label></div>
  <label class="f">Date of birth<input type="date" id="pv_dob" value="${esc(p.date_of_birth||'')}"></label>
+ <label class="f">Zoom meeting link <span class="hint">For online lessons. Use your personal meeting link, e.g. https://us05web.zoom.us/j/1234567890. Families only see it once a session is confirmed.</span><input type="url" id="pv_zoom" value="${esc(p.zoom_link||'')}" placeholder="https://zoom.us/j/…"></label>
  <button class="btn blue" type="submit" style="align-self:flex-start">Save private details</button></form>`}
 function familyAccount(){const f=ME.family,reqs=ME.requests.filter(r=>r.as==='family');
  if(!ACC_TAB)ACC_TAB=ME.learners.length?'requests':'learners';
- const body=ACC_TAB==='learners'?learnersTab():ACC_TAB==='details'?familyDetails():ACC_TAB==='settings'?settingsTab():`<div class="stack" style="gap:14px;max-width:none">${reqCards(reqs,'family')}</div>`;
+ const body=ACC_TAB==='learners'?learnersTab():ACC_TAB==='details'?familyDetails():ACC_TAB==='sessions'?`<div class="stack" style="gap:14px;max-width:none">${sessionsList()}</div>`:ACC_TAB==='settings'?settingsTab():`<div class="stack" style="gap:14px;max-width:none">${reqCards(reqs,'family')}</div>`;
  return`<div class="wrap" style="padding-block:28px;max-width:980px">${accTop()}${accHeader('Hello, '+esc(firstName(f.full_name)),'Your parent &amp; learner account')}
   ${!ME.learners.length?`<div class="sb-msg"><b>Start here:</b> add your learner, then find a tutor and request a free trial or taster.</div>`:''}
-  ${tabs([['requests','My requests',reqs.filter(r=>r.status==='accepted').length],['learners','Learners',ME.learners.length],['details','My details'],['settings','Settings']],ACC_TAB,'data-acc')}${body}
+  ${tabs([['requests','My requests',0],['sessions','Sessions',(ME.sessions||[]).filter(s=>['pending','confirmed'].includes(s.status)&&new Date(s.starts_at)>new Date()).length],['learners','Learners',ME.learners.length],['details','My details'],['settings','Settings']],ACC_TAB,'data-acc')}${body}
   <div class="row" style="margin-top:18px"><button class="btn yellow" data-go="find">Find a tutor</button></div></div>`}
 function familyDetails(){const f=ME.family;return`<form class="panel stack" id="sb_fam" style="gap:14px;max-width:640px" novalidate>
  <label class="f">Your full name<input type="text" id="fd_name" maxlength="80" value="${esc(f.full_name)}"></label>
@@ -1649,9 +1707,9 @@ function vThread(id){if(!SESSION)return needLogin();if(need('me',loadMe)!=='ok')
  const st=need('thread:'+id,()=>loadThread(id));if(st==='busy')return`<div class="wrap" style="padding-block:40px">${spinner('Loading messages…')}</div>`;if(st.startsWith('err:'))return`<div class="wrap">${sbErr(st.slice(4))}</div>`;
  const r=THREAD.req;if(!r)return`<div class="wrap" style="padding-block:40px"><div class="panel">This conversation isn’t available.</div></div>`;
  const other=r.admin?`${esc(r.family.first_name)} ↔ ${esc(r.tutor.name)}`:r.as==='tutor'?esc(r.family.first_name)+' (parent or carer)':esc(r.tutor.name);
- const canSend=!r.admin&&['new','accepted'].includes(r.status);
+ const canSend=!r.admin&&['new','accepted'].includes(r.status),bookBtn=r.as==='family'&&r.status==='accepted'?`<button class="btn sm yellow" data-go="book-${r.id}">Book a session</button>`:'';
  return`<div class="wrap" style="padding-block:24px;max-width:760px"><button class="btn ghost sm" data-go="${r.admin?'admin':'account'}" style="padding:0;align-self:flex-start">← Back</button>
- <div class="panel stack sb-thread" style="gap:12px;max-width:none"><div class="row between"><div><b style="font-size:1.15rem">${other}</b><div class="small muted">${esc(r.subject)}${r.learner?.first_name?' · for '+esc(r.learner.first_name):''}</div></div>${statusBadge(r.status)}</div>
+ <div class="panel stack sb-thread" style="gap:12px;max-width:none"><div class="row between"><div><b style="font-size:1.15rem">${other}</b><div class="small muted">${esc(r.subject)}${r.learner?.first_name?' · for '+esc(r.learner.first_name):''}</div></div>${statusBadge(r.status)}</div>${bookBtn?`<div class="sb-next"><span><b>Ready to start?</b> Choose a time from ${esc(firstName(r.tutor.name))}’s availability.</span>${bookBtn}</div>`:''}
   <div class="sb-msgs" id="sb_msgs" aria-live="polite">${THREAD.msgs.length?THREAD.msgs.map(m=>`<div class="sb-bub ${m.sender_id===ME.uid||(r.admin&&m.sender_id===r.tutor_id)?'me':''}">${r.admin?`<b class="sb-who">${m.sender_id===r.tutor_id?esc(r.tutor.name):esc(r.family.first_name)}</b>`:''}<p>${esc(m.body)}</p><span>${whenT(m.created_at)}</span></div>`).join(''):`<p class="small muted" style="text-align:center">No messages yet. Say hello and suggest some times for the ${r.subject?esc(r.subject)+' ':''}trial.</p>`}</div>
   ${canSend?`<form id="sb_send" class="stack" style="gap:8px;max-width:none" novalidate><label class="f"><span class="sr-only">Message</span><textarea id="ms_body" maxlength="2000" rows="3" placeholder="Write a message…"></textarea></label><div class="row between"><span class="hint">Keep messages on NeuroScholarly. Don’t share phone numbers or emails.</span><button class="btn sm blue" type="submit">Send</button></div></form>`:`<p class="small muted">${r.admin?'Admin view: read only.':'This request is '+(RSTAT[r.status]?.[0]||r.status).toLowerCase()+', so messaging is closed.'}</p>`}
   <button class="btn ghost sm" data-sb="concern" data-id="${r.id}" style="padding:0;align-self:flex-start;color:var(--c-red)">Report a concern</button></div></div>`}
@@ -1662,16 +1720,21 @@ function vAdmin2(){if(!SESSION)return needLogin();if(need('me',loadMe)!=='ok')re
  if(!ME.isAdmin)return`<div class="wrap" style="padding-block:48px"><div class="panel stack"><h2>Admin only</h2><p class="muted">This page is for the NeuroScholarly team.</p></div></div>`;
  const st=need('admin',loadAdmin);if(st==='busy')return`<div class="wrap" style="padding-block:40px">${spinner('Loading admin…')}</div>`;if(st.startsWith('err:'))return`<div class="wrap">${sbErr(st.slice(4))}</div>`;
  const A=ADMIN,pend=A.tutors.filter(t=>t.status==='pending').length;
- const body=ADM_TAB==='families'?A.families.map(f=>`<article class="panel stack" style="gap:6px;max-width:none"><div class="row between"><b>${esc(f.full_name)}</b><span class="small muted">Joined ${when(f.created_at)}</span></div><div class="small">${esc(f.login_email||'')}${f.phone?' · '+esc(f.phone):''}${f.area?' · '+esc(f.area):''}</div>
+ const body=ADM_TAB==='sessions'?(A.sessions.map(s=>`<article class="panel stack" style="gap:4px;max-width:none"><div class="row between"><b>${fmtWhen(s.starts_at)}</b>${sessStatus(s)}</div><div class="small">${esc(s.family)} → ${esc(s.tutor)}${s.learner?' · for '+esc(s.learner):''}</div><div class="small muted">${SKIND[s.kind]} · ${s.mode==='online'?'Online':'In person'} · ${esc(s.subject)}</div></article>`).join('')||'<p class="muted">No sessions yet.</p>'):ADM_TAB==='families'?A.families.map(f=>`<article class="panel stack" style="gap:6px;max-width:none"><div class="row between"><b>${esc(f.full_name)}</b><span class="small muted">Joined ${when(f.created_at)}</span></div><div class="small">${esc(f.login_email||'')}${f.phone?' · '+esc(f.phone):''}${f.area?' · '+esc(f.area):''}</div>
    ${f.learners.length?`<div class="small muted">Learners: ${f.learners.map(l=>esc(l.first_name)+(l.age?' ('+l.age+')':'')+(l.needs.length?' – '+l.needs.map(esc).join(', '):'')).join(' · ')}</div>`:'<div class="small muted">No learners yet</div>'}</article>`).join('')||'<p class="muted">No families yet.</p>'
-  :ADM_TAB==='requests'?A.requests.map(r=>`<article class="panel stack" style="gap:6px;max-width:none"><div class="row between"><b>${esc(r.family)} → ${esc(r.tutor)}</b>${statusBadge(r.status)}</div><div class="small muted">${esc(r.subject)}${r.learner?' · for '+esc(r.learner):''} · ${when(r.created_at)}</div>${r.message?`<p class="small sb-quote">“${esc(r.message)}”</p>`:''}<button class="btn sm" data-thread="${r.id}" style="align-self:flex-start">Read messages (${r.messages})</button></article>`).join('')||'<p class="muted">No requests yet.</p>'
+  :ADM_TAB==='requests'?A.requests.map(r=>`<article class="panel stack" style="gap:6px;max-width:none"><div class="row between"><b>${esc(r.family)} → ${esc(r.tutor)}</b>${statusBadge(r.status)}</div><div class="small muted">${esc(r.subject)}${r.learner?' · for '+esc(r.learner):''} · ${when(r.created_at)}</div>${r.message?`<p class="small sb-quote">“${esc(r.message)}”</p>`:''}<form class="sb-payform" data-id="${r.id}" onsubmit="return false"><label class="f">Amount (£)<input type="number" step="0.01" min="0" name="amt" value="${r.amount??''}"></label><label class="f">Stripe payment link<input type="url" name="link" value="${esc(r.payment_link||'')}" placeholder="https://buy.stripe.com/…"></label><label class="f">Payment<select name="st">${[['none','Not needed'],['due','Due'],['paid','Paid']].map(([k,v])=>`<option value="${k}" ${r.payment_status===k?'selected':''}>${v}</option>`).join('')}</select></label><button type="button" class="btn sm" data-sb="savepay" data-id="${r.id}">Save payment</button></form>
+ <button class="btn sm" data-thread="${r.id}" style="align-self:flex-start">Read messages (${r.messages})</button></article>`).join('')||'<p class="muted">No requests yet.</p>'
   :A.tutors.map(adminTutor).join('')||'<p class="muted">No tutors yet.</p>';
- return`<div class="wrap" style="padding-block:28px;max-width:1000px"><div class="row between"><button class="btn ghost sm" data-go="account" style="padding:0">← My account</button><button class="btn sm" data-sb="retry" data-v="admin">Refresh</button></div>
+ return`<div class="wrap" style="padding-block:28px;max-width:1000px"><div class="row between"><button class="btn ghost sm" data-go="account" style="padding:0">← My account</button><div class="row" style="gap:6px"><button class="btn sm" data-sb="retry" data-v="admin">Refresh</button></div></div>
+ ${backupPanel()}
  <div class="sec-head" style="margin-bottom:14px"><p class="eyebrow">Admin</p><h1 style="font-size:clamp(1.8rem,4vw,2.4rem)">NeuroScholarly admin</h1><p class="muted">${A.tutors.length} Pioneers · ${A.families.length} families · ${A.requests.length} requests</p></div>
- ${tabs([['tutors','Pioneers',pend],['families','Families',0],['requests','Requests',0]],ADM_TAB,'data-adm')}<div class="stack" style="gap:14px;max-width:none">${body}</div></div>`}
+ ${tabs([['tutors','Pioneers',pend],['families','Families',0],['requests','Requests',0],['sessions','Sessions',0]],ADM_TAB,'data-adm')}<div class="stack" style="gap:14px;max-width:none">${body}</div></div>`}
+function backupPanel(){const last=ss.get('ns_last_backup'),days=last?Math.floor((Date.now()-last)/864e5):null;
+ return`<div class="sb-msg ${days===null||days>=7?'':'ok'}" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between"><span><b>Backup:</b> ${days===null?'no backup downloaded on this device yet.':days===0?'downloaded today.':`last downloaded ${days} day${days>1?'s':''} ago.`}${days===null||days>=7?' Please download one every week.':''}</span><span class="row" style="gap:6px"><button class="btn sm" data-sb="backup">Full backup</button><button class="btn sm" data-sb="contacts">Contacts spreadsheet</button></span></div>`}
 function adminTutor(t){const p=t.private||{};return`<article class="panel stack sb-adm" style="gap:10px;max-width:none">
  <div class="row between"><div class="row" style="gap:12px">${tPhoto(t,'av sb-av')}<div><b>${esc(t.display_name)}</b> <span class="badge blue">${PTYPES[t.pioneer_type]}</span>${t.founding?' '+fpBadge:''}<div class="small muted">${esc(t.login_email||'')} · joined ${when(t.created_at)}</div></div></div><span class="badge sb-st ${{approved:'ok',pending:'blue',hidden:'grey'}[t.status]}">${{approved:'Live',pending:'Pending approval',hidden:'Hidden'}[t.status]}</span></div>
  <div class="small"><b>Private:</b> ${esc(p.full_name||'–')} · ${esc(p.phone||'no phone')} · ${esc(p.postcode||'no postcode')} · DOB ${esc(p.date_of_birth||'–')}</div>
+ <div class="sb-admdocs"><b class="small">Documents:</b> ${(t.documents||[]).length?(t.documents||[]).map(d=>`<span class="sb-docchip">${DOCSHORT[d.kind]}<button type="button" data-sb="viewdoc" data-path="${esc(d.path)}">View</button><button type="button" data-sb="admdeldoc" data-id="${d.id}" data-path="${esc(d.path)}" aria-label="Delete ${DOCSHORT[d.kind]}">✕</button></span>`).join(''):'<span class="small muted">none uploaded yet</span>'}</div>
  <div class="small"><b>Teaches:</b> ${t.subjects.map(esc).join(', ')||'–'} · <b>Levels:</b> ${t.levels.map(esc).join(', ')||'–'}${t.specialisms.length?' · <b>Specialist:</b> '+t.specialisms.map(esc).join(', '):''}</div>
  <div class="small"><b>Rate:</b> ${t.hourly_rate?gbp2(t.hourly_rate)+'/hr':'–'} · ${trialText(t)} · ${MODES[t.lesson_mode]}${t.area?' · '+esc(t.area):''}</div>
  ${t.bio?`<p class="small sb-quote" style="white-space:pre-line">${esc(t.bio)}</p>`:''}
@@ -1686,11 +1749,83 @@ function resizePhoto(file){return new Promise((res,rej)=>{if(!/^image\//.test(fi
 async function busy(btn,fn,label='Saving…'){if(btn){if(btn.disabled)return;btn.disabled=true;btn.dataset.t=btn.textContent;btn.textContent=label}
  try{return await fn()}catch(e){toast(e.message||'Something went wrong');throw e}finally{if(btn&&btn.isConnected){btn.disabled=false;btn.textContent=btn.dataset.t}}}
 
+/* ---- sessions & booking ---- */
+const DAYN=['','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const SKIND={trial:'Free 20-minute trial',taster:'30-minute taster',lesson:'60-minute lesson'};
+const SMINS={trial:20,taster:30,lesson:60};
+const SSTAT={pending:['Waiting for tutor','blue'],confirmed:['Confirmed','ok'],declined:['Declined','grey'],cancelled:['Cancelled','grey']};
+let BOOK=null,BK={kind:'',mode:'',day:'',slot:''};
+const TZ='Europe/London';
+function ldnParts(d){const o={};new Intl.DateTimeFormat('en-GB',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',weekday:'short',hourCycle:'h23'}).formatToParts(d).forEach(p=>o[p.type]=p.value);
+ return{y:+o.year,m:+o.month,d:+o.day,h:+o.hour,mi:+o.minute,dow:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].indexOf(o.weekday)+1}}
+function ldnToDate(y,m,d,h,mi){let g=Date.UTC(y,m-1,d,h,mi);for(let i=0;i<2;i++){const p=ldnParts(new Date(g));g-=Date.UTC(p.y,p.m-1,p.d,p.h,p.mi)-Date.UTC(y,m-1,d,h,mi)}return new Date(g)}
+const fmtWhen=iso=>new Date(iso).toLocaleString('en-GB',{timeZone:TZ,weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+const fmtTime=d=>d.toLocaleTimeString('en-GB',{timeZone:TZ,hour:'2-digit',minute:'2-digit'});
+const hhmm=t=>String(t).slice(0,5);
+const TIMES=(()=>{const a=[];for(let h=6;h<=22;h++)for(const m of[0,30])a.push(String(h).padStart(2,'0')+':'+(m?'30':'00'));return a})();
+function sessStatus(s){if(s.status==='confirmed'&&new Date(s.starts_at)<new Date())return`<span class="badge sb-st grey">Completed</span>`;const [l,c]=SSTAT[s.status]||[s.status,'grey'];return`<span class="badge sb-st ${c}">${l}</span>`}
+function icsFor(s){const st=new Date(s.starts_at),en=new Date(st.getTime()+s.minutes*60000),f=d=>d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+ const title=`NeuroScholarly: ${s.subject} – ${s.as==='tutor'?s.learner||s.family:s.tutor}`,desc=`${SKIND[s.kind]} (${s.mode==='online'?'online':'in person'}).${s.zoom_link?' Join on Zoom: '+s.zoom_link:''} A parent or carer must be present for learners under 18. Manage at https://neuroscholarly.com/#account`;
+ return{title,desc,start:f(st),end:f(en),loc:s.mode==='online'?(s.zoom_link||'Online'):(s.area||'In person')}}
+function gcalLink(s){const i=icsFor(s);return'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(i.title)+'&dates='+i.start+'/'+i.end+'&details='+encodeURIComponent(i.desc)+'&location='+encodeURIComponent(i.loc)}
+function downloadIcs(s){const i=icsFor(s),e=t=>t.replace(/([,;\\])/g,'\\$1');
+ download('neuroscholarly-session.ics',['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//NeuroScholarly//Sessions//EN','BEGIN:VEVENT','UID:'+s.id+'@neuroscholarly.com','DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,''),'DTSTART:'+i.start,'DTEND:'+i.end,'SUMMARY:'+e(i.title),'DESCRIPTION:'+e(i.desc),'LOCATION:'+e(i.loc),'BEGIN:VALARM','TRIGGER:-PT30M','ACTION:DISPLAY','DESCRIPTION:Reminder','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n'),'text/calendar')}
+function sessCard(s){const up=new Date(s.starts_at)>new Date(),who=s.as==='tutor'?`${esc(s.learner||'Learner')} · parent ${esc(s.family)}`:esc(s.tutor);
+ return`<article class="panel stack sb-sess ${s.status}" style="gap:8px;max-width:none"><div class="row between"><div><b class="sb-when">${fmtWhen(s.starts_at)}</b><div class="small muted">${SKIND[s.kind]} · ${s.mode==='online'?'Online':'In person'+(s.area?' · '+esc(s.area):'')} · ${esc(s.subject)}</div><div class="small">${who}</div></div>${sessStatus(s)}</div>
+ ${s.note?`<p class="small sb-quote">“${esc(s.note)}”</p>`:''}
+ ${s.status==='confirmed'&&up&&s.mode==='online'?(s.zoom_link?`<a class="btn sm blue" href="${esc(s.zoom_link)}" target="_blank" rel="noopener" style="align-self:flex-start">Join on Zoom</a>`:`<p class="small muted">${s.as==='tutor'?'Add your Zoom link in Private details so the family can join.':'The tutor will add a Zoom link before the session.'}</p>`):''}
+ ${s.status==='confirmed'&&up&&s.mode==='online'&&s.as==='family'?'<p class="small muted">A parent or carer must be present for learners under 18.</p>':''}
+ <div class="row">${s.as==='tutor'&&s.status==='pending'?`<button class="btn sm blue" data-sb="sess-confirm" data-id="${s.id}">Confirm</button><button class="btn sm" data-sb="sess-decline" data-id="${s.id}">Can’t do this time</button>`:''}
+  ${s.status==='confirmed'&&up?`<button class="btn sm" data-sb="ics" data-id="${s.id}">Add to calendar</button><a class="btn sm ghost" href="${gcalLink(s)}" target="_blank" rel="noopener">Google Calendar</a>`:''}
+  ${['pending','confirmed'].includes(s.status)&&up?`<button class="btn sm ghost" data-sb="sess-cancel" data-id="${s.id}" style="color:var(--c-red)">Cancel</button>`:''}
+  <button class="btn sm ghost" data-thread="${s.request_id}">Messages</button></div></article>`}
+function sessionsList(){const S=ME.sessions||[],now=new Date(),act=S.filter(s=>['pending','confirmed'].includes(s.status)&&new Date(s.starts_at)>now),past=S.filter(s=>!act.includes(s)).reverse().slice(0,10);
+ return`${act.length?act.map(sessCard).join(''):`<div class="panel stack" style="max-width:none"><h3>No upcoming sessions</h3><p class="muted">${ME.role==='tutor'?'When a family books a time from your availability, it appears here for you to confirm.':'Once a tutor accepts your request, tap “Book a session” to choose a time.'}</p></div>`}
+ ${past.length?`<details class="sb-past"><summary>Past and cancelled sessions (${past.length})</summary><div class="stack" style="gap:10px;max-width:none;margin-top:10px">${past.map(sessCard).join('')}</div></details>`:''}`}
+function availEditor(){const A=(ME.avail||[]).slice().sort((a,b)=>a.weekday-b.weekday||a.start_time.localeCompare(b.start_time));
+ return`<div class="panel stack" style="gap:12px;max-width:none"><h3>Your weekly availability</h3><p class="small muted">Families can only book inside these times (UK time). Sessions are 20, 30 or 60 minutes.</p>
+ ${A.length?`<div class="sb-avlist">${A.map(a=>`<span class="sb-avchip"><b>${DAYN[a.weekday].slice(0,3)}</b> ${hhmm(a.start_time)}–${hhmm(a.end_time)}<button type="button" data-sb="av-del" data-id="${a.id}" aria-label="Remove ${DAYN[a.weekday]} ${hhmm(a.start_time)}">✕</button></span>`).join('')}</div>`:'<p class="sb-msg" style="margin:0"><b>Add your first time slot</b> so families can book you.</p>'}
+ <form id="sb_av" class="sb-avform" novalidate><label class="f">Day<select id="av_day">${DAYN.slice(1).map((d,i)=>`<option value="${i+1}">${d}</option>`).join('')}</select></label>
+  <label class="f">From<select id="av_from">${TIMES.map(t=>`<option ${t==='16:00'?'selected':''}>${t}</option>`).join('')}</select></label>
+  <label class="f">To<select id="av_to">${TIMES.map(t=>`<option ${t==='18:00'?'selected':''}>${t}</option>`).join('')}</select></label>
+  <button class="btn sm blue" type="submit">Add</button></form></div>`}
+function tutorSessionsTab(){const t=ME.tutor;return`<div class="stack" style="gap:14px;max-width:none">
+ ${t&&t.lesson_mode!=='in_person'&&!ME.priv?.zoom_link?`<div class="sb-msg">For online lessons, add your <b>Zoom meeting link</b> in <button class="btn ghost sm" data-acc="private" style="padding:0;min-height:0">Private details</button>. Families see it once a session is confirmed.</div>`:''}
+ ${sessionsList()}${t?availEditor():''}</div>`}
+async function loadBook(id){const r=(ME.requests||[]).find(x=>x.id===id&&x.as==='family');if(!r)throw new Error('Request not found');
+ const [t,av,busyT]=await Promise.all([sb(`/rest/v1/tutors?id=eq.${r.tutor.id}&select=*`,{anon:true}),sb(`/rest/v1/tutor_availability?tutor_id=eq.${r.tutor.id}&select=*`,{anon:true}),rpc('tutor_busy',{tutor:r.tutor.id})]);
+ BOOK={r,t:t[0],avail:av||[],busy:(busyT||[]).map(b=>[new Date(b.starts_at).getTime(),new Date(b.starts_at).getTime()+b.minutes*60000])}}
+function bookSlots(mins){const out={},now=Date.now(),start=new Date();
+ for(let i=0;i<21;i++){const day=new Date(start.getTime()+i*864e5),p=ldnParts(day),key=`${p.y}-${String(p.m).padStart(2,'0')}-${String(p.d).padStart(2,'0')}`;
+  BOOK.avail.filter(a=>a.weekday===p.dow).forEach(a=>{const [sh,sm]=hhmm(a.start_time).split(':').map(Number),[eh,em]=hhmm(a.end_time).split(':').map(Number);
+   for(let m=sh*60+sm;m+mins<=eh*60+em;m+=30){const d=ldnToDate(p.y,p.m,p.d,Math.floor(m/60),m%60),t0=d.getTime(),t1=t0+mins*60000;
+    if(t0<now+12*3600e3)continue;if(BOOK.busy.some(([b0,b1])=>t0<b1&&t1>b0))continue;(out[key]=out[key]||[]).push(d)}})}
+ Object.values(out).forEach(a=>a.sort((x,y)=>x-y));return out}
+function vBook(id){if(!SESSION)return needLogin();if(need('me',loadMe)!=='ok')return`<div class="wrap">${spinner()}</div>`;
+ const st=need('book:'+id,()=>loadBook(id));if(st==='busy')return`<div class="wrap" style="padding-block:40px">${spinner('Finding free times…')}</div>`;if(st.startsWith('err:'))return`<div class="wrap" style="padding-block:40px">${sbErr(st.slice(4))}</div>`;
+ const {r,t}=BOOK,used=(ME.sessions||[]).some(s=>s.request_id===id&&['trial','taster'].includes(s.kind)&&['pending','confirmed'].includes(s.status)||s.request_id===id&&['trial','taster'].includes(s.kind)&&s.status==='confirmed');
+ const first=r.trial_type==='taster'?'taster':'trial',kinds=used?['lesson']:[first,'lesson'];if(!kinds.includes(BK.kind))BK.kind=kinds[0];
+ const modes=t.lesson_mode==='both'?['online','in_person']:[t.lesson_mode];if(!modes.includes(BK.mode))BK.mode=modes[0];
+ const price=k=>k==='trial'?'FREE':k==='taster'?gbp2(t.taster_price||2.5):t.hourly_rate?gbp2(t.hourly_rate):'';
+ const slots=bookSlots(SMINS[BK.kind]),days=Object.keys(slots).sort();if(!days.includes(BK.day)){BK.day=days[0]||'';BK.slot=''}
+ const top=`<div class="wrap" style="padding-block:28px;max-width:760px"><button class="btn ghost sm" data-go="account" style="padding:0;align-self:flex-start">← My account</button>
+ <div class="row" style="gap:14px">${tPhoto(t,'av sb-av')}<div><p class="eyebrow">Book a session</p><h1 style="font-size:clamp(1.6rem,4vw,2.2rem)">${esc(t.display_name)}</h1><p class="small muted">${esc(r.subject)}${r.learner?.first_name?' · for '+esc(r.learner.first_name):''}</p></div></div>`;
+ if(!BOOK.avail.length)return top+`<div class="panel stack" style="gap:10px;max-width:none"><h3>${esc(firstName(t.display_name))} hasn’t added available times yet</h3><p class="muted">Send a message to suggest some times, and we’ll remind them to add their availability.</p><button class="btn blue" data-thread="${r.id}" style="align-self:flex-start">Send a message</button></div></div>`;
+ return top+`<form class="panel stack" id="sb_book" data-req="${r.id}" style="gap:16px;max-width:none" novalidate>
+ <div class="stack" style="gap:8px;max-width:none"><b>1. Type of session</b><div class="sb-opts">${kinds.map(k=>`<button type="button" class="sb-opt" aria-pressed="${BK.kind===k}" data-sb="bk" data-f="kind" data-v="${k}"><b>${SKIND[k]}</b><span>${price(k)}</span></button>`).join('')}</div></div>
+ ${modes.length>1?`<div class="stack" style="gap:8px;max-width:none"><b>2. Online or in person?</b><div class="sb-opts">${modes.map(m=>`<button type="button" class="sb-opt" aria-pressed="${BK.mode===m}" data-sb="bk" data-f="mode" data-v="${m}"><b>${m==='online'?'Online (Zoom)':'In person'}</b>${m==='in_person'&&t.area?`<span>${esc(t.area)}</span>`:''}</button>`).join('')}</div></div>`:''}
+ <div class="stack" style="gap:8px;max-width:none"><b>${modes.length>1?3:2}. Choose a day</b>${days.length?`<div class="sb-days">${days.map(k=>{const d=slots[k][0];return`<button type="button" class="sb-day" aria-pressed="${BK.day===k}" data-sb="bk" data-f="day" data-v="${k}"><span>${d.toLocaleDateString('en-GB',{timeZone:TZ,weekday:'short'})}</span><b>${d.toLocaleDateString('en-GB',{timeZone:TZ,day:'numeric'})}</b><span>${d.toLocaleDateString('en-GB',{timeZone:TZ,month:'short'})}</span></button>`}).join('')}</div>`:`<p class="sb-msg" style="margin:0">No free times in the next 3 weeks for this session length. Try another type, or <button type="button" class="btn ghost sm" data-thread="${r.id}" style="padding:0;min-height:0">message ${esc(firstName(t.display_name))}</button>.</p>`}</div>
+ ${BK.day?`<div class="stack" style="gap:8px;max-width:none"><b>${modes.length>1?4:3}. Choose a time <span class="hint">(UK time)</span></b><div class="sb-times">${slots[BK.day].map(d=>`<button type="button" class="sb-time" aria-pressed="${BK.slot===d.toISOString()}" data-sb="bk" data-f="slot" data-v="${d.toISOString()}">${fmtTime(d)}</button>`).join('')}</div></div>`:''}
+ <label class="f">Anything the tutor should know? <span class="hint">Optional. Please don’t include phone numbers or emails.</span><textarea id="bk_note" maxlength="500" rows="2"></textarea></label>
+ ${BK.slot?`<div class="sb-msg ok" style="margin:0"><b>${SKIND[BK.kind]}</b> on <b>${fmtWhen(BK.slot)}</b>, ${BK.mode==='online'?'online':'in person'} · ${price(BK.kind)}</div>`:''}
+ <button class="btn blue" type="submit" ${BK.slot?'':'disabled'}>Request this time</button>
+ <p class="small muted">${esc(firstName(t.display_name))} will confirm, and you’ll get an email. A parent or carer must be present for learners under 18.</p></form></div>`}
+
 /* ---- routing ---- */
 Object.assign(VIEWS,{find:vFindLive,request:vRequest,join:vJoin2,signup:vSignup,login:vLogin,forgot:vForgot,newpw:vNewPw,checkemail:vCheckEmail,account:vAccount2,admin:vAdmin2,verify:vAccount2});
 const _pioneers=VIEWS.pioneers;VIEWS.pioneers=()=>_pioneers().replace(/<form class="panel stack" id="pioneerForm"[\s\S]*?<\/form><p class="small muted"[^>]*>[\s\S]*?<\/p>/,`<div class="panel stack" style="gap:14px"><h3>Create your Pioneer account</h3><p class="muted">Sign up, build your profile with your photo, subjects and rates, then we check your ID, enhanced DBS and certificates. Approved profiles go live straight away.</p><button class="btn blue" data-sb="signup" data-v="tutor" style="align-self:flex-start">Create my Pioneer account</button><p class="small muted">Already started? <button type="button" class="btn ghost sm" data-go="login" style="padding:0;min-height:0">Log in</button></p></div>`);
 render=function(){clearInterval(POLL);POLL=null;
- let html;if(current.startsWith('pt-'))html=vTutorLive(current.slice(3));else if(current.startsWith('preq-'))html=vRequestTutor(current.slice(5));else if(current.startsWith('thread-'))html=vThread(current.slice(7));else html=(VIEWS[current]||vHome)();
+ let html;if(current.startsWith('pt-'))html=vTutorLive(current.slice(3));else if(current.startsWith('preq-'))html=vRequestTutor(current.slice(5));else if(current.startsWith('thread-'))html=vThread(current.slice(7));else if(current.startsWith('book-'))html=vBook(current.slice(5));else html=(VIEWS[current]||vHome)();
  $('#view').innerHTML=html;
  const navKey=current.startsWith('pt-')||current.startsWith('preq-')?'find':current;
  $$('nav.main [data-go]').forEach(b=>b.setAttribute('aria-current',b.dataset.go===navKey?'page':'false'));
@@ -1718,9 +1853,25 @@ document.addEventListener('click',async e=>{const t=e.target.closest('button,[da
   case'clearf':TF={q:'',subject:'',spec:'',mode:''};render();break;
   case'logout':{document.querySelector('.drawer')?.remove();const tok=SESSION?.access_token;resetAccount();if(tok)fetch(SB.url+'/auth/v1/logout',{method:'POST',headers:{apikey:SB.key,Authorization:'Bearer '+tok}}).catch(()=>{});go('home');toast('You’re logged out');break}
   case'resend':{const em=ss.get('ns_pending_email');if(!em){go('login');break}await busy(t,()=>sb('/auth/v1/resend',{method:'POST',body:{type:'signup',email:em},anon:true}),'Sending…');toast('Link sent again');break}
-  case'accept':case'decline':await busy(t,()=>rpc('respond_request',{req:id,accept:a==='accept'}));await refreshMe();render();toast(a==='accept'?'Accepted. Send a message to arrange the first session.':'Request declined');break;
-  case'cancelreq':if(!confirmInline(t,'Tap again to cancel'))break;await busy(t,()=>rpc('cancel_request',{req:id}));await refreshMe();render();toast('Request cancelled');break;
+  case'accept':case'decline':await busy(t,()=>rpc('respond_request',{req:id,accept:a==='accept'}));alertEmail(a==='accept'?'accepted':'declined',id);await refreshMe();render();toast(a==='accept'?'Accepted. Send a message to arrange the first session.':'Request declined');break;
+  case'cancelreq':if(!confirmInline(t,'Tap again to cancel'))break;await busy(t,()=>rpc('cancel_request',{req:id}));alertEmail('cancelled',id);await refreshMe();render();toast('Request cancelled');break;
   case'add-learner':EDIT_LEARNER='';render();break;
+  case'bk':{BK[d.f]=d.v;if(d.f==='kind'||d.f==='mode'){BK.slot=''}if(d.f==='day')BK.slot='';const y=scrollY;render();scrollTo(0,y);break}
+  case'sess-confirm':case'sess-decline':await busy(t,()=>rpc('respond_session',{sess:id,accept:a==='sess-confirm'}));alertEmail(a==='sess-confirm'?'confirmed':'session_declined',null,id);await refreshMe();render();toast(a==='sess-confirm'?'Session confirmed. The family has been emailed.':'We’ve asked the family to choose another time.');break;
+  case'sess-cancel':if(!confirmInline(t,'Tap again to cancel'))break;await busy(t,()=>rpc('cancel_session',{sess:id}));alertEmail('session_cancelled',null,id);await refreshMe();render();toast('Session cancelled. We’ve let them know.');break;
+  case'ics':{const s=(ME.sessions||[]).find(x=>x.id===id);if(s)downloadIcs(s);break}
+  case'av-del':await busy(t,()=>sb(`/rest/v1/tutor_availability?id=eq.${id}`,{method:'DELETE'}),'…');await refreshMe();render();toast('Time removed');break;
+  case'deldoc':{if(!confirmInline(t,'Tap again to remove'))break;const d=ME.docs.find(x=>x.id===id);await busy(t,async()=>{await sb('/storage/v1/object/tutor-docs/'+d.path,{method:'DELETE'}).catch(()=>{});await sb(`/rest/v1/tutor_documents?id=eq.${id}`,{method:'DELETE'})},'Removing…');await refreshMe();render();toast('Document removed');break}
+  case'viewdoc':{const w=window.open('about:blank','_blank');try{const r=await sb('/storage/v1/object/sign/tutor-docs/'+d.path,{method:'POST',body:{expiresIn:300}});const u=SB.url+'/storage/v1'+(r.signedURL||r.signedUrl);if(w)w.location.href=u;else location.href=u}catch(err){if(w)w.close();toast(err.message)}break}
+  case'admdeldoc':{if(!confirmInline(t,'Delete?'))break;await busy(t,async()=>{await sb('/storage/v1/object/tutor-docs/'+d.path,{method:'DELETE'}).catch(()=>{});await sb(`/rest/v1/tutor_documents?id=eq.${id}`,{method:'DELETE'})},'…');LOAD.admin=null;render();toast('Document deleted');break}
+  case'savepay':{const fm=t.closest('.sb-payform'),st=fm.querySelector('[name=st]').value,link=fm.querySelector('[name=link]').value.trim(),amt=fm.querySelector('[name=amt]').value;
+   if(st==='due'&&!/^https:\/\/(buy|checkout|donate)\.stripe\.com\//.test(link)){toast('Paste a Stripe payment link starting https://buy.stripe.com/');return}
+   const prev=(ADMIN.requests.find(x=>x.id===id)||{}).payment_status;await busy(t,()=>rpc('admin_set_payment',{req:id,pay_status:st,pay_link:link||null,pay_amount:amt?+amt:null}));if(st==='due'&&prev!=='due')alertEmail('payment',id);LOAD.admin=null;render();toast(st==='due'?'Saved. The family has been emailed the payment link.':'Payment saved');break}
+  case'backup':{await busy(t,async()=>{const b=await rpc('admin_backup');download('neuroscholarly-backup-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(b,null,1),'application/json');ss.set('ns_last_backup',Date.now())},'Preparing…');render();toast('Backup downloaded. Keep it somewhere safe and private.');break}
+  case'contacts':{const A=ADMIN,rows=[['Type','Name','Login email','Phone','Area / postcode','Status','Details']];
+   A.tutors.forEach(x=>rows.push(['Pioneer',x.private?.full_name||x.display_name,x.login_email,x.private?.phone,x.private?.postcode||x.area,x.status,(PTYPES[x.pioneer_type]||'')+' · '+x.subjects.join(', ')]));
+   A.families.forEach(x=>rows.push(['Parent & learner',x.full_name,x.login_email,x.phone,x.area,'',x.learners.map(l=>l.first_name+(l.age?' ('+l.age+')':'')).join(', ')]));
+   download('neuroscholarly-contacts-'+new Date().toISOString().slice(0,10)+'.csv','\ufeff'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n'),'text/csv');toast('Spreadsheet downloaded');break}
   case'edit-learner':EDIT_LEARNER=id;render();break;
   case'cancel-learner':EDIT_LEARNER=null;render();break;
   case'del-learner':if(!confirmInline(t,'Tap again to remove'))break;await busy(t,()=>sb(`/rest/v1/learners?id=eq.${id}`,{method:'DELETE'}),'Removing…');await refreshMe();render();toast('Learner removed');break;
@@ -1771,8 +1922,9 @@ document.addEventListener('submit',async e=>{const f=e.target;if(!f.id||!f.id.st
    const wasLive=ME.tutor?.status==='approved';NEWPHOTO=null;await refreshMe();
    if(wasLive&&ME.tutor.status==='pending')notify('Pioneer profile changed, needs re-check: '+name,{Type:'Profile re-check',Name:name,Email:ME.email});
    TUTORS=null;LOAD.tutors=null;ACC_TAB=ME.priv?'profile':'private';render();scrollTo(0,0);toast(ME.priv?'Profile saved':'Profile saved. Now add your private details.')});break}
- case'sb_tpriv':{const row={id:ME.uid,full_name:fv(f,'pv_name'),email:ME.email,phone:fv(f,'pv_phone'),postcode:fv(f,'pv_post').toUpperCase(),date_of_birth:fv(f,'pv_dob')||null,updated_at:new Date().toISOString()};
+ case'sb_tpriv':{const row={id:ME.uid,full_name:fv(f,'pv_name'),email:ME.email,phone:fv(f,'pv_phone'),postcode:fv(f,'pv_post').toUpperCase(),date_of_birth:fv(f,'pv_dob')||null,zoom_link:fv(f,'pv_zoom')||null,updated_at:new Date().toISOString()};
   if(!row.full_name||!row.phone){toast('Add your full name and phone');return}
+  if(row.zoom_link&&!/^https:\/\/([a-z0-9-]+\.)*zoom\.us\//i.test(row.zoom_link)){toast('That doesn’t look like a Zoom link. It should start https:// and include zoom.us');return}
   await busy(btn,()=>sb('/rest/v1/tutor_private',{method:'POST',body:row,prefer:'resolution=merge-duplicates,return=minimal'}));await refreshMe();render();toast('Private details saved');break}
  case'sb_fam':{const row={full_name:fv(f,'fd_name'),area:fv(f,'fd_area')||null,phone:fv(f,'fd_phone')||null,updated_at:new Date().toISOString()};if(row.full_name.length<2){toast('Add your full name');return}
   await busy(btn,()=>sb(`/rest/v1/families?id=eq.${ME.uid}`,{method:'PATCH',body:row,prefer:'return=minimal'}));await refreshMe();render();toast('Details saved');break}
@@ -1785,11 +1937,27 @@ document.addEventListener('submit',async e=>{const f=e.target;if(!f.id||!f.id.st
   if(!subj){toast('Choose a subject');return}if(CONTACT_RE.test(msg)){toast('Please remove phone numbers, emails and social media. You can message safely once you’ve sent the request.');return}
   if(!$('#rq_safe').checked){toast('Please tick the safeguarding box');return}
   await busy(btn,async()=>{if(lid==='new'){const rows=await sb('/rest/v1/learners',{method:'POST',body:{family_id:ME.uid,first_name:fv(f,'rq_lname'),age:+fv(f,'rq_lage')||null,subjects:[subj]},prefer:'return=representation'});lid=rows[0].id}
-   await sb('/rest/v1/requests',{method:'POST',body:{learner_id:lid,tutor_id:tid,subject:subj,trial_type:$('#rq_trial').value,message:msg||null},prefer:'return=minimal'});
+   const made=await sb('/rest/v1/requests',{method:'POST',body:{learner_id:lid,tutor_id:tid,subject:subj,trial_type:$('#rq_trial').value,message:msg||null},prefer:'return=representation'});if(made&&made[0])alertEmail('request',made[0].id);
    notify('New tutor request: '+(t?.display_name||'')+' – '+subj,{Type:'Tutor request (account)',Tutor:t?.display_name,Subject:subj,Family:ME.family.full_name,Email:ME.email});
    await refreshMe();ACC_TAB='requests';go('account');toast('Request sent to '+firstName(t?.display_name)+'. We’ll let them know.')},'Sending…');break}
+ case'sb_doc':{const fl=$('#dc_file').files[0],kind=$('#dc_kind').value;if(!fl){toast('Choose a file first');return}
+  if(fl.size>10*1024*1024){toast('That file is over 10 MB. Please choose a smaller one, or take a photo instead.');return}
+  const type=fl.type||(/\.pdf$/i.test(fl.name)?'application/pdf':'image/jpeg');if(!/^(application\/pdf|image\/(jpeg|png|webp|heic|heif))$/.test(type)){toast('Please upload a PDF or a photo (JPG or PNG).');return}
+  const ext=(fl.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,5)||'jpg',path=`${ME.uid}/${kind}-${Date.now()}.${ext}`;
+  const hadAll=!docsMissing().length;
+  await busy(btn,async()=>{await sb('/storage/v1/object/tutor-docs/'+path,{method:'POST',body:fl,headers:{'Content-Type':type,'x-upsert':'false'}});
+   await sb('/rest/v1/tutor_documents',{method:'POST',body:{kind,path,file_name:fl.name.slice(0,200),size_bytes:fl.size},prefer:'return=minimal'})},'Uploading…');
+  await refreshMe();render();toast(DOCSHORT[kind]+' uploaded securely');
+  if(!hadAll&&!docsMissing().length)notify('Documents ready to check: '+(ME.tutor?.display_name||ME.email),{Type:'Pioneer documents uploaded',Name:ME.priv?.full_name||ME.name,Email:ME.email});break}
+ case'sb_av':{const day=+$('#av_day').value,fr=$('#av_from').value,to=$('#av_to').value;if(to<=fr){toast('The end time must be after the start time');return}
+  if((ME.avail||[]).some(a=>a.weekday===day&&hhmm(a.start_time)<to&&hhmm(a.end_time)>fr)){toast('That overlaps a time you’ve already added');return}
+  await busy(btn,()=>sb('/rest/v1/tutor_availability',{method:'POST',body:{weekday:day,start_time:fr,end_time:to},prefer:'return=minimal'}),'Adding…');await refreshMe();render();toast(DAYN[day]+' '+fr+'–'+to+' added');break}
+ case'sb_book':{const note=$('#bk_note').value.trim();if(!BK.slot){toast('Choose a time');return}if(CONTACT_RE.test(note)){toast('Please remove phone numbers, emails and social media from your note');return}
+  const reqId=f.dataset.req;let sid;
+  try{sid=await busy(btn,()=>rpc('book_session',{req:reqId,start_at:BK.slot,mins:SMINS[BK.kind],lesson_mode:BK.mode,booking_note:note||null}),'Sending…')}catch(e){LOAD['book:'+reqId]=null;BK.slot='';render();return}
+  alertEmail('booked',null,sid);const when=fmtWhen(BK.slot);BK={kind:'',mode:'',day:'',slot:''};LOAD['book:'+reqId]=null;await refreshMe();ACC_TAB='sessions';go('account');toast('Booking sent for '+when+'. You’ll get an email when it’s confirmed.');break}
  case'sb_send':{const ta=$('#ms_body'),body=ta.value.trim(),id=current.slice(7);if(!body)return;if(CONTACT_RE.test(body)){toast('For everyone’s safety, please don’t share phone numbers, emails or social media. Keep messages on NeuroScholarly.');return}
-  await busy(btn,()=>sb('/rest/v1/messages',{method:'POST',body:{request_id:id,body},prefer:'return=minimal'}),'Sending…');ta.value='';await loadThread(id);render();break}
+  await busy(btn,()=>sb('/rest/v1/messages',{method:'POST',body:{request_id:id,body},prefer:'return=minimal'}),'Sending…');alertEmail('message',id);ta.value='';await loadThread(id);render();break}
  }}catch(err){}
 },true);
 
