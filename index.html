@@ -1569,7 +1569,7 @@ function settingsTab(){return`<div class="stack" style="gap:16px;max-width:640px
 function tutorAccount(){const t=ME.tutor,newReq=ME.requests.filter(r=>r.as==='tutor'&&r.status==='new').length;
  if(!ACC_TAB)ACC_TAB=t?'requests':'profile';
  const banner=!t?`<div class="sb-msg"><b>Step 1:</b> build your profile below. Once it’s saved, we’ll check your ID, enhanced DBS and certificates before it goes live.</div>`
-  :t.status==='pending'?`<div class="sb-msg"><b>Waiting for approval.</b> We’re checking your profile. To speed things up, email your photo ID, enhanced DBS certificate and qualification certificates to <b>${CONTACT}</b>.</div>`
+  :t.status==='pending'?`<div class="sb-msg"><b>Waiting for approval.</b> We’re checking your profile. To speed things up, email your photo ID, enhanced DBS certificate and qualification certificates (or proof of university enrolment) to <b>${CONTACT}</b> with the subject <b>Pioneer verification – ${esc(ME.priv?.full_name||ME.name||'your full name')} – ${esc(ME.email)}</b>.</div>`
   :t.status==='approved'?`<div class="sb-msg ok"><b>Your profile is live.</b> Families can find you and send requests. <button class="btn ghost sm" data-pt="${t.id}" style="padding:0;min-height:0">View my public profile</button></div>`
   :`<div class="sb-msg err"><b>Your profile is hidden.</b> Please contact <b>${CONTACT}</b>.</div>`;
  const body=ACC_TAB==='profile'?tutorProfileForm():ACC_TAB==='private'?tutorPrivateForm():ACC_TAB==='settings'?settingsTab():`<div class="stack" style="gap:14px;max-width:none">${reqCards(ME.requests.filter(r=>r.as==='tutor'),'tutor')}</div>`;
@@ -1686,7 +1686,7 @@ render=function(){clearInterval(POLL);POLL=null;
 
 /* ---- events ---- */
 document.addEventListener('click',e=>{if(!e.target.closest('#burger'))return;setTimeout(()=>{const nav=$('.drawer nav');if(!nav||nav.querySelector('[data-acct-item]'))return;const add=(go,label)=>{const b=document.createElement('button');b.className='item';b.dataset.go=go;b.dataset.acctItem='1';b.textContent=label;nav.appendChild(b)};
- if(SESSION){add('account','My account');if(ME?.isAdmin)add('admin','Admin')}else add('login','Log in')},0)});
+ if(SESSION){nav.querySelector('[data-go="join"]')?.remove();add('account','My account');if(ME?.isAdmin)add('admin','Admin');const b=document.createElement('button');b.className='item';b.dataset.sb='logout';b.dataset.acctItem='1';b.textContent='Log out';nav.appendChild(b)}else add('login','Log in')},0)});
 document.addEventListener('click',async e=>{const t=e.target.closest('button,[data-sb]');if(!t)return;const d=t.dataset;
  const stop=()=>{e.preventDefault();e.stopImmediatePropagation()};
  if(d.pt){stop();go('pt-'+d.pt);return}
@@ -1701,7 +1701,7 @@ document.addEventListener('click',async e=>{const t=e.target.closest('button,[da
   case'signup':SIGNUP_ROLE=d.v||'family';if(SESSION){go('account');break}go('signup');break;
   case'retry':LOAD[d.v]=null;if(d.v==='admin')ADMIN=null;render();break;
   case'clearf':TF={q:'',subject:'',spec:'',mode:''};render();break;
-  case'logout':{const tok=SESSION?.access_token;resetAccount();if(tok)fetch(SB.url+'/auth/v1/logout',{method:'POST',headers:{apikey:SB.key,Authorization:'Bearer '+tok}}).catch(()=>{});go('home');toast('You’re logged out');break}
+  case'logout':{document.querySelector('.drawer')?.remove();const tok=SESSION?.access_token;resetAccount();if(tok)fetch(SB.url+'/auth/v1/logout',{method:'POST',headers:{apikey:SB.key,Authorization:'Bearer '+tok}}).catch(()=>{});go('home');toast('You’re logged out');break}
   case'resend':{const em=ss.get('ns_pending_email');if(!em){go('login');break}await busy(t,()=>sb('/auth/v1/resend',{method:'POST',body:{type:'signup',email:em},anon:true}),'Sending…');toast('Link sent again');break}
   case'accept':case'decline':await busy(t,()=>rpc('respond_request',{req:id,accept:a==='accept'}));await refreshMe();render();toast(a==='accept'?'Accepted. Send a message to arrange the first session.':'Request declined');break;
   case'cancelreq':if(!confirmInline(t,'Tap again to cancel'))break;await busy(t,()=>rpc('cancel_request',{req:id}));await refreshMe();render();toast('Request cancelled');break;
@@ -1737,7 +1737,7 @@ document.addEventListener('submit',async e=>{const f=e.target;if(!f.id||!f.id.st
   if(!$('#su_age').checked||!$('#su_terms').checked){toast('Please tick both boxes to continue');return}
   const r=await busy(btn,()=>sb('/auth/v1/signup?redirect_to='+encodeURIComponent(SITE_URL),{method:'POST',body:{email:em,password:pw,data:{role:SIGNUP_ROLE,name}},anon:true}),'Creating…');
   if(SIGNUP_ROLE==='tutor')notify('New Pioneer sign-up: '+name,{Type:'New Pioneer account',Name:name,Email:em});
-  if(r&&r.access_token){setSession(r);LOAD={};go('account');toast('Welcome to NeuroScholarly')}else{ss.set('ns_pending_email',em);go('checkemail')}break}
+  if(r&&r.access_token){setSession(r);LOAD={};go('account');toast('Welcome to NeuroScholarly')}else if(r&&Array.isArray(r.identities)&&!r.identities.length){go('login');setTimeout(()=>{const i=$('#sl_email');if(i)i.value=em},0);toast('There’s already an account with that email. Please log in, or use a different email.')}else{ss.set('ns_pending_email',em);go('checkemail')}break}
  case'sb_forgot':{const em=fv(f,'sf_email');if(!emailOK(em)){toast('Please enter a valid email');return}await busy(btn,()=>sb('/auth/v1/recover?redirect_to='+encodeURIComponent(SITE_URL),{method:'POST',body:{email:em},anon:true}),'Sending…');f.innerHTML=okBox('Check your email',`If there’s an account for <b>${esc(em)}</b>, we’ve sent a link to reset your password.`);break}
  case'sb_newpw':case'sb_chpw':{const p1=f.querySelector('input').value,p2=f.id==='sb_newpw'?$('#np_2').value:p1;if(p1.length<8||!/[A-Za-z]/.test(p1)||!/\d/.test(p1)){toast('Password: at least 8 characters, with letters and numbers');return}if(p1!==p2){toast('The passwords don’t match');return}
   await busy(btn,()=>sb('/auth/v1/user',{method:'PUT',body:{password:p1}}));toast('Password updated');if(f.id==='sb_newpw')go('account');else f.reset();break}
