@@ -699,7 +699,7 @@ const SVG={
 const swoosh=`<svg class="swoosh" viewBox="0 0 760 360" aria-hidden="true"><path d="M40 300C220 330 420 250 560 150S760 40 800 60V0H120C220 80 120 220 40 300z" fill="#EAF0FC"/><path d="M60 330C260 300 430 230 560 140S730 20 790 30" fill="none" stroke="#1D44A8" stroke-width="26" stroke-linecap="round"/><path d="M170 340C340 300 480 230 590 160S740 70 800 70" fill="none" stroke="#FFC527" stroke-width="16" stroke-linecap="round"/><path d="M300 345C440 315 560 250 640 200" fill="none" stroke="#FFC527" stroke-width="6" stroke-linecap="round" opacity=".6"/></svg>`;
 
 /* ---------- options ---------- */
-const SUBJECTS=["Maths","English","Science","Biology","Chemistry","Physics","Reading & Phonics","Computing & Coding","History","Geography","Modern Languages","Study Skills","11+ Preparation","WAEC / WASSCE","NECO","BECE (Ghana)","SAT / ACT (US)"];
+const SUBJECTS=["Maths","English","Science","Biology","Chemistry","Physics","Reading & Phonics","Computing & Coding","History","Geography","Modern Languages","Study Skills","11+ Preparation","UCAS & Personal Statements","UCAT","Medicine & Dentistry Interviews (MMI)","University Interviews","ESAT / TMUA","LNAT","WAEC / WASSCE","NECO","BECE (Ghana)","SAT / ACT (US)"];
 const LEVELS=["Early years & KS1 (4–7)","Primary KS2 (7–11)","KS3 (11–14)","GCSE (14–16)","A-Level & College (16–18)","University & young adult (18–25)"];
 const NEEDS=["Autism","ADHD","Dyslexia","Dyscalculia","Anxiety & confidence","Speech & language","Waiting for assessment","Exam stress","Gifted & stretch","Just learns differently","Getting ahead"];
 const PRICES=[["Under £30",0,29],["£30–£45",30,45],["£46–£60",46,60],["£60+",61,999]];
@@ -1454,6 +1454,7 @@ document.addEventListener('submit',e=>{const f=e.target;const handled=['requestF
   sendForm(f,(/safeguarding/i.test(org)?'SAFEGUARDING – ':'')+subj+': '+$('#c_name').value.trim(),{Type:subj,...(current==='partners'?{Area:PSECT[PTAB]?.[0]}:{})},okBox('Message sent',"Thank you. We'll reply within 2 working days."));return}
 },true);
 
+const UNI_SUBJ=['UCAS & Personal Statements','UCAT','Medicine & Dentistry Interviews (MMI)','University Interviews','ESAT / TMUA','LNAT'];
 /* ================= ACCOUNTS (Supabase) ================= */
 const SB=Object.assign({url:'https://uifmdbdyrxdaugdshkog.supabase.co',key:'sb_publishable_nDx25btMVP-NkaySWPt1Jw_R1HW8d0W'},window.NS_SB||{});
 const SITE_URL=location.origin+location.pathname;
@@ -1585,7 +1586,7 @@ function vJoin2(){return`<div class="wrap" style="padding-block:48px;max-width:9
 function tutorMatches(t){const q=TF.q.toLowerCase();
  if(abroad()&&t.lesson_mode==='in_person')return false;
  if(q&&![t.display_name,t.bio,t.area,...t.subjects,...t.specialisms,...t.levels].join(' ').toLowerCase().includes(q))return false;
- if(TF.subject&&!t.subjects.includes(TF.subject))return false;
+ if(TF.subject&&!t.subjects.includes(TF.subject)&&!(UNI_SUBJ.includes(TF.subject)&&(t.services||[]).includes('uni_apps')))return false;
  if(TF.spec&&!t.specialisms.includes(TF.spec))return false;
  if(TF.service&&!(t.services||[]).includes(TF.service))return false;
  if(TF.mode==='online'&&t.lesson_mode==='in_person')return false;
