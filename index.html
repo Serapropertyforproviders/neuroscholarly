@@ -638,6 +638,11 @@ h1{letter-spacing:-.03em}
 .sb-wbmini{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.sb-wbmini .sb-wbtile{padding:16px}
 .sb-wbtile{display:flex;flex-direction:column;gap:8px;align-items:flex-start;text-align:left;cursor:pointer;font:inherit;color:inherit;max-width:none}
 .sb-wbtile b{color:var(--blue-deep);font-size:1.05rem}.sb-wbtile:hover,.sb-wbtile:focus-visible{border-color:var(--blue)}
+/* DBS guide */
+.sb-dbs{border-top:5px solid var(--yellow)}
+.sb-dbsq{background:var(--blue-soft);border-radius:14px;padding:12px 14px;font-size:.95rem}
+.sb-dbssteps{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:8px;line-height:1.5}
+.sb-dbsbtn{align-self:flex-start;min-height:48px;font-size:1.05rem;text-decoration:none}
 
 </style>
 <style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
@@ -1699,10 +1704,23 @@ function tutorProfileForm(){const t=ME.tutor||{display_name:'',pioneer_type:'',s
  <div class="row"><button class="btn blue" type="submit">${ME.tutor?'Save changes':'Save my profile'}</button>${ME.tutor?`<button type="button" class="btn" data-pt="${ME.tutor.id}">Preview</button>`:''}</div>
  ${ME.tutor?.status==='approved'?`<p class="small muted">Changing your name, photo or “About you” sends your profile back for a quick re-check.</p>`:''}</form>`}
 function docsMissing(){const have=new Set((ME?.docs||[]).map(d=>d.kind));return['id','dbs','qualification'].filter(k=>!have.has(k))}
+const DBS_URL='https://self-employed-dbs.co.uk/self-employed-dbs-checks/';
+function dbsGuide(compact){return`<div class="panel stack sb-dbs" style="gap:12px;max-width:none">
+ <div class="row between" style="align-items:flex-start;gap:10px"><div><p class="eyebrow" style="margin:0">Enhanced DBS check</p><h3 style="margin:2px 0 0">No DBS yet? Get one online in 3 steps</h3></div><span class="badge blue">About £60.50</span></div>
+ ${compact?'':'<p class="small muted" style="margin:0">Every Pioneer needs an enhanced DBS check before teaching. You can sign up and build your profile now, and your profile goes live once your DBS is uploaded and checked.</p>'}
+ <div class="sb-dbsq"><b>Already have one?</b> If it’s an enhanced DBS from the last 3 years, or it’s on the DBS Update Service, just upload it below. It’s free.</div>
+ <ol class="sb-dbssteps">
+  <li><b>Apply online.</b> Tap the button below. Choose <b>Enhanced DBS</b> and say you’re a self-employed tutor working with children and young people.</li>
+  <li><b>Check your ID on your phone.</b> With a biometric passport (it has a chip symbol on the cover), it’s done in minutes. No passport? They’ll arrange an in-person document check instead.</li>
+  <li><b>Upload your certificate here.</b> It usually arrives within 2 weeks. Upload a clear photo of it in this Documents tab and we’ll check it.</li>
+ </ol>
+ <a class="btn blue sb-dbsbtn" href="${DBS_URL}" target="_blank" rel="noopener">Apply for my DBS now</a>
+ <p class="small muted" style="margin:0">You pay the provider directly: about £60.50 (£41 government fee + £19.50 admin). Tip: join the DBS Update Service (£15 a year) so future checks are instant and free. NeuroScholarly isn’t paid by the provider.</p></div>`}
 function docsTab(){const D=ME.docs||[],miss=docsMissing();return`<div class="stack" style="gap:16px;max-width:760px">
  <div class="panel stack" style="gap:10px;max-width:none"><h3>Your verification documents</h3><p class="small muted">Upload clear photos or scans. Only you and the NeuroScholarly team can see these. They’re stored privately and never shown on your profile.</p>
   <ul class="sb-doclist">${['id','dbs','qualification'].map(k=>`<li class="${miss.includes(k)?'':'ok'}"><span>${miss.includes(k)?'○':'✓'}</span>${DOCKINDS[k]}</li>`).join('')}<li class="${(ME.priv?.referees||[]).length>=2?'ok':''}"><span>${(ME.priv?.referees||[]).length>=2?'✓':'○'}</span>Two referees, added in&nbsp;<button class="btn ghost sm" data-acc="private" style="padding:0;min-height:0">Private details</button></li></ul></div>
  ${D.length?`<div class="panel stack" style="gap:8px;max-width:none"><h3>Uploaded</h3>${D.map(d=>`<div class="row between sb-docrow"><div><b>${DOCSHORT[d.kind]}</b><div class="small muted">${esc(d.file_name||'')} · ${d.size_bytes?kb(d.size_bytes)+' · ':''}${when(d.uploaded_at)}</div></div><button class="btn sm ghost" data-sb="deldoc" data-id="${d.id}">Remove</button></div>`).join('')}</div>`:''}
+ ${miss.includes('dbs')?dbsGuide():''}
  <form class="panel stack" id="sb_doc" style="gap:12px;max-width:none" novalidate><h3>Upload a document</h3>
   <label class="f">What is it?<select id="dc_kind">${Object.entries(DOCKINDS).map(([k,v])=>`<option value="${k}" ${k===(miss[0]||'other')?'selected':''}>${v}</option>`).join('')}</select></label>
   <label class="f">Choose file<input type="file" id="dc_file" accept="image/*,application/pdf"><span class="hint">Photo, PDF or scan, up to 10 MB.</span></label>
@@ -1921,7 +1939,7 @@ function vReference(tok){const st=need('ref:'+tok,()=>loadRefForm(tok));
 
 /* ---- routing ---- */
 Object.assign(VIEWS,{find:vFindLive,request:vRequest,join:vJoin2,signup:vSignup,login:vLogin,forgot:vForgot,newpw:vNewPw,checkemail:vCheckEmail,account:vAccount2,admin:vAdmin2,verify:vAccount2});
-const _pioneers=VIEWS.pioneers;VIEWS.pioneers=()=>_pioneers().replace(/<form class="panel stack" id="pioneerForm"[\s\S]*?<\/form><p class="small muted"[^>]*>[\s\S]*?<\/p>/,`<div class="panel stack" style="gap:14px"><h3>Create your Pioneer account</h3><p class="muted">Sign up, build your profile with your photo, subjects and rates, then we check your ID, enhanced DBS and certificates. Approved profiles go live straight away.</p><button class="btn blue" data-sb="signup" data-v="tutor" style="align-self:flex-start">Create my Pioneer account</button><p class="small muted">Already started? <button type="button" class="btn ghost sm" data-go="login" style="padding:0;min-height:0">Log in</button></p></div>`);
+const _pioneers=VIEWS.pioneers;VIEWS.pioneers=()=>_pioneers().replace(/<form class="panel stack" id="pioneerForm"[\s\S]*?<\/form><p class="small muted"[^>]*>[\s\S]*?<\/p>/,`<div class="panel stack" style="gap:14px"><h3>Create your Pioneer account</h3><p class="muted">Sign up, build your profile with your photo, subjects and rates, then we check your ID, enhanced DBS and certificates. Approved profiles go live straight away.</p><button class="btn blue" data-sb="signup" data-v="tutor" style="align-self:flex-start">Create my Pioneer account</button><div class="sb-dbsq"><b>No DBS yet? Join now anyway.</b> Build your profile today, then apply for your enhanced DBS online in minutes (about £60.50, paid to the provider). Your profile goes live once it’s checked. <a href="https://self-employed-dbs.co.uk/self-employed-dbs-checks/" target="_blank" rel="noopener">Apply for a DBS</a></div><p class="small muted">Already started? <button type="button" class="btn ghost sm" data-go="login" style="padding:0;min-height:0">Log in</button></p></div>`);
 render=function(){clearInterval(POLL);POLL=null;
  let html;if(current.startsWith('pt-'))html=vTutorLive(current.slice(3));else if(current.startsWith('preq-'))html=vRequestTutor(current.slice(5));else if(current.startsWith('thread-'))html=vThread(current.slice(7));else if(current.startsWith('book-'))html=vBook(current.slice(5));else if(current.startsWith('ref-'))html=vReference(current.slice(4));else if(current.startsWith('grp-'))html=vGroupBook(current.slice(4));else if(current.startsWith('jr-'))html=vJournalPost(current.slice(3));else if(current.startsWith('jw-'))html=vJournalWrite(current.slice(3));else html=(VIEWS[current]||vHome)();
  $('#view').innerHTML=html;
