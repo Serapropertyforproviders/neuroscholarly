@@ -656,6 +656,9 @@ h1{letter-spacing:-.03em}
 .sb-recruit .pills .pill{background:var(--blue-soft);color:var(--blue-deep);font-weight:600}
 .sb-rticks{grid-template-columns:repeat(2,minmax(0,1fr));font-size:.98rem;gap:6px 18px}
 @media (max-width:600px){.sb-rticks{grid-template-columns:1fr}}
+.sb-wait{border-top:6px solid var(--yellow)}
+.sb-waitbar{background:var(--yellow-soft,#FFF6D9);border:1px solid #F5DE9A;border-radius:14px;padding:12px 16px;font-size:.98rem;color:var(--ink)}
+.sb-waitbar b{color:var(--blue-deep)}
 
 </style>
 <style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
@@ -2544,6 +2547,34 @@ document.addEventListener('submit',e=>{const f=e.target;if(f.id!=='commForm')ret
  sendForm(f,'REFERRAL – '+$('#cm_lot').value+': '+$('#cm_org').value.trim(),{Type:'Commissioner referral'},okBox('Referral received','Thank you. We’ll reply within 2 working days with a proposed tutor, plan and costs.'))},true);
 
 Object.assign(VIEWS,{groups:vGroups,journal:vJournal,home:()=>vHome().replace("<!--RECRUIT-->",homeRecruit())+homeWellbeing()+homeJournal(),wellbeing:vWellbeing,commission:vCommission});
+/* ---- Pioneers-only mode: learners join a waiting list until LEARNERS_OPEN is true ---- */
+const LEARNERS_OPEN=false;
+const LEARN_OK=()=>LEARNERS_OPEN||ME?.isAdmin;
+function waitPanel(ctx){return`<div class="panel stack sb-wait" style="gap:12px;max-width:none">
+ <p class="eyebrow">Opening soon for learners</p><h2 style="font-size:clamp(1.5rem,3.5vw,2rem)">We’re welcoming our founding Pioneers first</h2>
+ <p class="muted" style="margin:0">Right now we’re recruiting and checking our first tutors, so every family meets a fully verified Pioneer from day one. Bookings for learners open in the next few weeks.${ctx?` ${ctx}`:''}</p>
+ <p style="margin:0"><b>Join the waiting list</b> and we’ll email you as soon as bookings open. Waiting-list families hear first.</p>
+ <form class="stack" id="waitForm" style="gap:12px">
+  <div class="sb-grid2"><label class="f">Your name<input type="text" id="wl_name" autocomplete="name" required></label><label class="f">Email<input type="email" id="wl_email" autocomplete="email" required></label></div>
+  <div class="sb-grid2"><label class="f">I am…<select id="wl_who"><option>A parent or carer</option><option>A young adult (18–25)</option><option>A school, council or organisation</option></select></label><label class="f">Learner’s age or year <span class="hint">Optional</span><input type="text" id="wl_age"></label></div>
+  <label class="f">What would help? <span class="hint">Optional</span><input type="text" id="wl_need" placeholder="e.g. GCSE maths, dyslexia support, confidence"></label>
+  <button class="btn blue" style="align-self:flex-start">Join the waiting list</button></form>
+ <p class="small muted" style="margin:0">Want to tutor instead? <button type="button" class="btn ghost sm" data-go="pioneers" style="padding:0;min-height:0">Become a Pioneer</button>, applications are open now.</p></div>`}
+const waitBanner=()=>LEARN_OK()?'':`<div class="sb-waitbar"><b>Learner bookings open soon.</b> We’re welcoming our founding Pioneers first. <button type="button" class="btn ghost sm" data-sb="waitjump" style="padding:0;min-height:0">Join the waiting list →</button></div>`;
+(function(){
+ const _vs=vSignup;vSignup=function(){if(SIGNUP_ROLE!=='tutor'&&!LEARN_OK())return`<div class="wrap" style="padding-block:40px;max-width:640px"><div class="sb-switch" role="tablist" style="margin-bottom:16px"><button type="button" class="tab" aria-selected="true" data-sb="role" data-v="family">I’m a parent, carer or young adult</button><button type="button" class="tab" aria-selected="false" data-sb="role" data-v="tutor">I want to teach</button></div>${waitPanel()}</div>`;return _vs()};
+ const _vj=vJoin2;vJoin2=function(){let h=_vj();if(!LEARN_OK())h=h.replace(/<p class="muted">Create a free parent &amp; learner account\.[\s\S]*?<\/button>/,'<p class="muted">Bookings for learners open in the next few weeks. Join the waiting list and we’ll email you as soon as they do.</p><button class="btn blue" data-sb="signup" data-v="family" style="align-self:flex-start;margin-top:auto">Join the waiting list</button>');return h};
+ const _vr=vRequestTutor;vRequestTutor=function(id){if(LEARN_OK())return _vr(id);const t=findTutor(id);return`<div class="wrap" style="padding-block:32px;max-width:760px">${t?`<button class="btn ghost sm" data-pt="${t.id}" style="padding:0;align-self:flex-start">← Back to ${esc(firstName(t.display_name))}’s profile</button>`:''}${waitPanel(t?`You’ll be able to request ${esc(firstName(t.display_name))} then.`:'')}</div>`};
+ const _vg=vGroupBook;vGroupBook=function(id){if(LEARN_OK())return _vg(id);return`<div class="wrap" style="padding-block:32px;max-width:760px"><button class="btn ghost sm" data-go="groups" style="padding:0;align-self:flex-start">← All group sessions</button>${waitPanel('Group sessions open at the same time.')}</div>`};
+ const _vf=vFindLive;vFindLive=function(){let h=_vf();if(!LEARN_OK()){h=h.replace(/(<div class="wrap stack" style="gap:18px;padding-bottom:56px;max-width:1100px">)/,'$1'+waitBanner()).replace(/>Request a free trial</g,'>Join the waiting list<').replace(/>Request a taster</g,'>Join the waiting list<')}return h};
+ if(typeof vGroups==='function'){const _vgs=vGroups;vGroups=function(){let h=_vgs();if(!LEARN_OK())h=h.replace(/>Book a place</g,'>Join the waiting list<');return h};VIEWS.groups=vGroups}
+ Object.assign(VIEWS,{signup:vSignup,join:vJoin2,find:vFindLive});
+})();
+document.addEventListener('click',e=>{const b=e.target.closest('[data-sb="waitjump"]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();SIGNUP_ROLE='family';go('signup')},true);
+document.addEventListener('submit',e=>{const f=e.target;if(f.id!=='waitForm')return;e.preventDefault();e.stopImmediatePropagation();
+ if(!$('#wl_name').value.trim()||!emailOK($('#wl_email').value)){toast('Add your name and a valid email');return}
+ sendForm(f,'WAITING LIST – '+$('#wl_who').value+': '+$('#wl_name').value.trim(),{Type:'Learner waiting list'},okBox('You’re on the list','Thank you. We’ll email you as soon as learner bookings open.'))},true);
+
 /* boot */
 (async()=>{if(await bootAuth())return;const h=(location.hash||'').slice(1);current=(VIEWS[h]||/^(pt|preq|thread|book|ref|grp|jr|jw)-/.test(h))?h:'home';render()})();
 </script>
