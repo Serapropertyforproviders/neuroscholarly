@@ -654,6 +654,8 @@ h1{letter-spacing:-.03em}
 @media (max-width:900px){.sb-lots{grid-template-columns:1fr}}
 .sb-recruit{max-width:none;border-top:6px solid var(--yellow);background:linear-gradient(135deg,#fff 60%,var(--blue-soft))}
 .sb-recruit .pills .pill{background:var(--blue-soft);color:var(--blue-deep);font-weight:600}
+.sb-rticks{grid-template-columns:repeat(2,minmax(0,1fr));font-size:.98rem;gap:6px 18px}
+@media (max-width:600px){.sb-rticks{grid-template-columns:1fr}}
 
 </style>
 <style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
@@ -661,7 +663,7 @@ h1{letter-spacing:-.03em}
 <body>
 
 
-<div class="nowopen-wrap"><div class="wrap"><button class="nowopen" data-go="join"><span class="mega" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10v4a1 1 0 0 0 1 1h2l5 4V5L6 9H4a1 1 0 0 0-1 1z" fill="#0F2A6B"/><path d="M15 8.5a4.5 4.5 0 0 1 0 7M18 6a8 8 0 0 1 0 12" fill="none" stroke="#E8A800" stroke-width="2" stroke-linecap="round"/></svg></span><b>NOW OPEN</b><span class="sep">·</span><span class="full">Founding families &amp; Pioneers welcome</span><span class="short">Founding places open</span><span class="arr" aria-hidden="true">→</span></button></div></div>
+<div class="nowopen-wrap"><div class="wrap"><button class="nowopen" data-go="pioneers"><span class="mega" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10v4a1 1 0 0 0 1 1h2l5 4V5L6 9H4a1 1 0 0 0-1 1z" fill="#0F2A6B"/><path d="M15 8.5a4.5 4.5 0 0 1 0 7M18 6a8 8 0 0 1 0 12" fill="none" stroke="#E8A800" stroke-width="2" stroke-linecap="round"/></svg></span><b>NOW RECRUITING</b><span class="sep">·</span><span class="full">Self-employed tutors: join our first 100 Pioneers</span><span class="short">Tutors: join our first 100</span><span class="arr" aria-hidden="true">→</span></button></div></div>
 
 <header class="top">
   <div class="wrap">
@@ -858,6 +860,7 @@ function vHome(){return`
    <div class="nh-trial"><span class="cap" aria-hidden="true"><svg viewBox="0 0 24 24" fill="#1D44A8"><path d="M12 4L1 9l11 5 9-4.1V16h2V9z"/><path d="M5 12.6V16c0 1.7 3.1 3 7 3s7-1.3 7-3v-3.4l-7 3.2z"/></svg></span><span><b>FREE 20-minute trial</b> or <b>£2.50–£7.50</b> introductory taster, depending on the tutor.</span></div>
   </div>
  </section>
+<!--RECRUIT-->
  <div class="wrap">
   <div class="nh-icons"><div class="nh-ic"><span class="ic blue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14.6C9.2 10.2 1.6 9.8 1.6 14.6S9.2 19 12 14.6 22.4 9.8 22.4 14.6 14.8 19 12 14.6z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path transform="translate(8.6 .2) scale(.42)" d="M12 21s-8-5-8-11.2A4.6 4.6 0 0 1 12 7a4.6 4.6 0 0 1 8 2.8C20 16 12 21 12 21z" fill="currentColor"/></svg></span><b>Specialist Learning</b></div><div class="nh-ic"><span class="ic red"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-5-8-11.2A4.6 4.6 0 0 1 12 7a4.6 4.6 0 0 1 8 2.8C20 16 12 21 12 21z"/></svg></span><b>No Diagnosis Required</b></div><div class="nh-ic"><span class="ic green"><svg viewBox="0 0 24 24"><path d="M12 2l8 3v6.5c0 5-3.4 8.9-8 10.5-4.6-1.6-8-5.5-8-10.5V5z" fill="currentColor"/><path d="M8.3 12.2l2.5 2.5 4.9-5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><b>Safe &amp; Verified</b></div><div class="nh-ic"><span class="ic purple"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="6.6" r="3.1"/><circle cx="4.9" cy="9.3" r="2.2"/><circle cx="19.1" cy="9.3" r="2.2"/><path d="M7 20.2v-3.4c0-2.6 2.2-4.6 5-4.6s5 2 5 4.6v3.4c0 .5-.4.8-.8.8H7.8c-.4 0-.8-.3-.8-.8zM1.2 20.2v-2.6c0-2 1.6-3.6 3.7-3.6.6 0 1.1.1 1.5.3-.6.8-.9 1.8-.9 2.9V21H2c-.4 0-.8-.4-.8-.8zM22.8 20.2v-2.6c0-2-1.6-3.6-3.7-3.6-.6 0-1.1.1-1.5.3.6.8.9 1.8.9 2.9V21H22c.4 0 .8-.4.8-.8z"/></svg></span><b>Ages 4–25</b></div></div>
   ${searchCard()}
@@ -873,7 +876,6 @@ function vHome(){return`
   <div class="sec-head center"><p class="eyebrow">Specialists, not just tutors</p><h2>Certified in how your child learns.</h2><p class="muted">Great subject tutors help many young people. But when ADHD, autism, dyslexia or another difference is part of the picture, you want someone with specialist training. Look for the <span class="badge spec">★ Specialist</span> badge.</p></div>
   <div class="spec-grid">${[["ADHD","Focus, organisation, motivation and learning in short, structured bursts."],["Autism","Predictable, calm sessions built around interests and sensory needs."],["Dyslexia & SpLD","Structured, multi-sensory literacy and study strategies."],["Neurodiversity","Broad specialist training across different ways of thinking."]].map(([a,d])=>`<button class="spec-tile" data-spec="${a}" style="cursor:pointer;text-align:left"><b>★ ${a}</b><span class="small muted">${d}</span><span class="small" style="color:var(--blue);font-weight:600">Find ${a} specialists →</span></button>`).join('')}</div>
  </div></section>
-<!--RECRUIT-->
  <section class="band"><div class="wrap split">
   <div class="stack" style="gap:16px"><p class="eyebrow">Family Bundles</p><h2>More than one child? Save as a family.</h2><p class="muted">Book back-to-back lessons for siblings in one visit or one Zoom session. Each child gets their own full hour with the same trusted tutor, and you pay less.</p>
    <div class="row"><button class="btn blue" data-kids="2">Find tutors for siblings</button></div></div>
@@ -2530,11 +2532,12 @@ function vCommission(){return`<section class="band soft" style="padding-top:56px
    <button class="btn blue">Send referral</button></form>
  </div></section>
  ${finalBlock()}`}
-function homeRecruit(){return`<section class="band soft"><div class="wrap"><div class="panel sb-recruit">
- <div class="stack" style="gap:10px"><p class="eyebrow">Now recruiting</p><h2>Specialist Pioneers wanted</h2>
- <p class="muted" style="margin:0">Help children who learn differently, are out of school or are in hospital. Paid, flexible work, online or in person.</p>
- <div class="pills">${['SEN tutors','SEMH specialists','Qualified teachers (QTS)','Speech &amp; language','Hospital &amp; medical-needs tutors','Alternative provision tutors'].map(x=>`<span class="pill">${x}</span>`).join('')}</div>
- <div class="row" style="align-items:center"><button class="btn blue" data-go="pioneers">Become a Pioneer <span aria-hidden="true">→</span></button><span class="small muted">No DBS yet? Join today and add it later.</span></div></div></div></div></section>`}
+function homeRecruit(){return`<section class="band" style="padding-block:28px 8px"><div class="wrap"><div class="panel sb-recruit">
+ <div class="stack" style="gap:12px"><p class="eyebrow">Now recruiting self-employed tutors</p><h2>Become one of our first 100 Pioneers</h2>
+ <p class="muted" style="margin:0">We’re building a team of specialist tutors to support children and young people aged 4–25, including those with SEN, ADHD, autism and dyslexia. Set your own rate, keep 100% of it, and teach when and where suits you.</p>
+ <ul class="ticks sb-rticks"><li>Keep 100% of your hourly rate</li><li>Choose your own hours</li><li>Online or in person</li><li>Founding Pioneer badge for the first 100</li><li>No DBS yet? Join now and add it later</li><li>Free to join, no fees</li></ul>
+ <div class="pills">${['Teachers (QTS)','SEN &amp; SEMH specialists','University students','Speech &amp; language','Hospital &amp; medical-needs tutors','Alternative provision tutors'].map(x=>`<span class="pill">${x}</span>`).join('')}</div>
+ <div class="row" style="align-items:center"><button class="btn blue" data-go="pioneers">Become a Pioneer <span aria-hidden="true">→</span></button><span class="small muted">Sign up in minutes</span></div></div></div></div></section>`}
 document.addEventListener('click',e=>{const a=e.target.closest('[data-jump]');if(!a)return;e.preventDefault();document.getElementById(a.dataset.jump)?.scrollIntoView({behavior:'smooth',block:'start'})},true);
 document.addEventListener('submit',e=>{const f=e.target;if(f.id!=='commForm')return;e.preventDefault();e.stopImmediatePropagation();
  if(!$('#cm_org').value.trim()||!$('#cm_name').value.trim()||!emailOK($('#cm_email').value)){toast('Add your organisation, name and a valid work email');return}
