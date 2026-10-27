@@ -681,6 +681,8 @@ h1{letter-spacing:-.03em}
 .sb-faq summary::after{content:"+";position:absolute;right:18px;top:12px;font-size:1.5rem;color:var(--blue)}
 .sb-faq details[open] summary::after{content:"–"}
 .sb-faq details p{margin:0;padding:0 18px 16px;line-height:1.55}
+.ns-pop-more{align-self:flex-start;border:0;background:none;color:var(--blue);font:inherit;font-weight:700;cursor:pointer;padding:2px 0;text-decoration:underline;text-underline-offset:3px}
+.sb-recruit{scroll-margin-top:96px}
 
 </style>
 <style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
@@ -1118,7 +1120,7 @@ function certBlock(){return`<div class="split" style="align-items:start">
   <ol class="stack" style="padding-left:20px;margin:0;gap:6px"><li>Complete an ADHD, autism, dyslexia/SpLD or neurodiversity course</li><li>Upload your certificate in <b>Verification &amp; Documents</b></li><li>We check it and add the ★ Specialist badge to your profile</li></ol></div>
  <div class="panel stack" style="gap:12px;border-top:5px solid var(--yellow)"><p class="eyebrow">Not certified yet?</p><h3 style="font-size:1.3rem">Start with NeuroDiverse Training</h3><p class="muted small">Our £19.99 course is a great first step and earns the ✓ NeuroDiverse Trained badge. Already hold a recognised certificate? Upload it for the ★ Specialist badge.</p><div class="row"><button class="btn sm blue" data-go="training">See our courses</button><button class="btn sm" data-go="verify">Upload a certificate</button></div></div></div>`}
 function vPioneers(){return`<section class="band soft" style="padding-top:56px"><div class="wrap">
- <div class="sec-head center"><p class="eyebrow">Tutor with us</p><h1 style="font-size:clamp(2.2rem,5vw,3.2rem)">Your knowledge can change what someone believes is possible.</h1><p class="muted">We call our tutors <b>Pioneers</b>. Teach online or in person, set your own price, keep 100% of it and choose your hours.</p><button class="btn blue sb-pbtn" data-sb="signup" data-v="tutor">Become a Pioneer <span aria-hidden="true">→</span></button><div class="sb-dbstop"><span class="sb-dbsic" aria-hidden="true">✓</span><div><b>No DBS yet? No problem. Join today.</b> Build your profile now and we’ll show you how to get your enhanced DBS online in minutes. Your profile goes live as soon as it’s checked.<br><b>Studying nursing, medicine, social work, teaching or biomedical science?</b> You may already have an enhanced DBS from your course placements. If it covers work with children and is from the last 3 years, or it’s on the DBS Update Service, just upload it. It’s free.</div></div></div>
+ <div class="sec-head center"><p class="eyebrow">Tutor with us</p><h1 style="font-size:clamp(2.2rem,5vw,3.2rem)">Your knowledge can change what someone believes is possible.</h1><p class="muted">We call our tutors <b>Pioneers</b>: teachers, teaching assistants, SEN TAs and learning support assistants, classroom and group leaders, mentors, specialists, graduates and students. Teach online or in person, set your own price, keep 100% of it and choose your hours.</p><button class="btn blue sb-pbtn" data-sb="signup" data-v="tutor">Become a Pioneer <span aria-hidden="true">→</span></button><div class="sb-dbstop"><span class="sb-dbsic" aria-hidden="true">✓</span><div><b>No DBS yet? No problem. Join today.</b> Build your profile now and we’ll show you how to get your enhanced DBS online in minutes. Your profile goes live as soon as it’s checked.<br><b>Studying nursing, medicine, social work, teaching or biomedical science?</b> You may already have an enhanced DBS from your course placements. If it covers work with children and is from the last 3 years, or it’s on the DBS Update Service, just upload it. It’s free.</div></div></div>
  <div class="ptypes">${PIONEERS.map(([c,t,line,,sub])=>`<div class="ptype" style="--c:var(--c-${c})"><b>${t}</b><span class="small muted">${sub}</span><span class="small">${line}</span><span class="pg">Typical rate: ${capText(t)} / hour</span></div>`).join('')}</div>
  <p class="small muted" style="text-align:center;margin-top:12px">Typical rates are a guide. You set your own price.</p>
  </div></section>
@@ -2558,10 +2560,10 @@ function vCommission(){return`<section class="band soft" style="padding-top:56px
  </div></section>
  ${finalBlock()}`}
 function homeRecruit(){return`<section class="band" style="padding-block:28px 8px"><div class="wrap"><div class="panel sb-recruit">
- <div class="stack" style="gap:12px"><p class="eyebrow">Now recruiting self-employed tutors</p><h2>Become one of our first 100 Pioneers</h2>
- <p class="muted" style="margin:0">We’re building a team of specialist tutors to support children and young people aged 4–25, including those with SEN, ADHD, autism and dyslexia. Set your own rate, keep 100% of it, and teach when and where suits you.</p>
+ <div class="stack" style="gap:12px"><p class="eyebrow" id="perks">Now recruiting self-employed tutors, TAs &amp; group leaders</p><h2>Become one of our first 100 Pioneers</h2>
+ <p class="muted" style="margin:0">We’re building a team of tutors, teaching assistants, group leaders and specialists to support children and young people aged 4–25, including those with SEN, ADHD, autism and dyslexia. Set your own rate, keep 100% of it, and teach when and where suits you.</p>
  <ul class="ticks sb-rticks"><li>Keep 100% of your hourly rate</li><li>Choose your own hours</li><li>Online or in person</li><li>Founding Pioneer badge for the first 100</li><li>No DBS yet? Join now and add it later</li><li>Free to join, no fees</li><li>Regular work, including council-funded 1:1, group and online placements</li><li>A reference for every approved Pioneer</li><li>Free NeuroScholarly uniform for face-to-face sessions</li><li>Lunch vouchers for regular face-to-face group sessions</li></ul>
- <div class="pills">${['Teachers (QTS)','SEN &amp; SEMH specialists','University students','Speech &amp; language','Hospital &amp; medical-needs tutors','Alternative provision tutors'].map(x=>`<span class="pill">${x}</span>`).join('')}</div>
+ <div class="pills">${['Teachers (QTS)','Teaching assistants (TAs)','SEN TAs &amp; learning support assistants','Classroom &amp; group leaders','SEN &amp; SEMH specialists','Mentors &amp; youth workers','Speech &amp; language','Hospital &amp; medical-needs tutors','Alternative provision tutors','University students &amp; graduates'].map(x=>`<span class="pill">${x}</span>`).join('')}</div>
  <div class="row" style="align-items:center"><button class="btn blue" data-go="pioneers">Become a Pioneer <span aria-hidden="true">→</span></button><span class="small muted">Sign up in minutes</span></div></div></div></div></section>`}
 document.addEventListener('click',e=>{const a=e.target.closest('[data-jump]');if(!a)return;e.preventDefault();document.getElementById(a.dataset.jump)?.scrollIntoView({behavior:'smooth',block:'start'})},true);
 document.addEventListener('submit',e=>{const f=e.target;if(f.id!=='commForm')return;e.preventDefault();e.stopImmediatePropagation();
@@ -2617,20 +2619,22 @@ function popSeen(){try{return sessionStorage.getItem(POP_KEY)==='1'}catch(e){ret
 function popMark(){try{sessionStorage.setItem(POP_KEY,'1')}catch(e){}window.__nsPop=true}
 function closePop(){const m=document.getElementById('nsPop');if(!m)return;m.classList.remove('show');setTimeout(()=>m.remove(),200);document.removeEventListener('keydown',popKey);popMark()}
 function popKey(e){if(e.key==='Escape')closePop()}
-function showPop(){if(popSeen()||document.getElementById('nsPop')||typeof SESSION!=='undefined'&&SESSION)return;if(current!=='home')return;
+function showPop(){if(popSeen()||document.getElementById('nsPop'))return;if(typeof ME!=='undefined'&&ME?.tutor)return;if(current!=='home')return;
  const m=document.createElement('div');m.id='nsPop';m.className='ns-pop';m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');m.setAttribute('aria-labelledby','nsPopT');
  m.innerHTML=`<div class="ns-pop-box"><button type="button" class="ns-pop-x" data-popx aria-label="Close">✕</button>
   <span class="ns-pop-eb"><i></i>Now recruiting</span>
   <h2 id="nsPopT">Become one of our first <span>100 Pioneers</span></h2>
-  <p>We’re recruiting self-employed tutors to support children and young people aged 4–25, including those with SEN, ADHD, autism and dyslexia.</p>
-  <ul><li>Set your own rate and keep 100%</li><li>Choose your hours, online or in person</li><li>Founding Pioneer badge for the first 100</li><li>A reference for every approved Pioneer</li><li>Free uniform and lunch vouchers for face-to-face work</li><li>No DBS yet? Join now, add it later</li></ul>
+  <p>We’re recruiting self-employed tutors, teaching assistants and group leaders to support children and young people aged 4–25, including those with SEN, ADHD, autism and dyslexia.</p>
+  <ul><li>Set your own rate and keep 100%</li><li>Regular work, online or face to face</li><li>A reference for every approved Pioneer</li><li>Free uniform and lunch vouchers</li></ul>
+  <button type="button" class="ns-pop-more" data-popmore>See all the perks ↓</button>
   <button type="button" class="btn blue ns-pop-go" data-popgo>Become a Pioneer <span aria-hidden="true">→</span></button>
   <button type="button" class="ns-pop-later" data-popx>Maybe later</button></div>`;
  document.body.appendChild(m);requestAnimationFrame(()=>m.classList.add('show'));document.addEventListener('keydown',popKey);m.querySelector('[data-popgo]').focus({preventScroll:true});popMark()}
 document.addEventListener('click',e=>{const m=document.getElementById('nsPop');if(!m)return;
  if(e.target===m||e.target.closest('[data-popx]')){e.preventDefault();closePop();return}
- if(e.target.closest('[data-popgo]')){e.preventDefault();closePop();go('pioneers')}},true);
-setTimeout(showPop,2500);
+ if(e.target.closest('[data-popgo]')){e.preventDefault();closePop();go('pioneers')}
+ if(e.target.closest('[data-popmore]')){e.preventDefault();closePop();setTimeout(()=>document.querySelector('.sb-recruit')?.scrollIntoView({behavior:'smooth',block:'start'}),220)}},true);
+(function(){let t=0;const iv=setInterval(()=>{t++;if(t>=3&&current==='home'){showPop();if(document.getElementById('nsPop')||popSeen())clearInterval(iv)}if(t>120)clearInterval(iv)},1000)})();
 
 /* boot */
 (async()=>{if(await bootAuth())return;const h=(location.hash||'').slice(1);current=(VIEWS[h]||/^(pt|preq|thread|book|ref|grp|jr|jw)-/.test(h))?h:'home';render()})();
