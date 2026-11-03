@@ -2391,7 +2391,7 @@ function vPioneerAgreement(){return policyPage('Become a Tutor','Pioneer Agreeme
 Object.assign(VIEWS,{'safeguarding-policy':vSafeguardingPolicy,'pioneer-agreement':vPioneerAgreement});
 
 /* ---- The Journal ---- */
-const JCATS=['Tips for parents','Neurodiversity explained','Wellbeing & confidence','Exams & study skills','Professional insight','Stories & experiences'];
+const JCATS=['Tips for parents','Neurodiversity explained','Wellbeing & confidence','Exams & study skills','Professional insight','Stories & experiences','Poetry & creative writing','Faith & reflection'];
 let JLIST=null,JPOST={},JCAT='',JINV={},JADM=null;
 const jLink=tok=>'https://neuroscholarly.com/#jw-'+tok;
 const jMins=w=>Math.max(1,Math.round((+w||0)/200))+' min read';
@@ -2703,6 +2703,23 @@ function freeLearn(){return`<div class="panel stack" style="gap:12px;max-width:n
 trainingBlock=()=>freeLearn();
 (function(){const _s=VIEWS['student-jobs'];VIEWS['student-jobs']=()=>_s().replace('<div class="panel stack" style="gap:10px;max-width:none"><h3>Ready to apply?</h3>',freeLearn()+'<div class="panel stack" style="gap:10px;max-width:none"><h3>Ready to apply?</h3>')})();
 (function(){const _p=VIEWS.pioneers;VIEWS.pioneers=()=>_p().replace(/(id="training"[\s\S]*?)(<\/div><\/section>)/,(m,a,b)=>a+freeLearn()+b)})();
+
+/* ---- "Write for The Journal" pitch form (anyone can offer to write) ---- */
+function jPitch(){const cats=(typeof CATS!=='undefined'?CATS:[]);return`<div class="wrap" style="padding-bottom:56px;max-width:1100px"><div class="panel stack" id="jpitch" style="gap:12px;max-width:none;border-top:5px solid var(--yellow)">
+ <p class="eyebrow">Write for The Journal</p><h2 style="font-size:clamp(1.4rem,3vw,1.8rem)">Have something to share?</h2>
+ <p class="muted" style="margin:0;max-width:none">You don’t need to be a tutor or a parent using NeuroScholarly. We welcome articles, stories and poems from professionals, parents, young people and writers. Tell us your idea, and if it’s a good fit, we’ll send you a private link to submit your piece. All contributions are voluntary, and every piece is checked before it’s published.</p>
+ <form class="stack" id="jpForm" style="gap:12px" novalidate>
+  <div class="sb-grid2"><label class="f">Your name<input type="text" id="jp_name" autocomplete="name" required></label><label class="f">Email<input type="email" id="jp_email" autocomplete="email" required></label></div>
+  <div class="sb-grid2"><label class="f">About you <span class="hint">Optional, e.g. SENCO, parent, poet</span><input type="text" id="jp_role"></label><label class="f">Section<select id="jp_cat"><option value="">Not sure yet</option>${cats.map(c=>`<option>${esc(c)}</option>`).join('')}</select></label></div>
+  <label class="f">Your idea<textarea id="jp_idea" placeholder="A few lines about what you’d like to write"></textarea></label>
+  <label class="check"><input type="checkbox" id="jp_ok"><span>I understand that contributions are voluntary, and that I must not include anything that could identify a child or family.</span></label>
+  <button class="btn blue" style="align-self:flex-start">Send my idea</button></form></div></div>`}
+(function(){const _j=VIEWS.journal;VIEWS.journal=(...a)=>{const h=_j(...a);return typeof h==='string'?h+jPitch():h}})();
+document.addEventListener('submit',e=>{const f=e.target;if(f.id!=='jpForm')return;e.preventDefault();e.stopImmediatePropagation();
+ const v=id=>($('#'+id)?.value||'').trim();if(!v('jp_name')||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('jp_email'))){toast('Please add your name and a valid email');return}
+ if(v('jp_idea').length<10){toast('Please tell us a little about your idea');return}if(!$('#jp_ok').checked){toast('Please tick the box to continue');return}
+ notify('JOURNAL PITCH: '+v('jp_name'),{name:v('jp_name'),email:v('jp_email'),about:v('jp_role'),section:v('jp_cat')||'Not sure',idea:v('jp_idea')});
+ $('#jpitch').innerHTML='<div class="stack center" style="gap:10px;text-align:center"><span class="tick" style="width:56px;height:56px;font-size:1.6rem">✓</span><h2 style="font-size:1.5rem">Thank you for your idea</h2><p class="muted" style="margin:0">We’ll reply within a week. Can’t see our email? Please check your junk or spam folder.</p></div>'},true);
 
 /* ---- Recruiting pop-up (home page, once per visit) ---- */
 const POP_KEY='ns_pop_pioneers';
