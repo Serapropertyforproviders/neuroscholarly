@@ -686,6 +686,8 @@ h1{letter-spacing:-.03em}
 
 .sb-junk{display:flex;flex-direction:column;gap:4px;background:#FFF6D6;border:1.5px solid #F4C430;border-left:6px solid #F4B90E;border-radius:12px;padding:12px 14px;font-size:.92rem;line-height:1.5;color:#14213D}.sb-junk b{color:#0F2A6B}
 
+.pw-wrap{position:relative;display:block;width:100%}.pw-wrap input{width:100%;padding-right:52px!important;box-sizing:border-box}.pw-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:42px;height:42px;display:grid;place-items:center;border:0;background:transparent;color:var(--blue,#1D44A8);cursor:pointer;border-radius:10px}.pw-eye:focus-visible{outline:3px solid #FFC527}
+
 .cm-who{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0 28px;padding:8px 22px}.cm-row{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line)}.cm-row:last-child{border-bottom:0}@media(min-width:720px){.cm-row:nth-last-child(2){border-bottom:0}}.cm-row b{display:block;color:var(--blue-deep);font-size:1.02rem}.cm-dot{width:12px;height:12px;border-radius:50%;flex:none;margin-top:7px}.pg-gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.pg-gal figure{margin:0;display:flex;flex-direction:column;gap:6px}.pg-gal img{width:100%;height:auto;border-radius:12px;border:1px solid var(--line);box-shadow:0 6px 18px rgba(15,42,107,.10);background:#fff}
 </style>
 <style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
@@ -1524,7 +1526,9 @@ function friendlyErr(d,s){const m=String((d&&(d.msg||d.error_description||d.mess
  if(/Invalid login credentials/i.test(m))return'That email and password don’t match. Please try again.';
  if(/Email not confirmed/i.test(m))return'Please confirm your email first. Check your inbox (and spam) for our link.';
  if(/already (been )?registered|User already/i.test(m))return'There’s already an account with that email. Try logging in.';
- if(/Password should|weak password/i.test(m))return'Please choose a stronger password: at least 8 characters with letters and numbers.';
+ if(/different from the old|same as the old|same_password/i.test(m))return'That’s the password you already use. Please make it a little different: changing just one or two characters is fine.';
+ if(/known to be weak|easy to guess|pwned|leaked/i.test(m))return'That password appears on a list of common or leaked passwords, so it isn’t safe. Please try a different one.';
+ if(/Password should|weak password/i.test(m))return'Please choose a password with at least 8 characters, including letters and numbers.';
  if(/rate limit|too many|security purposes/i.test(m)||s===429)return'Too many attempts. Please wait a few minutes and try again.';
  if(/row-level security|permission denied|Not allowed/i.test(m))return'Sorry, you don’t have permission to do that.';
  if(/check constraint/i.test(m))return'Some details aren’t in the right format. Please check and try again.';
@@ -1620,7 +1624,7 @@ function vForgot(){return`<div class="wrap" style="padding-block:48px;max-width:
  <button class="btn blue" type="submit">Send reset link</button><button type="button" class="btn ghost sm" data-go="login" style="padding:0;align-self:flex-start">Back to log in</button></form></div>`}
 function vNewPw(){if(!SESSION)return needLogin();return`<div class="wrap" style="padding-block:48px;max-width:560px"><form class="panel stack" id="sb_newpw" style="gap:14px" novalidate>
  <h2 style="font-size:1.6rem">Choose a new password</h2>
- <label class="f">New password<input type="password" id="np_1" autocomplete="new-password" minlength="8"></label>
+ <label class="f">New password<input type="password" id="np_1" autocomplete="new-password" minlength="8"><span class="hint">At least 8 characters, with letters and numbers. You can keep it similar to your old one: changing one or two characters is fine. Tap the eye to see what you’ve typed.</span></label>
  <label class="f">Type it again<input type="password" id="np_2" autocomplete="new-password" minlength="8"></label>
  <button class="btn blue" type="submit">Save new password</button></form></div>`}
 function vJoin2(){return`<div class="wrap" style="padding-block:48px;max-width:900px"><div class="sec-head center"><p class="eyebrow">Join NeuroScholarly</p><h1 style="font-size:clamp(2rem,4.4vw,3rem)">How would you like to join?</h1></div>
@@ -1722,7 +1726,7 @@ function payBlock(r,as){if(!r.payment_status||r.payment_status==='none')return''
  if(as==='family'&&r.payment_link)return`<div class="sb-pay"><div><b>Payment due${amt?': '+amt:''}</b><div class="small muted">Secure card payment by Stripe.</div></div><a class="btn sm yellow" href="${esc(r.payment_link)}" target="_blank" rel="noopener">Pay securely</a></div>`;
  return`<div class="sb-pay"><b>Payment due${amt?': '+amt:''}</b></div>`}
 function settingsTab(){return`<div class="stack" style="gap:16px;max-width:640px">
- <form class="panel stack" id="sb_chpw" style="gap:12px" novalidate><h3>Change password</h3><label class="f">New password<input type="password" id="cp_1" autocomplete="new-password" minlength="8"></label><button class="btn sm blue" type="submit" style="align-self:flex-start">Update password</button></form>
+ <form class="panel stack" id="sb_chpw" style="gap:12px" novalidate><h3>Change password</h3><label class="f">New password<input type="password" id="cp_1" autocomplete="new-password" minlength="8"><span class="hint">At least 8 characters, with letters and numbers. You can keep it similar to your old one: changing one or two characters is fine. Tap the eye to see what you’ve typed.</span></label><button class="btn sm blue" type="submit" style="align-self:flex-start">Update password</button></form>
  <div class="panel stack" style="gap:10px"><h3>Delete my account</h3><p class="small muted">We’ll delete your account and details within 30 days. Records we must keep for safeguarding are kept only as long as the law requires.</p><button class="btn sm" data-sb="delacct" style="align-self:flex-start;border-color:var(--c-red);color:var(--c-red)">Request account deletion</button></div>
  <div class="panel stack" style="gap:10px"><h3>Worried about something?</h3><p class="small muted">Tell us straight away. We take every safeguarding concern seriously.</p><button class="btn sm" data-sb="concern" style="align-self:flex-start">Report a concern</button></div></div>`}
 function tutorAccount(){const t=ME.tutor,newReq=ME.requests.filter(r=>r.as==='tutor'&&r.status==='new').length;
@@ -2088,7 +2092,7 @@ document.addEventListener('submit',async e=>{const f=e.target;if(!f.id||!f.id.st
   if(SIGNUP_ROLE==='tutor')notify('New Pioneer sign-up: '+name,{Type:'New Pioneer account',Name:name,Email:em,'Heard about us':$('#su_src')?.value||'Not given'});
   if(r&&r.access_token){setSession(r);LOAD={};go('account');toast('Welcome to NeuroScholarly')}else if(r&&Array.isArray(r.identities)&&!r.identities.length){go('login');setTimeout(()=>{const i=$('#sl_email');if(i)i.value=em},0);toast('There’s already an account with that email. Please log in, or use a different email.')}else{ss.set('ns_pending_email',em);go('checkemail')}break}
  case'sb_forgot':{const em=fv(f,'sf_email');if(!emailOK(em)){toast('Please enter a valid email');return}await busy(btn,()=>sb('/auth/v1/recover?redirect_to='+encodeURIComponent(SITE_URL),{method:'POST',body:{email:em},anon:true}),'Sending…');f.innerHTML=okBox('Check your email',`If there’s an account for <b>${esc(em)}</b>, we’ve sent a link to reset your password. It can take a couple of minutes. <br><br><b>Can’t see it?</b> Check your junk or spam folder, and add hello@neuroscholarly.com to your contacts. The link works once and expires after an hour, so request a new one if it has expired.`);break}
- case'sb_newpw':case'sb_chpw':{const p1=f.querySelector('input').value,p2=f.id==='sb_newpw'?$('#np_2').value:p1;if(p1.length<8||!/[A-Za-z]/.test(p1)||!/\d/.test(p1)){toast('Password: at least 8 characters, with letters and numbers');return}if(p1!==p2){toast('The passwords don’t match');return}
+ case'sb_newpw':case'sb_chpw':{const p1=f.querySelector('input').value,p2=f.id==='sb_newpw'?$('#np_2').value:p1;if(p1.length<8||!/[A-Za-z]/.test(p1)||!/\d/.test(p1)){toast('Password: at least 8 characters, with letters and numbers');return}if(p1!==p2){toast('The two passwords don’t match. Tap the eye on each box to check what you’ve typed.');return}
   await busy(btn,()=>sb('/auth/v1/user',{method:'PUT',body:{password:p1}}));toast('Password updated');if(f.id==='sb_newpw')go('account');else f.reset();break}
  case'sb_tprof':{const name=fv(f,'tp_name'),type=fv(f,'tp_type'),subs=[...vals(f,'tp_subj'),...fv(f,'tp_other').split(',').map(s=>s.trim()).filter(Boolean)].slice(0,30),lv=vals(f,'tp_lvl'),rate=+fv(f,'tp_rate'),mode=fv(f,'tp_mode'),area=fv(f,'tp_area'),trial=f.querySelector('input[name=tp_trial]:checked').value,bio=$('#tp_bio').value.trim();
   if(name.length<2){toast('Add the name families will see');return}if(!type){toast('Choose your Pioneer type');return}if(!subs.length){toast('Choose at least one subject');return}if(!lv.length){toast('Choose at least one age or level');return}
@@ -2177,6 +2181,14 @@ async function bootAuth(){const raw=(location.hash||'').slice(1);
  return false}
 addEventListener('hashchange',()=>{if(/(^|&)(access_token|error_description)=/.test((location.hash||'').slice(1)))bootAuth()});
 SESSION=ss.get('ns_session');if(SESSION?.access_token)USER={role:SESSION.user?.user_metadata?.role||'family'};else SESSION=null;
+
+/* ---- Show/hide password eye on every password box ---- */
+(function(){const EYE='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+ NOEYE='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.9 17.9A10.4 10.4 0 0 1 12 19C5.5 19 2 12 2 12a18.6 18.6 0 0 1 4.1-5.1M9.9 5.2A9.6 9.6 0 0 1 12 5c6.5 0 10 7 10 7a18.6 18.6 0 0 1-2.2 3.2M14.1 14.1a3 3 0 1 1-4.2-4.2M2 2l20 20"/></svg>';
+ function enhance(root){(root||document).querySelectorAll('input[type=password]:not([data-eye])').forEach(i=>{i.dataset.eye='1';const w=document.createElement('span');w.className='pw-wrap';i.parentNode.insertBefore(w,i);w.appendChild(i);
+  const b=document.createElement('button');b.type='button';b.className='pw-eye';b.setAttribute('aria-label','Show password');b.innerHTML=EYE;w.appendChild(b);
+  b.addEventListener('click',e=>{e.preventDefault();const show=i.type==='password';i.type=show?'text':'password';b.innerHTML=show?NOEYE:EYE;b.setAttribute('aria-label',show?'Hide password':'Show password');i.focus()})})}
+ const v=document.getElementById('view');if(v)new MutationObserver(()=>enhance(v)).observe(v,{childList:true,subtree:true});enhance(document)})();
 
 /* ---- skills & wellbeing + group sessions ---- */
 const SERVICES={quantum_leap:'Quantum Leap™ confidence',public_speaking:'Public speaking & elocution',adhd_coaching:'ADHD & study skills coaching',social_skills:'Social skills & mentoring',uni_apps:'University applications & interviews'};
@@ -2690,7 +2702,7 @@ const OU_COURSES=[['Understanding autism','https://www.open.edu/openlearn/scienc
 function freeLearn(){return`<div class="panel stack" style="gap:12px;max-width:none;margin-top:18px;border-top:5px solid var(--c-green,#2E9E5B)"><p class="eyebrow">Free starting point</p><h3 style="font-size:1.3rem">Build your neurodiversity knowledge for free</h3>
  <p class="muted small" style="margin:0;max-width:none">New to neurodiversity, or a student on a budget? Start with these free online courses from <b>OpenLearn</b>, The Open University’s free learning site. They’re self-paced, and you get a free Statement of Participation when you finish.</p>
  <ul class="stack" style="list-style:none;padding:0;margin:0;gap:10px">${OU_COURSES.map(([t,u,d])=>`<li><a href="${u}" target="_blank" rel="noopener" style="font-weight:700;color:var(--blue)">${t} ↗</a><br><span class="small muted">${d}</span></li>`).join('')}</ul>
- <p class="small muted" style="margin:0;max-width:none">Finished one? Upload your Statement of Participation in <b>Verification &amp; Documents</b>. OpenLearn courses are free and run by The Open University, not by NeuroScholarly.</p></div>`}
+ <div style="border-top:1px solid var(--line);padding-top:10px"><b style="color:var(--blue-deep)">Want to go further? Optional low-cost courses</b><p class="small muted" style="margin:4px 0 0;max-width:none"><a href="https://www.centreofexcellence.com" target="_blank" rel="noopener" style="font-weight:700;color:var(--blue)">Centre of Excellence ↗</a> offers online courses such as Autism Awareness, ADHD Awareness and Neurodiversity Awareness diplomas. They are paid, self-paced and CPD-accredited (they are not formal qualifications). Prices vary and sales are common, so check before you buy.</p></div><p class="small muted" style="margin:0;max-width:none">Finished a course? Upload your certificate or Statement of Participation in <b>Verification &amp; Documents</b>. These courses are run by The Open University and Centre of Excellence, not by NeuroScholarly, and are optional: you never need to buy anything to join.</p></div>`}
 trainingBlock=(o=>()=>o()+freeLearn())(trainingBlock);
 (function(){const _s=VIEWS['student-jobs'];VIEWS['student-jobs']=()=>_s().replace('<div class="panel stack" style="gap:10px;max-width:none"><h3>Ready to apply?</h3>',freeLearn()+'<div class="panel stack" style="gap:10px;max-width:none"><h3>Ready to apply?</h3>')})();
 (function(){const _p=VIEWS.pioneers;VIEWS.pioneers=()=>_p().replace(/(id="training"[\s\S]*?)(<\/div><\/section>)/,(m,a,b)=>a+freeLearn()+b)})();
