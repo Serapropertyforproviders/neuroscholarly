@@ -687,6 +687,10 @@ h1{letter-spacing:-.03em}
 .sb-junk{display:flex;flex-direction:column;gap:4px;background:#FFF6D6;border:1.5px solid #F4C430;border-left:6px solid #F4B90E;border-radius:12px;padding:12px 14px;font-size:.92rem;line-height:1.5;color:#14213D}.sb-junk b{color:#0F2A6B}
 
 .pw-wrap{position:relative;display:block;width:100%}.pw-wrap input{width:100%;padding-right:52px!important;box-sizing:border-box}.pw-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:42px;height:42px;display:grid;place-items:center;border:0;background:transparent;color:var(--blue,#1D44A8);cursor:pointer;border-radius:10px}.pw-eye:focus-visible{outline:3px solid #FFC527}
+/* green "fully checked" tick */
+.sb-vtick{display:inline-grid;place-items:center;width:1.15em;height:1.15em;margin-left:.35em;border-radius:50%;background:#1E8E4E;color:#fff;font-size:.7em;font-weight:800;line-height:1;vertical-align:.15em}
+.sb-tickok{color:#16653A}.sb-tickneed{color:#7A4B00;background:#FFF6D6;border-radius:8px;padding:6px 10px}
+.sb-cvbox{border-top:5px solid var(--yellow)}
 
 .cm-who{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0 28px;padding:8px 22px}.cm-row{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line)}.cm-row:last-child{border-bottom:0}@media(min-width:720px){.cm-row:nth-last-child(2){border-bottom:0}}.cm-row b{display:block;color:var(--blue-deep);font-size:1.02rem}.cm-dot{width:12px;height:12px;border-radius:50%;flex:none;margin-top:7px}.pg-gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.pg-gal figure{margin:0;display:flex;flex-direction:column;gap:6px}.pg-gal img{width:100%;height:auto;border-radius:12px;border:1px solid var(--line);box-shadow:0 6px 18px rgba(15,42,107,.10);background:#fff}
 </style>
@@ -1545,8 +1549,10 @@ async function sb(path,{method='GET',body,prefer,headers={},anon=false}={}){
  catch(e){if(e.status===401&&SESSION&&!anon){await sbRefresh();if(SESSION){h.Authorization='Bearer '+SESSION.access_token;return sbRaw(path,{method,headers:h,body:b})}resetAccount();go('login');toast('Please log in again');}throw e}}
 const rpc=(fn,args={})=>sb('/rest/v1/rpc/'+fn,{method:'POST',body:args});
 function alertEmail(kind,request_id,session_id){try{if(!SESSION)return;fetch(SB.url+'/functions/v1/notify',{method:'POST',headers:{apikey:SB.key,Authorization:'Bearer '+SESSION.access_token,'Content-Type':'application/json'},body:JSON.stringify({kind,request_id,session_id})}).catch(()=>{})}catch(e){}}
-const DOCKINDS={id:'Photo ID (passport or driving licence)',dbs:'Enhanced DBS certificate',qualification:'Qualification certificate or proof of university enrolment',other:'Other document'};
-const DOCSHORT={id:'Photo ID',dbs:'Enhanced DBS',qualification:'Qualification / enrolment',other:'Other'};
+const DOCKINDS={id:'Photo ID (passport or driving licence)',dbs:'Enhanced DBS certificate',qualification:'Qualification certificate or proof of university enrolment',cv:'CV (your up-to-date CV)',training:'Training certificate (e.g. OpenLearn Statement of Participation)',other:'Other document'};
+const DOCSHORT={id:'Photo ID',dbs:'Enhanced DBS',qualification:'Qualification / enrolment',cv:'CV',training:'Training certificate',other:'Other'};
+const docLow=k=>k==='cv'?'CV':DOCSHORT[k].toLowerCase();
+const VTICK='<span class="sb-vtick" title="Fully checked: ID, enhanced DBS, qualifications, CV and two references" role="img" aria-label="Fully checked">✓</span>';
 function kb(n){return n>=1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB'}
 function download(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500)}
 const csvCell=v=>{v=Array.isArray(v)?v.join('; '):v??'';v=String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
@@ -1640,7 +1646,7 @@ function tutorMatches(t){const q=TF.q.toLowerCase();
  if(TF.mode==='in_person'&&t.lesson_mode==='online')return false;return true}
 function liveCard(t){const ck=checksList(t);return`<article class="tcard sb-card ${t.specialisms.length?'is-spec':''}">
  <button class="sb-phbtn" data-pt="${t.id}" aria-label="View ${esc(t.display_name)}’s profile">${tPhoto(t)}</button>
- <div class="mid"><div class="row" style="gap:8px"><h3 style="font-size:1.3rem">${esc(t.display_name)}</h3><span class="badge blue">${PTYPES[t.pioneer_type]}</span></div>
+ <div class="mid"><div class="row" style="gap:8px"><h3 style="font-size:1.3rem">${esc(t.display_name)}${t.fully_verified?VTICK:''}</h3><span class="badge blue">${PTYPES[t.pioneer_type]}</span></div>
   ${t.founding?`<div>${fpBadge}</div>`:''}
   ${ck.length?`<ul class="ticks">${ck.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}
   ${t.bio?`<p class="small muted sb-clamp">${esc(t.bio)}</p>`:''}
@@ -1648,7 +1654,7 @@ function liveCard(t){const ck=checksList(t);return`<article class="tcard sb-card
  <div class="side">${t.hourly_rate?`<div class="rate">${gbp2(famPrice(t.hourly_rate))}<small>/hour</small></div>`:''}<div class="free ${t.trial_type}">${trialText(t)}</div>
   <button class="btn sm blue" data-preq="${t.id}">${t.trial_type==='taster'?'Request a taster':'Request a free trial'}</button><button class="btn sm" data-pt="${t.id}">View profile</button></div></article>`}
 function vFindLive(){if(SESSION&&!ME)need('me',loadMe);const st=need('tutors',loadTutors);
- const head=`<div class="wrap" style="padding-top:36px"><div class="sec-head"><p class="eyebrow">Find your tutor</p><h1 style="font-size:clamp(2rem,4.4vw,3rem)">Find the right person for you.</h1><p class="muted">Every Pioneer is checked before their profile goes live. Request a FREE 20-minute trial or a £2.50–£7.50 introductory taster, depending on the tutor.</p></div></div>`;
+ const head=`<div class="wrap" style="padding-top:36px"><div class="sec-head"><p class="eyebrow">Find your tutor</p><h1 style="font-size:clamp(2rem,4.4vw,3rem)">Find the right person for you.</h1><p class="muted">Every Pioneer is checked before their profile goes live. Request a FREE 20-minute trial or a £2.50–£7.50 introductory taster, depending on the tutor.</p><p class="small muted">${VTICK} <b>Fully checked</b> means we hold their ID, enhanced DBS, qualifications and CV, and two references have come back.</p></div></div>`;
  if(st==='busy')return head+`<div class="wrap">${spinner('Finding tutors…')}</div>`;
  if(st.startsWith('err:'))return head+`<div class="wrap stack" style="padding-bottom:48px">${sbErr(st.slice(4))}<button class="btn sm" data-sb="retry" data-v="tutors" style="align-self:flex-start">Try again</button></div>`;
  const list=TUTORS.filter(tutorMatches);
@@ -1668,7 +1674,7 @@ function vTutorLive(id){if(!TUTORS){const st=need('tutors',loadTutors);if(st==='
  const ck=checksList(t),preview=t.status!=='approved';
  return`<div class="wrap" style="padding-block:32px;max-width:980px">${preview?`<div class="sb-msg">This is a preview. Families can’t see this profile until it’s approved.</div>`:''}
  <button class="btn ghost sm" data-go="find" style="padding:0;align-self:flex-start">← All tutors</button>
- <div class="panel sb-profile"><div class="sb-prof-top">${tPhoto(t,'ph sb-big')}<div class="stack" style="gap:8px"><h1 style="font-size:clamp(1.8rem,4vw,2.4rem)">${esc(t.display_name)}</h1>
+ <div class="panel sb-profile"><div class="sb-prof-top">${tPhoto(t,'ph sb-big')}<div class="stack" style="gap:8px"><h1 style="font-size:clamp(1.8rem,4vw,2.4rem)">${esc(t.display_name)}${t.fully_verified?VTICK:''}</h1>
   <div class="row" style="gap:8px"><span class="badge blue">${PTYPES[t.pioneer_type]}</span>${t.founding?fpBadge:''}</div>
   <div class="row" style="gap:14px;align-items:baseline">${t.hourly_rate?`<span class="rate">${gbp2(famPrice(t.hourly_rate))}<small>/hour</small></span>`:''}<span class="free ${t.trial_type}">${trialText(t)}</span></div>
   <p class="small muted">${MODES[t.lesson_mode]}${t.lesson_mode!=='online'&&t.area?' · '+esc(t.area):''}</p></div></div>
@@ -1728,7 +1734,7 @@ function settingsTab(){return`<div class="stack" style="gap:16px;max-width:640px
 function tutorAccount(){const t=ME.tutor,newReq=ME.requests.filter(r=>r.as==='tutor'&&r.status==='new').length;
  if(!ACC_TAB)ACC_TAB=!t?'profile':(ME.sessions||[]).some(s=>s.status==='pending'&&new Date(s.starts_at)>new Date())?'sessions':'requests';
  const banner=!t?`<div class="sb-msg"><b>Step 1:</b> build your profile below. Once it’s saved, we’ll check your ID, enhanced DBS and certificates before it goes live.</div>`
-  :t.status==='pending'?`<div class="sb-msg"><b>Waiting for approval.</b> We’re checking your profile. ${docsMissing().length?`Please upload your ${docsMissing().map(k=>DOCSHORT[k].toLowerCase()).join(', ')} securely in the <button class="btn ghost sm" data-acc="docs" style="padding:0;min-height:0">Documents</button> tab.`:'Thanks for uploading your documents. We’ll be in touch soon.'} <span class="small">We email you at each step. Can’t see our emails? Check your junk or spam folder and add hello@neuroscholarly.com to your contacts.</span>${''}</div>`
+  :t.status==='pending'?`<div class="sb-msg"><b>Waiting for approval.</b> We’re checking your profile. ${docsMissing().length?`Please upload your ${docsMissing().map(docLow).join(', ')} securely in the <button class="btn ghost sm" data-acc="docs" style="padding:0;min-height:0">Documents</button> tab.`:'Thanks for uploading your documents. We’ll be in touch soon.'} <span class="small">We email you at each step. Can’t see our emails? Check your junk or spam folder and add hello@neuroscholarly.com to your contacts.</span>${''}</div>`
   :t.status==='approved'?(!(ME.avail||[]).length?`<div class="sb-msg"><b>Next step:</b> add your weekly availability in <button class="btn ghost sm" data-acc="sessions" style="padding:0;min-height:0">Sessions</button> so families can book you.</div>`:`<div class="sb-msg ok"><b>Your profile is live.</b> Families can find you and book sessions. <button class="btn ghost sm" data-pt="${t.id}" style="padding:0;min-height:0">View my public profile</button></div>`)
   :`<div class="sb-msg err"><b>Your profile is hidden.</b> Please contact <b>${CONTACT}</b>.</div>`;
  const body=ACC_TAB==='journal'?tutorJournalTab():ACC_TAB==='groups'?tutorGroupsTab():ACC_TAB==='profile'?tutorProfileForm():ACC_TAB==='private'?tutorPrivateForm():ACC_TAB==='docs'?docsTab():ACC_TAB==='sessions'?tutorSessionsTab():ACC_TAB==='settings'?settingsTab():`<div class="stack" style="gap:14px;max-width:none">${reqCards(ME.requests.filter(r=>r.as==='tutor'),'tutor')}</div>`;
@@ -1755,7 +1761,7 @@ function tutorProfileForm(){const t=ME.tutor||{display_name:'',pioneer_type:'',s
   <label class="check"><input type="radio" name="tp_trial" value="taster" ${t.trial_type==='taster'?'checked':''}><span><b>Introductory taster</b>: you keep 100% <select id="tp_taster" aria-label="Taster price">${[2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5].map(p=>`<option value="${p}" ${+t.taster_price===p?'selected':''}>${gbp2(p)}</option>`).join('')}</select></span></label></div></fieldset>
  <div class="row"><button class="btn blue" type="submit">${ME.tutor?'Save changes':'Save my profile'}</button>${ME.tutor?`<button type="button" class="btn" data-pt="${ME.tutor.id}">Preview</button>`:''}</div>
  ${ME.tutor?.status==='approved'?`<p class="small muted">Changing your name, photo or “About you” sends your profile back for a quick re-check.</p>`:''}</form>`}
-function docsMissing(){const have=new Set((ME?.docs||[]).map(d=>d.kind));return['id','dbs','qualification'].filter(k=>!have.has(k))}
+function docsMissing(){const have=new Set((ME?.docs||[]).map(d=>d.kind));return['id','dbs','qualification','cv'].filter(k=>!have.has(k))}
 const DBS_URL='https://self-employed-dbs.co.uk/self-employed-dbs-checks/';
 function dbsGuide(compact){return`<div class="panel stack sb-dbs" style="gap:12px;max-width:none">
  <div class="row between" style="align-items:flex-start;gap:10px"><div><p class="eyebrow" style="margin:0">Enhanced DBS check</p><h3 style="margin:2px 0 0">No DBS yet? Get one online in 3 steps</h3></div><span class="badge blue">About £60.50</span></div>
@@ -1770,8 +1776,9 @@ function dbsGuide(compact){return`<div class="panel stack sb-dbs" style="gap:12p
  <p class="small muted" style="margin:0">You pay the provider directly: about £60.50 (£41 government fee + £19.50 admin). Tip: join the DBS Update Service (£15 a year) so future checks are instant and free. NeuroScholarly isn’t paid by the provider.</p></div>`}
 function docsTab(){const D=ME.docs||[],miss=docsMissing();return`<div class="stack" style="gap:16px;max-width:760px">
  <div class="panel stack" style="gap:10px;max-width:none"><h3>Your verification documents</h3><p class="small muted">Upload clear photos or scans. Only you and the NeuroScholarly team can see these. They’re stored privately and never shown on your profile.</p>
-  <ul class="sb-doclist">${['id','dbs','qualification'].map(k=>`<li class="${miss.includes(k)?'':'ok'}"><span>${miss.includes(k)?'○':'✓'}</span>${DOCKINDS[k]}</li>`).join('')}<li class="${(ME.priv?.referees||[]).length>=2?'ok':''}"><span>${(ME.priv?.referees||[]).length>=2?'✓':'○'}</span>Two referees, added in&nbsp;<button class="btn ghost sm" data-acc="private" style="padding:0;min-height:0">Private details</button></li></ul></div>
+  <ul class="sb-doclist">${['id','dbs','qualification','cv'].map(k=>`<li class="${miss.includes(k)?'':'ok'}"><span>${miss.includes(k)?'○':'✓'}</span>${DOCKINDS[k]}</li>`).join('')}<li class="${(ME.priv?.referees||[]).length>=2?'ok':''}"><span>${(ME.priv?.referees||[]).length>=2?'✓':'○'}</span>Two referees, added in&nbsp;<button class="btn ghost sm" data-acc="private" style="padding:0;min-height:0">Private details</button></li></ul></div>
  ${D.length?`<div class="panel stack" style="gap:8px;max-width:none"><h3>Uploaded</h3>${D.map(d=>`<div class="row between sb-docrow"><div><b>${DOCSHORT[d.kind]}</b><div class="small muted">${esc(d.file_name||'')} · ${d.size_bytes?kb(d.size_bytes)+' · ':''}${when(d.uploaded_at)}</div></div><button class="btn sm ghost" data-sb="deldoc" data-id="${d.id}">Remove</button></div>`).join('')}</div>`:''}
+ ${miss.includes('cv')?`<div class="panel stack sb-cvbox" style="gap:8px;max-width:none"><h3>Upload your CV</h3><p class="small muted">A PDF is best. Include your education, any work with children or young people, and your subjects.</p><button type="button" class="btn blue" data-sb="pickcv" style="align-self:flex-start">Upload my CV</button></div>`:''}
  ${miss.includes('dbs')?dbsGuide():''}
  <form class="panel stack" id="sb_doc" style="gap:12px;max-width:none" novalidate><h3>Upload a document</h3>
   <label class="f">What is it?<select id="dc_kind">${Object.entries(DOCKINDS).map(([k,v])=>`<option value="${k}" ${k===(miss[0]||'other')?'selected':''}>${v}</option>`).join('')}</select></label>
@@ -1846,8 +1853,9 @@ function vAdmin2(){if(!SESSION)return needLogin();if(need('me',loadMe)!=='ok')re
 function backupPanel(){const last=ss.get('ns_last_backup'),days=last?Math.floor((Date.now()-last)/864e5):null;
  return`<div class="sb-msg ${days===null||days>=7?'':'ok'}" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between"><span><b>Backup:</b> ${days===null?'no backup downloaded on this device yet.':days===0?'downloaded today.':`last downloaded ${days} day${days>1?'s':''} ago.`}${days===null||days>=7?' Please download one every week.':''}</span><span class="row" style="gap:6px"><button class="btn sm" data-sb="backup">Full backup</button><button class="btn sm" data-sb="contacts">Contacts spreadsheet</button></span></div>`}
 function adminTutor(t){const p=t.private||{};return`<article class="panel stack sb-adm" style="gap:10px;max-width:none">
- <div class="row between"><div class="row" style="gap:12px">${tPhoto(t,'av sb-av')}<div><b>${esc(t.display_name)}</b> <span class="badge blue">${PTYPES[t.pioneer_type]}</span>${t.founding?' '+fpBadge:''}<div class="small muted">${esc(t.login_email||'')} · joined ${when(t.created_at)}</div></div></div><span class="badge sb-st ${{approved:'ok',pending:'blue',hidden:'grey'}[t.status]}">${{approved:'Live',pending:'Pending approval',hidden:'Hidden'}[t.status]}</span></div>
+ <div class="row between"><div class="row" style="gap:12px">${tPhoto(t,'av sb-av')}<div><b>${esc(t.display_name)}</b>${t.fully_verified?VTICK:''} <span class="badge blue">${PTYPES[t.pioneer_type]}</span>${t.founding?' '+fpBadge:''}<div class="small muted">${esc(t.login_email||'')} · joined ${when(t.created_at)}</div></div></div><span class="badge sb-st ${{approved:'ok',pending:'blue',hidden:'grey'}[t.status]}">${{approved:'Live',pending:'Pending approval',hidden:'Hidden'}[t.status]}</span></div>
  <div class="small"><b>Private:</b> ${esc(p.full_name||'–')} · ${esc(p.phone||'no phone')} · ${esc(p.postcode||'no postcode')} · DOB ${esc(p.date_of_birth||'–')}</div>
+ ${adminTickNeeds(t)}
  ${adminRefs(t)}
  <div class="sb-admdocs"><b class="small">Documents:</b> ${(t.documents||[]).length?(t.documents||[]).map(d=>`<span class="sb-docchip">${DOCSHORT[d.kind]}<button type="button" data-sb="viewdoc" data-path="${esc(d.path)}">View</button><button type="button" data-sb="admdeldoc" data-id="${d.id}" data-path="${esc(d.path)}" aria-label="Delete ${DOCSHORT[d.kind]}">✕</button></span>`).join(''):'<span class="small muted">none uploaded yet</span>'}</div>
  <div class="small"><b>Teaches:</b> ${t.subjects.map(esc).join(', ')||'–'} · <b>Levels:</b> ${t.levels.map(esc).join(', ')||'–'}${t.specialisms.length?' · <b>Specialist:</b> '+t.specialisms.map(esc).join(', '):''}</div>
@@ -1957,6 +1965,11 @@ async function sendRefEmail(id){try{const r=await fetch(SB.url+'/functions/v1/no
 const RQ_LABEL={how:'How they know them',how_long:'Known for',role:'Referee’s role',character:'Reliability and character',suitability:'Suitability to work with children and young people',concerns:'Any reason they should not work with children or vulnerable young people?',concerns_detail:'Details',recommend:'Would they recommend them?'};
 function refAnswers(a){if(!a)return'';const bad=a.concerns==='Yes'||a.recommend==='No';
  return`<div class="sb-refans ${bad?'warn':''}">${bad?'<p class="sb-refwarn"><b>⚠ Concern raised. Read carefully before approving.</b></p>':''}${Object.entries(RQ_LABEL).filter(([k])=>a[k]).map(([k,l])=>`<p><b>${l}:</b> <span class="${(k==='concerns'&&a[k]==='Yes')||(k==='recommend'&&a[k]==='No')?'sb-red':''}">${esc(a[k])}</span></p>`).join('')}<p class="small muted">Declaration confirmed by ${esc(a.signed_name||'')}${a.organisation?' · '+esc(a.organisation):''}</p></div>`}
+function adminTickNeeds(t){if(t.fully_verified)return`<div class="small sb-tickok">${VTICK} <b>Fully checked.</b> Green tick shows on their public profile.</div>`;
+ const have=new Set((t.documents||[]).map(d=>d.kind)),got=(ADMIN.refs||[]).filter(q=>q.tutor_id===t.id&&q.status==='received').length,need=[];
+ if(t.status!=='approved')need.push('approved (Live)');['id','dbs','qualification','cv'].forEach(k=>{if(!have.has(k))need.push(DOCSHORT[k]+' uploaded')});
+ if(got<2)need.push(`2 references back (${got} so far)`);[['id_verified','ID verified'],['dbs_verified','Enhanced DBS'],['certs_verified','Certificates'],['refs_verified','References']].forEach(([k,l])=>{if(!t[k])need.push(`“${l}” ticked below`)});
+ return`<div class="small sb-tickneed"><b>Green tick needs:</b> ${need.join(' · ')}</div>`}
 function adminRefs(t){const p=t.private||{},R=(ADMIN.refs||[]).filter(q=>q.tutor_id===t.id),tn=p.full_name||t.display_name,refs=p.referees||[];
  if(!refs.length&&!R.length)return`<div class="small"><b>Referees:</b> <span class="muted">none added yet</span></div>`;
  const rows=refs.map(r=>{const q=R.find(x=>x.referee_email===String(r.email||'').trim().toLowerCase());
@@ -2040,7 +2053,8 @@ document.addEventListener('click',async e=>{const t=e.target.closest('button,[da
   case'sess-cancel':if(!confirmInline(t,'Tap again to cancel'))break;await busy(t,()=>rpc('cancel_session',{sess:id}));alertEmail('session_cancelled',null,id);await refreshMe();render();toast('Session cancelled. We’ve let them know.');break;
   case'ics':{const s=(ME.sessions||[]).find(x=>x.id===id);if(s)downloadIcs(s);break}
   case'av-del':await busy(t,()=>sb(`/rest/v1/tutor_availability?id=eq.${id}`,{method:'DELETE'}),'…');await refreshMe();render();toast('Time removed');break;
-  case'deldoc':{if(!confirmInline(t,'Tap again to remove'))break;const d=ME.docs.find(x=>x.id===id);await busy(t,async()=>{await sb('/storage/v1/object/tutor-docs/'+d.path,{method:'DELETE'}).catch(()=>{});await sb(`/rest/v1/tutor_documents?id=eq.${id}`,{method:'DELETE'})},'Removing…');await refreshMe();render();toast('Document removed');break}
+  case'pickcv':{const k=$('#dc_kind'),f=$('#dc_file');if(!k||!f)return;k.value='cv';f.dataset.auto='1';f.click();break}
+ case'deldoc':{if(!confirmInline(t,'Tap again to remove'))break;const d=ME.docs.find(x=>x.id===id);await busy(t,async()=>{await sb('/storage/v1/object/tutor-docs/'+d.path,{method:'DELETE'}).catch(()=>{});await sb(`/rest/v1/tutor_documents?id=eq.${id}`,{method:'DELETE'})},'Removing…');await refreshMe();render();toast('Document removed');break}
   case'viewdoc':{const w=window.open('about:blank','_blank');try{const r=await sb('/storage/v1/object/sign/tutor-docs/'+d.path,{method:'POST',body:{expiresIn:300}});const u=SB.url+'/storage/v1'+(r.signedURL||r.signedUrl);if(w)w.location.href=u;else location.href=u}catch(err){if(w)w.close();toast(err.message)}break}
   case'admdeldoc':{if(!confirmInline(t,'Delete?'))break;await busy(t,async()=>{await sb('/storage/v1/object/tutor-docs/'+d.path,{method:'DELETE'}).catch(()=>{});await sb(`/rest/v1/tutor_documents?id=eq.${id}`,{method:'DELETE'})},'…');LOAD.admin=null;render();toast('Document deleted');break}
   case'savepay':{const fm=t.closest('.sb-payform'),st=fm.querySelector('[name=st]').value,link=fm.querySelector('[name=link]').value.trim(),amt=fm.querySelector('[name=amt]').value;
@@ -2065,7 +2079,7 @@ document.addEventListener('input',e=>{const t=e.target;
  if(t.id==='tf_q'){TF.q=t.value;const box=$('#sb_results');if(box){const l=TUTORS.filter(tutorMatches);box.innerHTML=l.length?l.map(liveCard).join(''):`<div class="panel stack"><h3>No tutors match yet</h3><p class="muted">Try another search, or <button type="button" class="btn ghost sm" data-go="request" style="padding:0;min-height:0">tell us what you need</button>.</p></div>`}return}
  if(t.id==='tp_bio'){const c=$('#tp_bioc');if(c)c.textContent=t.value.length+'/1200'}
  if(t.id==='tp_rate'){const h=$('#tp_fam');if(h)h.textContent=+t.value?'Families see '+gbp2(famPrice(+t.value))+' an hour, including NeuroScholarly’s service fee. You receive 100% of your rate.':'You receive 100% of this. Families see it with NeuroScholarly’s service fee added.'}},true);
-document.addEventListener('change',async e=>{const t=e.target;
+document.addEventListener('change',async e=>{const t=e.target;if(t.id==='dc_file'&&t.dataset.auto==='1'&&t.files[0]){t.dataset.auto='';$('#sb_doc')?.requestSubmit();return}
  if(['tf_subject','tf_spec','tf_mode','tf_service'].includes(t.id)){TF[t.id.slice(3)]=t.value;render();return}
  if(['gf_cat','gf_year','gf_age','gf_need'].includes(t.id)){GF[t.id.slice(3)]=t.value;render();return}
  if(t.id==='gb_learner'){$('#gb_new').hidden=t.value!=='new'}
@@ -2131,6 +2145,7 @@ document.addEventListener('submit',async e=>{const f=e.target;if(!f.id||!f.id.st
   const hadAll=!docsMissing().length;
   await busy(btn,async()=>{await sb('/storage/v1/object/tutor-docs/'+path,{method:'POST',body:fl,headers:{'Content-Type':type,'x-upsert':'false'}});
    await sb('/rest/v1/tutor_documents',{method:'POST',body:{kind,path,file_name:fl.name.slice(0,200),size_bytes:fl.size},prefer:'return=minimal'})},'Uploading…');
+  if(kind==='training')notify('🎓 Free training completed: '+(ME.tutor?.display_name||ME.email),{Type:'Training certificate uploaded',Name:ME.priv?.full_name||ME.name,Email:ME.email,File:fl.name});
   await refreshMe();render();toast(DOCSHORT[kind]+' uploaded securely. We’ve emailed you an update: check your junk folder if you can’t see it.');pioneerMail('docs');
   if(!hadAll&&!docsMissing().length)notify('Documents ready to check: '+(ME.tutor?.display_name||ME.email),{Type:'Pioneer documents uploaded',Name:ME.priv?.full_name||ME.name,Email:ME.email});break}
  case'sb_av':{const day=+$('#av_day').value,fr=$('#av_from').value,to=$('#av_to').value;if(to<=fr){toast('The end time must be after the start time');return}
